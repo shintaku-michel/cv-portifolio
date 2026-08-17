@@ -1,5 +1,14 @@
 import type { SessionUser } from '../../shared/types/auth'
 
+function extractErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === 'object' && 'data' in error) {
+    const data = (error as { data?: { statusMessage?: string, message?: string } }).data
+    if (data?.statusMessage) return data.statusMessage
+    if (data?.message) return data.message
+  }
+  return fallback
+}
+
 export function useAuth() {
   const user = useState<SessionUser | null>('auth-user', () => null)
   const pending = useState('auth-pending', () => false)
@@ -19,9 +28,26 @@ export function useAuth() {
         body: { email, password }
       })
       user.value = response.user
-    } catch {
-      error.value = 'Email ou senha inválidos.'
-      throw new Error('login failed')
+    } catch (err) {
+      error.value = extractErrorMessage(err, 'Email ou senha inválidos.')
+      throw new Error('login failed', { cause: err })
+    } finally {
+      pending.value = false
+    }
+  }
+
+  async function register(name: string, email: string, password: string) {
+    pending.value = true
+    error.value = null
+    try {
+      const response = await $fetch<{ user: SessionUser }>('/api/auth/register', {
+        method: 'POST',
+        body: { name, email, password }
+      })
+      user.value = response.user
+    } catch (err) {
+      error.value = extractErrorMessage(err, 'Não foi possível concluir o cadastro.')
+      throw new Error('register failed', { cause: err })
     } finally {
       pending.value = false
     }
@@ -32,5 +58,5 @@ export function useAuth() {
     user.value = null
   }
 
-  return { user, pending, error, fetchUser, login, logout }
+  return { user, pending, error, fetchUser, login, register, logout }
 }

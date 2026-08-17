@@ -14,6 +14,14 @@ function toSessionUser(user: { id: string, name: string, email: string, role: Us
   return { id: user.id, name: user.name, email: user.email, role: user.role }
 }
 
+function isUniqueViolation(error: unknown): boolean {
+  if (typeof error !== 'object' || error === null) {
+    return false
+  }
+  const { code, cause } = error as { code?: string, cause?: unknown }
+  return code === '23505' || isUniqueViolation(cause)
+}
+
 export const AuthService = {
   async login(email: string, password: string): Promise<{ sessionId: string, expiresAt: Date, user: SessionUser }> {
     const normalizedEmail = email.trim().toLowerCase()
@@ -66,16 +74,24 @@ export const AuthService = {
 
   async register(input: { name: string, email: string, password: string, role?: UserRole }) {
     const passwordHash = await hashPassword(input.password)
-    const [user] = await db
-      .insert(users)
-      .values({
-        name: input.name,
-        email: input.email.trim().toLowerCase(),
-        passwordHash,
-        role: input.role ?? 'USER'
-      })
-      .returning()
 
-    return toSessionUser(user!)
+    try {
+      const [user] = await db
+        .insert(users)
+        .values({
+          name: input.name,
+          email: input.email.trim().toLowerCase(),
+          passwordHash,
+          role: input.role ?? 'USER'
+        })
+        .returning()
+
+      return toSessionUser(user!)
+    } catch (error) {
+      if (isUniqueViolation(error)) {
+        throw createError({ statusCode: 409, statusMessage: 'Este email já está cadastrado' })
+      }
+      throw error
+    }
   }
 }

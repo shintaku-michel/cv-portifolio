@@ -66,4 +66,19 @@ describe('AuthService (integração)', () => {
     const [remaining] = await db.select().from(sessions).where(eq(sessions.id, sessionId))
     expect(remaining).toBeUndefined()
   })
+
+  it('rejeita cadastro com email já existente (409)', async () => {
+    await expect(
+      AuthService.register({ name: 'Outro Nome', email: testEmail, password: 'outraSenha123' })
+    ).rejects.toMatchObject({ statusCode: 409 })
+  })
+
+  it('cadastro público sempre cria usuário com role USER, mesmo se role não for informado', async () => {
+    const newEmail = `test-auth-${randomUUID()}@example.com`
+    const user = await AuthService.register({ name: 'Novo Usuário', email: newEmail, password: 'senhaValida123' })
+
+    expect(user.role).toBe('USER')
+
+    await db.delete(users).where(eq(users.email, newEmail))
+  })
 })
