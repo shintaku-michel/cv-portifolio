@@ -1,4 +1,4 @@
-import type { SessionUser } from '../../shared/types/auth'
+import type { SessionUser } from '#shared/types/auth'
 
 function extractErrorMessage(error: unknown, fallback: string): string {
   if (error && typeof error === 'object' && 'data' in error) {
@@ -15,7 +15,11 @@ export function useAuth() {
   const error = useState<string | null>('auth-error', () => null)
 
   async function fetchUser() {
-    const response = await $fetch<{ user: SessionUser | null }>('/api/auth/me')
+    // useRequestFetch (não $fetch global) repassa os cookies da requisição
+    // original durante SSR — usado pelo middleware `admin` antes da página
+    // renderizar.
+    const requestFetch = useRequestFetch()
+    const response = await requestFetch<{ user: SessionUser | null }>('/api/auth/me')
     user.value = response.user
   }
 

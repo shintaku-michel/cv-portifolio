@@ -60,6 +60,8 @@ extend type Query {
   projects: [Project!]!
   """Busca por slug. Retorna null se DRAFT e o chamador não for ADMIN."""
   project(slug: String!): Project
+  """Busca por ID, para o formulário de edição do admin. Exige ADMIN."""
+  projectById(id: ID!): Project
   featuredProjects: [Project!]!
 }
 

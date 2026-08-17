@@ -83,6 +83,14 @@ export const ProjectService = {
     return toProject(row)
   },
 
+  async getById(id: string) {
+    const row = await db.query.projects.findFirst({
+      with: { projectTechnologies: { with: { technology: true } } },
+      where: (p, { eq }) => eq(p.id, id)
+    })
+    return row ? toProject(row) : null
+  },
+
   async create(input: CreateProjectInput) {
     try {
       const [project] = await db

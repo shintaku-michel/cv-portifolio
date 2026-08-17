@@ -11,6 +11,11 @@ export const projectResolvers = {
     project: (_parent: unknown, { slug }: { slug: string }, context: GraphQLContext) =>
       ProjectService.getBySlug(slug, { includeDraft: context.user?.role === 'ADMIN' }),
 
+    projectById: (_parent: unknown, { id }: { id: string }, context: GraphQLContext) => {
+      assertAdmin(context.user)
+      return ProjectService.getById(id)
+    },
+
     featuredProjects: () => ProjectService.getFeatured()
   },
 

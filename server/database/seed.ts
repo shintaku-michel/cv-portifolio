@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { AuthService } from '../services/auth.service'
-import { slugify } from '../utils/slug'
+import { slugify } from '../../shared/utils/slug'
 import { db } from './client'
 import { categories, projects, projectTechnologies, tags, technologies, users } from './schema'
 
