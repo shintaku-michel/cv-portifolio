@@ -1,15 +1,11 @@
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
+import { AuthService } from '../services/auth.service'
+import { db } from './client'
 import { categories, projects, projectTechnologies, tags, technologies } from './schema'
 
-process.loadEnvFile('.env')
-
-const queryClient = postgres(process.env.DATABASE_URL!)
-const db = drizzle(queryClient, { schema: { categories, projects, projectTechnologies, tags, technologies } })
-
-// Dados de referência (tecnologias, categorias, tags) e projetos de exemplo.
-// Posts/comentários/likes exigem um usuário autor e ficam para o seed do M3,
-// quando autenticação existir.
+// Dados de referência (tecnologias, categorias, tags), um projeto de exemplo
+// e dois usuários de teste (ADMIN e USER) para exercitar o login localmente.
+// Posts/comentários/likes com autor real ficam para quando o CRUD de posts
+// existir (M6).
 
 const technologyNames = ['Vue', 'Nuxt', 'TypeScript', 'JavaScript', 'GraphQL', 'PostgreSQL', 'Drizzle', 'Tailwind CSS', 'Docker']
 
@@ -26,6 +22,22 @@ function slugify(value: string) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
+}
+
+async function seedUsers() {
+  const seedAccounts = [
+    { name: 'Admin', email: 'admin@portfolio-cms.dev', password: 'admin12345', role: 'ADMIN' as const },
+    { name: 'Leitor', email: 'leitor@portfolio-cms.dev', password: 'leitor12345', role: 'USER' as const }
+  ]
+
+  for (const account of seedAccounts) {
+    try {
+      await AuthService.register(account)
+      console.log(`  usuário criado: ${account.email} (${account.role}) — senha: ${account.password}`)
+    } catch {
+      // usuário já existe (email é unique) — seed idempotente, segue em frente.
+    }
+  }
 }
 
 async function seed() {
@@ -79,8 +91,10 @@ async function seed() {
       .onConflictDoNothing()
   }
 
-  console.log('Seed concluído: technologies, categories, tags e projeto de exemplo.')
-  await queryClient.end()
+  await seedUsers()
+
+  console.log('Seed concluído: technologies, categories, tags, projeto de exemplo e usuários.')
+  await db.$client.end()
 }
 
 seed().catch((error) => {

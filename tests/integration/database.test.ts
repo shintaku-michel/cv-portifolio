@@ -1,20 +1,13 @@
-import { drizzle } from 'drizzle-orm/postgres-js'
-import postgres from 'postgres'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import * as schema from '../../server/database/schema'
-
-process.loadEnvFile('.env')
-
-const queryClient = postgres(process.env.DATABASE_URL!)
-const db = drizzle(queryClient, { schema })
+import { db } from '../../server/database/client'
 
 describe('database schema (integração)', () => {
   beforeAll(async () => {
-    await queryClient`select 1`
+    await db.execute('select 1')
   })
 
   afterAll(async () => {
-    await queryClient.end()
+    await db.$client.end()
   })
 
   it('possui tecnologias seedadas', async () => {
