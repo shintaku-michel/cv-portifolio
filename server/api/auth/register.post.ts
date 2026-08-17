@@ -9,13 +9,13 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<{ name?: unknown, email?: unknown, password?: unknown }>(event)
 
   if (typeof body?.name !== 'string' || !body.name.trim()) {
-    throw createError({ statusCode: 400, statusMessage: 'Nome é obrigatório' })
+    throw createError({ statusCode: 400, message: 'Nome é obrigatório' })
   }
   if (typeof body?.email !== 'string' || !EMAIL_REGEX.test(body.email)) {
-    throw createError({ statusCode: 400, statusMessage: 'Email inválido' })
+    throw createError({ statusCode: 400, message: 'Email inválido' })
   }
   if (typeof body?.password !== 'string' || body.password.length < MIN_PASSWORD_LENGTH) {
-    throw createError({ statusCode: 400, statusMessage: `Senha deve ter ao menos ${MIN_PASSWORD_LENGTH} caracteres` })
+    throw createError({ statusCode: 400, message: `Senha deve ter ao menos ${MIN_PASSWORD_LENGTH} caracteres` })
   }
 
   // Cadastro público nunca aceita `role` do cliente — sempre USER.

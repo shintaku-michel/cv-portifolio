@@ -1,6 +1,7 @@
+import { eq } from 'drizzle-orm'
 import { AuthService } from '../services/auth.service'
 import { db } from './client'
-import { categories, projects, projectTechnologies, tags, technologies } from './schema'
+import { categories, projects, projectTechnologies, tags, technologies, users } from './schema'
 
 // Dados de referência (tecnologias, categorias, tags), um projeto de exemplo
 // e dois usuários de teste (ADMIN e USER) para exercitar o login localmente.
@@ -37,6 +38,26 @@ async function seedUsers() {
     } catch {
       // usuário já existe (email é unique) — seed idempotente, segue em frente.
     }
+  }
+}
+
+// Promove o dono do portfólio a ADMIN quando ele já tiver se cadastrado
+// via /registro. Não cria a conta (a senha real é dele, não nossa) —
+// só ajusta a role se OWNER_EMAIL estiver definido no .env.
+async function promoteOwnerToAdmin() {
+  const ownerEmail = process.env.OWNER_EMAIL?.trim().toLowerCase()
+  if (!ownerEmail) {
+    return
+  }
+
+  const [promoted] = await db
+    .update(users)
+    .set({ role: 'ADMIN' })
+    .where(eq(users.email, ownerEmail))
+    .returning()
+
+  if (promoted) {
+    console.log(`  usuário promovido a ADMIN: ${promoted.email}`)
   }
 }
 
@@ -92,6 +113,7 @@ async function seed() {
   }
 
   await seedUsers()
+  await promoteOwnerToAdmin()
 
   console.log('Seed concluído: technologies, categories, tags, projeto de exemplo e usuários.')
   await db.$client.end()

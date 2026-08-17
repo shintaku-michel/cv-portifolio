@@ -35,7 +35,7 @@ describe('AuthService (integração)', () => {
   it('rejeita email inexistente com a mesma mensagem de erro', async () => {
     await expect(AuthService.login('nao-existe@example.com', testPassword)).rejects.toMatchObject({
       statusCode: 401,
-      statusMessage: 'Credenciais inválidas'
+      message: 'Credenciais inválidas'
     })
   })
 

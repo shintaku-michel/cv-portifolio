@@ -29,7 +29,7 @@ export const AuthService = {
 
     // Mesma mensagem de erro para email inexistente ou senha errada,
     // para não permitir enumeração de contas.
-    const invalidCredentialsError = createError({ statusCode: 401, statusMessage: 'Credenciais inválidas' })
+    const invalidCredentialsError = createError({ statusCode: 401, message: 'Credenciais inválidas' })
 
     if (!user) {
       throw invalidCredentialsError
@@ -89,7 +89,7 @@ export const AuthService = {
       return toSessionUser(user!)
     } catch (error) {
       if (isUniqueViolation(error)) {
-        throw createError({ statusCode: 409, statusMessage: 'Este email já está cadastrado' })
+        throw createError({ statusCode: 409, message: 'Este email já está cadastrado' })
       }
       throw error
     }

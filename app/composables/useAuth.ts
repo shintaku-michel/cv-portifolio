@@ -2,9 +2,9 @@ import type { SessionUser } from '../../shared/types/auth'
 
 function extractErrorMessage(error: unknown, fallback: string): string {
   if (error && typeof error === 'object' && 'data' in error) {
-    const data = (error as { data?: { statusMessage?: string, message?: string } }).data
-    if (data?.statusMessage) return data.statusMessage
+    const data = (error as { data?: { message?: string, statusMessage?: string } }).data
     if (data?.message) return data.message
+    if (data?.statusMessage) return data.statusMessage
   }
   return fallback
 }
