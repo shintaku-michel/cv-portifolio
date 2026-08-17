@@ -1,5 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { AuthService } from '../services/auth.service'
+import { slugify } from '../utils/slug'
 import { db } from './client'
 import { categories, projects, projectTechnologies, tags, technologies, users } from './schema'
 
@@ -13,17 +14,6 @@ const technologyNames = ['Vue', 'Nuxt', 'TypeScript', 'JavaScript', 'GraphQL', '
 const categoryNames = ['Vue', 'Nuxt', 'TypeScript', 'Frontend', 'Backend', 'Acessibilidade', 'Design Systems', 'JavaScript']
 
 const tagNames = ['Tutorial', 'Estudo de caso', 'Arquitetura', 'Performance', 'Boas práticas']
-
-const DIACRITICS_REGEX = /[̀-ͯ]/g
-
-function slugify(value: string) {
-  return value
-    .normalize('NFD')
-    .replace(DIACRITICS_REGEX, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-}
 
 async function seedUsers() {
   const seedAccounts = [

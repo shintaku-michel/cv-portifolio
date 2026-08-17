@@ -1,0 +1,63 @@
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+type Tag {
+  id: ID!
+  name: String!
+  slug: String!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  slug: String!
+  excerpt: String!
+  content: String!
+  coverImage: String
+  status: PostStatus!
+  author: User!
+  category: Category
+  tags: [Tag!]!
+  publishedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CreatePostInput {
+  title: String!
+  slug: String!
+  excerpt: String!
+  content: String!
+  coverImage: String
+  categoryId: ID
+  tagIds: [ID!]
+}
+
+input UpdatePostInput {
+  title: String
+  slug: String
+  excerpt: String
+  content: String
+  coverImage: String
+  categoryId: ID
+  tagIds: [ID!]
+}
+
+extend type Query {
+  """Posts publicados; ADMIN autenticado também vê rascunhos."""
+  posts: [Post!]!
+  """Busca por slug. Retorna null se DRAFT e o chamador não for ADMIN."""
+  post(slug: String!): Post
+  """Não há campo `featured` no modelo — retorna os publicados mais recentes."""
+  featuredPosts: [Post!]!
+}
+
+extend type Mutation {
+  createPost(input: CreatePostInput!): Post!
+  updatePost(id: ID!, input: UpdatePostInput!): Post!
+  publishPost(id: ID!): Post!
+  unpublishPost(id: ID!): Post!
+  deletePost(id: ID!): Boolean!
+}

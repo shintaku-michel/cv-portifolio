@@ -4,6 +4,7 @@ import { createError } from 'h3'
 import type { SessionUser, UserRole } from '../../shared/types/auth'
 import { db } from '../database/client'
 import { sessions, users } from '../database/schema'
+import { isUniqueViolation } from '../utils/db-errors'
 import { hashPassword, verifyPassword } from '../utils/password'
 
 export type { SessionUser } from '../../shared/types/auth'
@@ -12,14 +13,6 @@ const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000
 
 function toSessionUser(user: { id: string, name: string, email: string, role: UserRole }): SessionUser {
   return { id: user.id, name: user.name, email: user.email, role: user.role }
-}
-
-function isUniqueViolation(error: unknown): boolean {
-  if (typeof error !== 'object' || error === null) {
-    return false
-  }
-  const { code, cause } = error as { code?: string, cause?: unknown }
-  return code === '23505' || isUniqueViolation(cause)
 }
 
 export const AuthService = {

@@ -1,0 +1,9 @@
+type Technology {
+  id: ID!
+  name: String!
+  slug: String!
+}
+
+extend type Query {
+  technologies: [Technology!]!
+}

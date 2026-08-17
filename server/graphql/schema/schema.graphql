@@ -1,0 +1,13 @@
+scalar DateTime
+
+"""
+Raiz do schema. Cada domínio estende Query/Mutation no seu próprio
+arquivo .graphql (seção 21 do CLAUDE.md).
+"""
+type Query {
+  _empty: String
+}
+
+type Mutation {
+  _empty: String
+}

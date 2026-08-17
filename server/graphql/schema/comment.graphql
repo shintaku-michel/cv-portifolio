@@ -1,0 +1,44 @@
+enum CommentStatus {
+  PENDING
+  VISIBLE
+  HIDDEN
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  user: User!
+  postId: ID!
+  parentId: ID
+  status: CommentStatus!
+  """Respostas de 1º nível apenas (seção 16). Só inclui as VISIBLE, salvo para o autor/ADMIN."""
+  replies: [Comment!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CreateCommentInput {
+  postId: ID!
+  content: String!
+  parentId: ID
+}
+
+extend type Query {
+  """Apenas comentários VISIBLE de 1º nível (com respostas VISIBLE aninhadas)."""
+  comments(postId: ID!): [Comment!]!
+  """Exige ADMIN."""
+  pendingComments: [Comment!]!
+  """Retorna null se PENDING/HIDDEN e o chamador não for o autor nem ADMIN."""
+  comment(id: ID!): Comment
+}
+
+extend type Mutation {
+  """Exige usuário autenticado. Sempre cria como PENDING."""
+  createComment(input: CreateCommentInput!): Comment!
+  """Exige ADMIN."""
+  approveComment(id: ID!): Comment!
+  """Exige ADMIN."""
+  hideComment(id: ID!): Comment!
+  """Exige ser o autor do comentário ou ADMIN."""
+  deleteComment(id: ID!): Boolean!
+}
