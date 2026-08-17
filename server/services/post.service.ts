@@ -88,6 +88,14 @@ export const PostService = {
     return toPost(row)
   },
 
+  async getById(id: string) {
+    const row = await db.query.posts.findFirst({
+      with: withRelations,
+      where: (p, { eq }) => eq(p.id, id)
+    })
+    return row ? toPost(row) : null
+  },
+
   async create(authorId: string, input: CreatePostInput) {
     try {
       const [post] = await db

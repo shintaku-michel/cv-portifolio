@@ -11,6 +11,11 @@ export const postResolvers = {
     post: (_parent: unknown, { slug }: { slug: string }, context: GraphQLContext) =>
       PostService.getBySlug(slug, { includeDraft: context.user?.role === 'ADMIN' }),
 
+    postById: (_parent: unknown, { id }: { id: string }, context: GraphQLContext) => {
+      assertAdmin(context.user)
+      return PostService.getById(id)
+    },
+
     featuredPosts: () => PostService.getFeatured()
   },
 

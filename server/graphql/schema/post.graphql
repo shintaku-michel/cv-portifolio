@@ -46,10 +46,13 @@ input UpdatePostInput {
 }
 
 extend type Query {
+  tags: [Tag!]!
   """Posts publicados; ADMIN autenticado também vê rascunhos."""
   posts: [Post!]!
   """Busca por slug. Retorna null se DRAFT e o chamador não for ADMIN."""
   post(slug: String!): Post
+  """Busca por ID, para o formulário de edição do admin. Exige ADMIN."""
+  postById(id: ID!): Post
   """Não há campo `featured` no modelo — retorna os publicados mais recentes."""
   featuredPosts: [Post!]!
 }

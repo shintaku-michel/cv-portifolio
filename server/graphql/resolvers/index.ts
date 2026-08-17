@@ -3,6 +3,7 @@ import { categoryResolvers } from './category'
 import { commentResolvers } from './comment'
 import { postResolvers } from './post'
 import { projectResolvers } from './project'
+import { tagResolvers } from './tag'
 import { technologyResolvers } from './technology'
 
 export const resolvers = {
@@ -10,6 +11,7 @@ export const resolvers = {
   Query: {
     ...technologyResolvers.Query,
     ...categoryResolvers.Query,
+    ...tagResolvers.Query,
     ...projectResolvers.Query,
     ...postResolvers.Query,
     ...commentResolvers.Query
