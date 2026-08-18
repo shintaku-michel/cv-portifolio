@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge'
+import CommentSection from '@/components/posts/CommentSection.vue'
+import LikeButton from '@/components/posts/LikeButton.vue'
+import ShareButton from '@/components/posts/ShareButton.vue'
 import type { Post } from '#shared/types/post'
 
 const route = useRoute()
@@ -8,7 +11,7 @@ const slug = route.params.slug as string
 const QUERY = `
   query PostDetail($slug: String!) {
     post(slug: $slug) {
-      id title slug excerpt content coverImage publishedAt
+      id title slug excerpt content coverImage publishedAt likesCount likedByMe
       author { name }
       category { id name }
       tags { id name }
@@ -26,7 +29,18 @@ if (!data.value?.post) {
 
 const post = computed(() => data.value!.post!)
 
-useHead({ title: post.value.title })
+const requestUrl = useRequestURL()
+const postUrl = computed(() => `${requestUrl.origin}/posts/${post.value.slug}`)
+
+useSeoMeta({
+  title: post.value.title,
+  description: post.value.excerpt,
+  ogTitle: post.value.title,
+  ogDescription: post.value.excerpt,
+  ogImage: post.value.coverImage ?? undefined,
+  ogUrl: postUrl.value,
+  twitterCard: 'summary_large_image'
+})
 
 const renderedContent = computed(() => renderMarkdown(post.value.content))
 
@@ -70,5 +84,12 @@ function formatDate(value: string | null) {
         {{ tag.name }}
       </Badge>
     </div>
+
+    <div class="my-8 flex gap-3">
+      <LikeButton :post-id="post.id" :liked="post.likedByMe" :count="post.likesCount" />
+      <ShareButton :title="post.title" :url="postUrl" />
+    </div>
+
+    <CommentSection :post-id="post.id" />
   </article>
 </template>

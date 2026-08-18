@@ -2,7 +2,7 @@ import { createSchema } from 'graphql-yoga'
 import type { GraphQLContext } from '../context'
 import { resolvers } from '../resolvers'
 
-const SCHEMA_FILES = ['schema', 'user', 'technology', 'category', 'project', 'post', 'comment']
+const SCHEMA_FILES = ['schema', 'user', 'technology', 'category', 'project', 'post', 'comment', 'like']
 
 // Em dev o asset driver (fs) retorna string; no build de produção os
 // server assets são embutidos como bytes (Uint8Array), por isso decodifica.

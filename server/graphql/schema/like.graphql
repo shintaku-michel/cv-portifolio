@@ -1,0 +1,12 @@
+extend type Post {
+  likesCount: Int!
+  """false quando não autenticado."""
+  likedByMe: Boolean!
+}
+
+extend type Mutation {
+  """Exige usuário autenticado. Idempotente se já curtido."""
+  likePost(postId: ID!): Post!
+  """Exige usuário autenticado. Idempotente se não curtido."""
+  unlikePost(postId: ID!): Post!
+}

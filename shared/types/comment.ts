@@ -10,6 +10,7 @@ export interface Comment {
   postId: string
   parentId: string | null
   status: CommentStatus
+  replies: Comment[]
   createdAt: string
   updatedAt: string
 }

@@ -25,6 +25,8 @@ export interface Post {
   author: SessionUser
   category: Category | null
   tags: Tag[]
+  likesCount: number
+  likedByMe: boolean
   publishedAt: string | null
   createdAt: string
   updatedAt: string

@@ -1,6 +1,7 @@
 import { DateTimeScalar } from '../scalars/date-time'
 import { categoryResolvers } from './category'
 import { commentResolvers } from './comment'
+import { likeResolvers } from './like'
 import { postResolvers } from './post'
 import { projectResolvers } from './project'
 import { tagResolvers } from './tag'
@@ -22,7 +23,9 @@ export const resolvers = {
     ...projectResolvers.Mutation,
     ...postResolvers.Mutation,
     ...commentResolvers.Mutation,
-    ...userResolvers.Mutation
+    ...userResolvers.Mutation,
+    ...likeResolvers.Mutation
   },
-  Comment: commentResolvers.Comment
+  Comment: commentResolvers.Comment,
+  Post: likeResolvers.Post
 }
