@@ -40,7 +40,13 @@ async function toggle() {
 </script>
 
 <template>
-  <Button variant="outline" :disabled="pending" @click="toggle">
+  <Button
+    variant="outline"
+    :disabled="pending"
+    :aria-pressed="liked"
+    :aria-label="`${liked ? 'Descurtir' : 'Curtir'} (${count} ${count === 1 ? 'curtida' : 'curtidas'})`"
+    @click="toggle"
+  >
     <Heart :class="['size-4', liked ? 'fill-current text-destructive' : '']" />
     {{ count }}
   </Button>

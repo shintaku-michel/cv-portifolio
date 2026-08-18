@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { index, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { categories } from './categories'
 import { users } from './users'
 
@@ -17,4 +17,4 @@ export const posts = pgTable('posts', {
   publishedAt: timestamp('published_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
-})
+}, table => [index('posts_status_idx').on(table.status)])

@@ -1,4 +1,4 @@
-import { boolean, date, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { boolean, date, index, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 
 export const projectStatusEnum = pgEnum('project_status', ['DRAFT', 'PUBLISHED'])
 
@@ -19,4 +19,4 @@ export const projects = pgTable('projects', {
   endDate: date('end_date'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
-})
+}, table => [index('projects_status_idx').on(table.status)])
