@@ -26,6 +26,11 @@ export const commentResolvers = {
         return null
       }
       return comment
+    },
+
+    adminComments: (_parent: unknown, { status }: { status: 'PENDING' | 'VISIBLE' | 'HIDDEN' }, context: GraphQLContext) => {
+      assertAdmin(context.user)
+      return CommentService.getByStatus(status)
     }
   },
 

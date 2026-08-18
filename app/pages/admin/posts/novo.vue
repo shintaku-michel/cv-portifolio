@@ -2,7 +2,7 @@
 import PostForm from '@/components/admin/PostForm.vue'
 import type { Category, PostInput, Tag } from '#shared/types/post'
 
-definePageMeta({ middleware: 'admin' })
+definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Novo post' })
 
 const { data } = await useAsyncData('admin-post-novo-refs', () =>

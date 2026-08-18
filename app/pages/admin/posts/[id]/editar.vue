@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import PostForm from '@/components/admin/PostForm.vue'
 import type { Category, Post, PostInput, Tag } from '#shared/types/post'
 
-definePageMeta({ middleware: 'admin' })
+definePageMeta({ middleware: 'admin', layout: 'admin' })
 
 const route = useRoute()
 const id = route.params.id as string

@@ -5,6 +5,7 @@ import { postResolvers } from './post'
 import { projectResolvers } from './project'
 import { tagResolvers } from './tag'
 import { technologyResolvers } from './technology'
+import { userResolvers } from './user'
 
 export const resolvers = {
   DateTime: DateTimeScalar,
@@ -14,12 +15,14 @@ export const resolvers = {
     ...tagResolvers.Query,
     ...projectResolvers.Query,
     ...postResolvers.Query,
-    ...commentResolvers.Query
+    ...commentResolvers.Query,
+    ...userResolvers.Query
   },
   Mutation: {
     ...projectResolvers.Mutation,
     ...postResolvers.Mutation,
-    ...commentResolvers.Mutation
+    ...commentResolvers.Mutation,
+    ...userResolvers.Mutation
   },
   Comment: commentResolvers.Comment
 }

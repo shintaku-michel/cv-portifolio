@@ -8,6 +8,7 @@ type Comment {
   id: ID!
   content: String!
   user: User!
+  post: Post!
   postId: ID!
   parentId: ID
   status: CommentStatus!
@@ -30,6 +31,8 @@ extend type Query {
   pendingComments: [Comment!]!
   """Retorna null se PENDING/HIDDEN e o chamador não for o autor nem ADMIN."""
   comment(id: ID!): Comment
+  """Todos os comentários com o status informado, de qualquer post. Exige ADMIN."""
+  adminComments(status: CommentStatus!): [Comment!]!
 }
 
 extend type Mutation {

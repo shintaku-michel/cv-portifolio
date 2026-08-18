@@ -9,3 +9,13 @@ type User {
   email: String!
   role: UserRole!
 }
+
+extend type Query {
+  """Lista todos os usuários. Exige ADMIN."""
+  users: [User!]!
+}
+
+extend type Mutation {
+  """Altera a role de um usuário. Exige ADMIN; não permite auto-rebaixamento."""
+  updateUserRole(id: ID!, role: UserRole!): User!
+}

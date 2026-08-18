@@ -84,4 +84,12 @@ describe('CommentService (integração)', () => {
     const afterHide = await CommentService.getVisible(postId)
     expect(afterHide.some(c => c.id === visible!.id)).toBe(false)
   })
+
+  it('getByStatus (admin) lista comentários de qualquer post pelo status, com o post anexado', async () => {
+    const hidden = await CommentService.getByStatus('HIDDEN')
+    const found = hidden.find(c => c.postId === postId)
+
+    expect(found).toBeDefined()
+    expect(found!.post.id).toBe(postId)
+  })
 })

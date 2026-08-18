@@ -9,11 +9,15 @@ export type CreateCommentInput = {
   parentId?: string | null
 }
 
+type CommentStatus = 'PENDING' | 'VISIBLE' | 'HIDDEN'
+
+const withRelations = { user: true, post: true } as const
+
 export const CommentService = {
   async getVisible(postId: string) {
     return db.query.comments.findMany({
       with: {
-        user: true,
+        ...withRelations,
         replies: {
           with: { user: true },
           where: (r, { eq }) => eq(r.status, 'VISIBLE'),
@@ -26,16 +30,22 @@ export const CommentService = {
   },
 
   async getPending() {
+    return CommentService.getByStatus('PENDING')
+  },
+
+  // Admin: todos os comentários com o status informado, de qualquer post
+  // (seção 15 — admin visualiza pendentes, publicados e ocultos).
+  async getByStatus(status: CommentStatus) {
     return db.query.comments.findMany({
-      with: { user: true },
-      where: (c, { eq }) => eq(c.status, 'PENDING'),
-      orderBy: (c, { asc }) => [asc(c.createdAt)]
+      with: withRelations,
+      where: (c, { eq }) => eq(c.status, status),
+      orderBy: (c, { desc }) => [desc(c.createdAt)]
     })
   },
 
   async getById(id: string) {
     const comment = await db.query.comments.findFirst({
-      with: { user: true },
+      with: withRelations,
       where: (c, { eq }) => eq(c.id, id)
     })
     return comment ?? null
@@ -66,7 +76,7 @@ export const CommentService = {
     return CommentService.getById(comment!.id)
   },
 
-  async setStatus(id: string, status: 'PENDING' | 'VISIBLE' | 'HIDDEN') {
+  async setStatus(id: string, status: CommentStatus) {
     const [updated] = await db.update(comments).set({ status, updatedAt: new Date() }).where(eq(comments.id, id)).returning()
     if (!updated) {
       throw createError({ statusCode: 404, message: 'Comentário não encontrado' })

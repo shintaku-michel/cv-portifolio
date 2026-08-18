@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import ProjectForm from '@/components/admin/ProjectForm.vue'
 import type { Project, ProjectInput, Technology } from '#shared/types/project'
 
-definePageMeta({ middleware: 'admin' })
+definePageMeta({ middleware: 'admin', layout: 'admin' })
 
 const route = useRoute()
 const id = route.params.id as string

@@ -2,7 +2,7 @@
 import ProjectForm from '@/components/admin/ProjectForm.vue'
 import type { ProjectInput, Technology } from '#shared/types/project'
 
-definePageMeta({ middleware: 'admin' })
+definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Novo projeto' })
 
 const { data } = await useAsyncData('admin-projeto-novo-technologies', () =>
