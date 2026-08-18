@@ -2,6 +2,8 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import ErrorState from '@/components/common/ErrorState.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
 import type { SessionUser, UserRole } from '#shared/types/auth'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -9,7 +11,7 @@ useHead({ title: 'Admin · Usuários' })
 
 const { user: currentUser } = useAuth()
 
-const { data, refresh } = await useAsyncData('admin-usuarios', () =>
+const { data, pending, error, refresh } = await useAsyncData('admin-usuarios', () =>
   useGraphQL<{ users: SessionUser[] }>(`{ users { id name email role } }`)
 )
 
@@ -26,8 +28,8 @@ async function toggleRole(targetUser: SessionUser) {
       { id: targetUser.id, role: newRole }
     )
     await refresh()
-  } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Erro ao atualizar usuário'
+  } catch (err) {
+    errorMessage.value = err instanceof Error ? err.message : 'Erro ao atualizar usuário'
   } finally {
     actionPending.value = null
   }
@@ -43,7 +45,10 @@ async function toggleRole(targetUser: SessionUser) {
       {{ errorMessage }}
     </p>
 
-    <Table>
+    <LoadingState v-if="pending" />
+    <ErrorState v-else-if="error" message="Não foi possível carregar os usuários." />
+
+    <Table v-else>
       <TableHeader>
         <TableRow>
           <TableHead>Nome</TableHead>

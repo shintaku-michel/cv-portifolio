@@ -20,10 +20,13 @@ const QUERY = `
   }
 `
 
-const { data } = await useAsyncData(`projeto-${slug}`, () =>
+const { data, error } = await useAsyncData(`projeto-${slug}`, () =>
   useGraphQL<{ project: Project | null, projects: Project[] }>(QUERY, { slug })
 )
 
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Não foi possível carregar o projeto' })
+}
 if (!data.value?.project) {
   throw createError({ statusCode: 404, statusMessage: 'Projeto não encontrado' })
 }

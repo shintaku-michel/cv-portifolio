@@ -5,6 +5,13 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
+  app: {
+    head: {
+      htmlAttrs: { lang: 'pt-BR' },
+      title: 'Portfolio CMS',
+      titleTemplate: '%s · Portfolio CMS'
+    }
+  },
   modules: ['@nuxt/eslint'],
   css: ['~/assets/css/tailwind.css'],
   components: [

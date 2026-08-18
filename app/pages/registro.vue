@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+useHead({ title: 'Criar conta' })
+
 const { user, pending, error, fetchUser, register } = useAuth()
 
 const name = ref('')
@@ -27,7 +29,7 @@ async function onSubmit() {
   <div class="flex min-h-screen items-center justify-center p-4">
     <Card class="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Criar conta</CardTitle>
+        <CardTitle><h1 class="contents">Criar conta</h1></CardTitle>
         <CardDescription>Cadastre-se para curtir e comentar nos posts do blog.</CardDescription>
       </CardHeader>
       <CardContent>

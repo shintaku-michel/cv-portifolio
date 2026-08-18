@@ -19,9 +19,15 @@ async function onLogout() {
 
 <template>
   <div class="min-h-screen">
+    <a
+      href="#main"
+      class="sr-only rounded-md bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50"
+    >
+      Pular para o conteúdo
+    </a>
     <header class="border-b">
       <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-3">
-        <nav class="flex flex-wrap gap-1">
+        <nav aria-label="Administração" class="flex flex-wrap gap-1">
           <NuxtLink
             v-for="link in links"
             :key="link.to"
@@ -40,7 +46,7 @@ async function onLogout() {
         </div>
       </div>
     </header>
-    <main>
+    <main id="main">
       <slot />
     </main>
   </div>

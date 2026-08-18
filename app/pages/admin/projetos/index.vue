@@ -2,6 +2,9 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import EmptyState from '@/components/common/EmptyState.vue'
+import ErrorState from '@/components/common/ErrorState.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
 import type { Project } from '#shared/types/project'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -16,7 +19,7 @@ const QUERY = `
   }
 `
 
-const { data, refresh } = await useAsyncData('admin-projetos', () =>
+const { data, pending, error, refresh } = await useAsyncData('admin-projetos', () =>
   useGraphQL<{ projects: Project[] }>(QUERY)
 )
 
@@ -60,7 +63,11 @@ async function remove(project: Project) {
       </NuxtLink>
     </div>
 
-    <Table>
+    <LoadingState v-if="pending" />
+    <ErrorState v-else-if="error" message="Não foi possível carregar os projetos." />
+    <EmptyState v-else-if="!data?.projects.length" message="Nenhum projeto cadastrado ainda." />
+
+    <Table v-else>
       <TableHeader>
         <TableRow>
           <TableHead>Título</TableHead>

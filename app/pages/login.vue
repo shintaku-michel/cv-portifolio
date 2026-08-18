@@ -4,6 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+useHead({ title: 'Login' })
+
 const { user, pending, error, fetchUser, login, logout } = useAuth()
 
 const email = ref('')
@@ -27,7 +29,7 @@ async function onSubmit() {
   <div class="flex min-h-screen items-center justify-center p-4">
     <Card class="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
+        <CardTitle><h1 class="contents">Login</h1></CardTitle>
         <CardDescription>Acesse com sua conta do Portfolio CMS.</CardDescription>
       </CardHeader>
       <CardContent>

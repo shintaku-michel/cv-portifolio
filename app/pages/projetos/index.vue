@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge'
+import EmptyState from '@/components/common/EmptyState.vue'
+import ErrorState from '@/components/common/ErrorState.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
 import type { Project, Technology } from '#shared/types/project'
 
 useHead({ title: 'Projetos' })
@@ -38,16 +41,13 @@ const filteredProjects = computed(() => {
       Trabalhos, sistemas e experiências que desenvolvi.
     </p>
 
-    <div v-if="pending">
-      Carregando…
-    </div>
-    <div v-else-if="error" role="alert" class="text-destructive">
-      Não foi possível carregar os projetos.
-    </div>
+    <LoadingState v-if="pending" />
+    <ErrorState v-else-if="error" message="Não foi possível carregar os projetos." />
     <template v-else>
       <div v-if="data?.technologies.length" class="mb-8 flex flex-wrap gap-2">
         <button
           type="button"
+          :aria-pressed="!selectedTechnologyId"
           class="rounded-full border px-3 py-1 text-sm transition-colors"
           :class="!selectedTechnologyId ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'"
           @click="selectedTechnologyId = ''"
@@ -58,6 +58,7 @@ const filteredProjects = computed(() => {
           v-for="tech in data.technologies"
           :key="tech.id"
           type="button"
+          :aria-pressed="selectedTechnologyId === tech.id"
           class="rounded-full border px-3 py-1 text-sm transition-colors"
           :class="selectedTechnologyId === tech.id ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'"
           @click="selectedTechnologyId = tech.id"
@@ -66,9 +67,7 @@ const filteredProjects = computed(() => {
         </button>
       </div>
 
-      <p v-if="filteredProjects.length === 0" class="text-muted-foreground">
-        Nenhum projeto encontrado.
-      </p>
+      <EmptyState v-if="filteredProjects.length === 0" message="Nenhum projeto encontrado." />
 
       <div v-else class="grid gap-6 sm:grid-cols-2">
         <NuxtLink

@@ -20,10 +20,13 @@ const QUERY = `
   }
 `
 
-const { data, refresh } = await useAsyncData(`admin-post-${id}`, () =>
+const { data, error, refresh } = await useAsyncData(`admin-post-${id}`, () =>
   useGraphQL<{ postById: Post | null, categories: Category[], tags: Tag[] }>(QUERY, { id })
 )
 
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Não foi possível carregar o post' })
+}
 if (!data.value?.postById) {
   throw createError({ statusCode: 404, statusMessage: 'Post não encontrado' })
 }
@@ -46,8 +49,8 @@ async function onSubmit(input: PostInput) {
   try {
     await useGraphQL(MUTATION, { id, input })
     await refresh()
-  } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Erro ao salvar post'
+  } catch (err) {
+    errorMessage.value = err instanceof Error ? err.message : 'Erro ao salvar post'
   } finally {
     submitting.value = false
   }

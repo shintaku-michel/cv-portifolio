@@ -19,10 +19,13 @@ const QUERY = `
   }
 `
 
-const { data, refresh } = await useAsyncData(`admin-projeto-${id}`, () =>
+const { data, error, refresh } = await useAsyncData(`admin-projeto-${id}`, () =>
   useGraphQL<{ projectById: Project | null, technologies: Technology[] }>(QUERY, { id })
 )
 
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Não foi possível carregar o projeto' })
+}
 if (!data.value?.projectById) {
   throw createError({ statusCode: 404, statusMessage: 'Projeto não encontrado' })
 }
@@ -45,8 +48,8 @@ async function onSubmit(input: ProjectInput) {
   try {
     await useGraphQL(MUTATION, { id, input })
     await refresh()
-  } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Erro ao salvar projeto'
+  } catch (err) {
+    errorMessage.value = err instanceof Error ? err.message : 'Erro ao salvar projeto'
   } finally {
     submitting.value = false
   }

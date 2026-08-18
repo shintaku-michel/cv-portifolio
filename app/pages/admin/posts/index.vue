@@ -2,6 +2,9 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import EmptyState from '@/components/common/EmptyState.vue'
+import ErrorState from '@/components/common/ErrorState.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
 import type { Post } from '#shared/types/post'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -17,7 +20,7 @@ const QUERY = `
   }
 `
 
-const { data, refresh } = await useAsyncData('admin-posts', () =>
+const { data, pending, error, refresh } = await useAsyncData('admin-posts', () =>
   useGraphQL<{ posts: Post[] }>(QUERY)
 )
 
@@ -61,7 +64,11 @@ async function remove(post: Post) {
       </NuxtLink>
     </div>
 
-    <Table>
+    <LoadingState v-if="pending" />
+    <ErrorState v-else-if="error" message="Não foi possível carregar os posts." />
+    <EmptyState v-else-if="!data?.posts.length" message="Nenhum post cadastrado ainda." />
+
+    <Table v-else>
       <TableHeader>
         <TableRow>
           <TableHead>Título</TableHead>

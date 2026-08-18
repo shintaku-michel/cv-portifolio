@@ -19,10 +19,13 @@ const QUERY = `
   }
 `
 
-const { data } = await useAsyncData(`post-${slug}`, () =>
+const { data, error } = await useAsyncData(`post-${slug}`, () =>
   useGraphQL<{ post: Post | null }>(QUERY, { slug })
 )
 
+if (error.value) {
+  throw createError({ statusCode: 500, statusMessage: 'Não foi possível carregar o post' })
+}
 if (!data.value?.post) {
   throw createError({ statusCode: 404, statusMessage: 'Post não encontrado' })
 }

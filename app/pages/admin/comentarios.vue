@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import EmptyState from '@/components/common/EmptyState.vue'
+import ErrorState from '@/components/common/ErrorState.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
 import type { Comment, CommentStatus } from '#shared/types/comment'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -24,7 +27,7 @@ const QUERY = `
   }
 `
 
-const { data, refresh, pending } = await useAsyncData(
+const { data, refresh, pending, error } = await useAsyncData(
   () => `admin-comments-${activeStatus.value}`,
   () => useGraphQL<{ adminComments: Comment[] }>(QUERY, { status: activeStatus.value }),
   { watch: [activeStatus] }
@@ -77,6 +80,7 @@ async function remove(comment: Comment) {
         v-for="tab in statusTabs"
         :key="tab.value"
         type="button"
+        :aria-pressed="activeStatus === tab.value"
         class="rounded-full border px-3 py-1 text-sm transition-colors"
         :class="activeStatus === tab.value ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'"
         @click="activeStatus = tab.value"
@@ -85,12 +89,9 @@ async function remove(comment: Comment) {
       </button>
     </div>
 
-    <div v-if="pending">
-      Carregando…
-    </div>
-    <p v-else-if="!data?.adminComments.length" class="text-muted-foreground">
-      Nenhum comentário nesse status.
-    </p>
+    <LoadingState v-if="pending" />
+    <ErrorState v-else-if="error" message="Não foi possível carregar os comentários." />
+    <EmptyState v-else-if="!data?.adminComments.length" message="Nenhum comentário nesse status." />
 
     <Table v-else>
       <TableHeader>

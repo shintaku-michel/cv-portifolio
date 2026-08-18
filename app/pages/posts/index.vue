@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge'
+import EmptyState from '@/components/common/EmptyState.vue'
+import ErrorState from '@/components/common/ErrorState.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
 import type { Post } from '#shared/types/post'
 
 useHead({ title: 'Blog' })
@@ -33,15 +36,9 @@ function formatDate(value: string | null) {
       Artigos técnicos, tutoriais e relatos de projetos.
     </p>
 
-    <div v-if="pending">
-      Carregando…
-    </div>
-    <div v-else-if="error" role="alert" class="text-destructive">
-      Não foi possível carregar os posts.
-    </div>
-    <p v-else-if="!data?.posts.length" class="text-muted-foreground">
-      Nenhum post publicado ainda.
-    </p>
+    <LoadingState v-if="pending" />
+    <ErrorState v-else-if="error" message="Não foi possível carregar os posts." />
+    <EmptyState v-else-if="!data?.posts.length" message="Nenhum post publicado ainda." />
 
     <div v-else class="flex flex-col gap-6">
       <NuxtLink

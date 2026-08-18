@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import ErrorState from '@/components/common/ErrorState.vue'
 import type { Comment } from '#shared/types/comment'
 
 const props = defineProps<{
@@ -22,7 +23,7 @@ const QUERY = `
   }
 `
 
-const { data } = await useAsyncData(`comments-${props.postId}`, () =>
+const { data, error } = await useAsyncData(`comments-${props.postId}`, () =>
   useGraphQL<{ comments: Comment[] }>(QUERY, { postId: props.postId })
 )
 
@@ -81,7 +82,7 @@ function formatDate(value: string) {
     </h2>
 
     <div v-if="user" class="flex flex-col gap-2">
-      <Textarea v-model="newCommentContent" rows="3" placeholder="Escreva um comentário…" />
+      <Textarea v-model="newCommentContent" rows="3" placeholder="Escreva um comentário…" aria-label="Comentário" />
       <Button class="self-start" :disabled="submitting || !newCommentContent.trim()" @click="submitComment">
         {{ submitting ? 'Enviando…' : 'Comentar' }}
       </Button>
@@ -93,7 +94,8 @@ function formatDate(value: string) {
       <NuxtLink to="/login" class="underline">Faça login</NuxtLink> para comentar.
     </p>
 
-    <p v-if="!data?.comments.length" class="text-sm text-muted-foreground">
+    <ErrorState v-if="error" message="Não foi possível carregar os comentários." />
+    <p v-else-if="!data?.comments.length" class="text-sm text-muted-foreground">
       Nenhum comentário ainda.
     </p>
 
@@ -116,7 +118,7 @@ function formatDate(value: string) {
         </button>
 
         <div v-if="replyingToId === comment.id" class="ml-4 flex flex-col gap-2">
-          <Textarea v-model="replyContent" rows="2" placeholder="Escreva uma resposta…" />
+          <Textarea v-model="replyContent" rows="2" placeholder="Escreva uma resposta…" aria-label="Resposta" />
           <div class="flex gap-2">
             <Button size="sm" :disabled="replySubmitting || !replyContent.trim()" @click="submitReply(comment.id)">
               {{ replySubmitting ? 'Enviando…' : 'Responder' }}

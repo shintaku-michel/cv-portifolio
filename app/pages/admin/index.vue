@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import ErrorState from '@/components/common/ErrorState.vue'
+import LoadingState from '@/components/common/LoadingState.vue'
 import type { SessionUser } from '#shared/types/auth'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -14,7 +16,7 @@ const QUERY = `
   }
 `
 
-const { data } = await useAsyncData('admin-dashboard', () =>
+const { data, pending, error } = await useAsyncData('admin-dashboard', () =>
   useGraphQL<{
     projects: { id: string, status: string }[]
     posts: { id: string, status: string }[]
@@ -42,7 +44,10 @@ const stats = computed(() => {
     <h1 class="mb-6 text-2xl font-semibold">
       Dashboard
     </h1>
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <LoadingState v-if="pending" />
+    <ErrorState v-else-if="error" message="Não foi possível carregar o dashboard." />
+
+    <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <NuxtLink v-for="stat in stats" :key="stat.label" :to="stat.to">
         <Card class="transition-colors hover:bg-accent">
           <CardHeader>
