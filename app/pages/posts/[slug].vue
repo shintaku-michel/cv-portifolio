@@ -38,11 +38,32 @@ const postUrl = computed(() => `${requestUrl.origin}/posts/${post.value.slug}`)
 useSeoMeta({
   title: post.value.title,
   description: post.value.excerpt,
+  ogType: 'article',
   ogTitle: post.value.title,
   ogDescription: post.value.excerpt,
   ogImage: post.value.coverImage ?? undefined,
   ogUrl: postUrl.value,
-  twitterCard: 'summary_large_image'
+  twitterCard: 'summary_large_image',
+  twitterTitle: post.value.title,
+  twitterDescription: post.value.excerpt,
+  twitterImage: post.value.coverImage ?? undefined
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: postUrl.value }],
+  script: [{
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.value.title,
+      description: post.value.excerpt,
+      image: post.value.coverImage ?? undefined,
+      datePublished: post.value.publishedAt ?? undefined,
+      author: { '@type': 'Person', name: post.value.author.name },
+      mainEntityOfPage: postUrl.value
+    })
+  }]
 })
 
 const renderedContent = computed(() => renderMarkdown(post.value.content))

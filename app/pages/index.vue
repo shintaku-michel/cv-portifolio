@@ -6,7 +6,15 @@ import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import type { Project } from '#shared/types/project'
 
-useHead({ title: 'Início' })
+const requestUrl = useRequestURL()
+
+useSeoMeta({
+  title: 'Início',
+  description: 'Projetos, artigos e experiências construídos com Nuxt, GraphQL e PostgreSQL.',
+  ogTitle: 'Portfolio CMS',
+  ogUrl: requestUrl.origin
+})
+useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
 
 const { data, pending, error } = await useAsyncData('home-featured-projects', () =>
   useGraphQL<{ featuredProjects: Project[] }>(`

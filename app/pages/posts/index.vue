@@ -5,7 +5,15 @@ import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import type { Post } from '#shared/types/post'
 
-useHead({ title: 'Blog' })
+const requestUrl = useRequestURL()
+
+useSeoMeta({
+  title: 'Blog',
+  description: 'Artigos técnicos, tutoriais e relatos de projetos.',
+  ogTitle: 'Blog',
+  ogUrl: `${requestUrl.origin}/posts`
+})
+useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/posts` }] })
 
 const QUERY = `
   query PublicPosts {

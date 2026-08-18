@@ -5,7 +5,15 @@ import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import type { Project, Technology } from '#shared/types/project'
 
-useHead({ title: 'Projetos' })
+const requestUrl = useRequestURL()
+
+useSeoMeta({
+  title: 'Projetos',
+  description: 'Trabalhos, sistemas e experiências desenvolvidas.',
+  ogTitle: 'Projetos',
+  ogUrl: `${requestUrl.origin}/projetos`
+})
+useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/projetos` }] })
 
 const QUERY = `
   query PublicProjects {

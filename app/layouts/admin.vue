@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button'
 
 const { user, logout } = useAuth()
 
+// Regra única para todas as páginas admin (seção 31): nunca indexar.
+useSeoMeta({ robots: 'noindex, nofollow' })
+
 const links = [
   { to: '/admin', label: 'Dashboard' },
   { to: '/admin/projetos', label: 'Projetos' },

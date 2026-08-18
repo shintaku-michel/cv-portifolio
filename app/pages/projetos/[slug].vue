@@ -33,7 +33,37 @@ if (!data.value?.project) {
 
 const project = computed(() => data.value!.project!)
 
-useHead({ title: project.value.title })
+const requestUrl = useRequestURL()
+const projectUrl = computed(() => `${requestUrl.origin}/projetos/${project.value.slug}`)
+
+useSeoMeta({
+  title: project.value.title,
+  description: project.value.shortDescription,
+  ogTitle: project.value.title,
+  ogDescription: project.value.shortDescription,
+  ogImage: project.value.coverImage ?? undefined,
+  ogUrl: projectUrl.value,
+  twitterCard: 'summary_large_image',
+  twitterTitle: project.value.title,
+  twitterDescription: project.value.shortDescription,
+  twitterImage: project.value.coverImage ?? undefined
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: projectUrl.value }],
+  script: [{
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: project.value.title,
+      description: project.value.shortDescription,
+      image: project.value.coverImage ?? undefined,
+      url: projectUrl.value,
+      keywords: project.value.technologies.map(t => t.name).join(', ') || undefined
+    })
+  }]
+})
 
 // "Projeto relacionado" (seção 10): outros projetos publicados que
 // compartilham ao menos uma tecnologia, sem regra explícita no CLAUDE.md.
