@@ -6,14 +6,10 @@ import { Label } from '@/components/ui/label'
 
 useHead({ title: 'Login' })
 
-const { user, pending, error, fetchUser, login, logout } = useAuth()
+const { user, pending, error, login, logout } = useAuth()
 
 const email = ref('')
 const password = ref('')
-
-onMounted(() => {
-  fetchUser()
-})
 
 async function onSubmit() {
   try {

@@ -6,15 +6,11 @@ import { Label } from '@/components/ui/label'
 
 useHead({ title: 'Criar conta' })
 
-const { user, pending, error, fetchUser, register } = useAuth()
+const { user, pending, error, register } = useAuth()
 
 const name = ref('')
 const email = ref('')
 const password = ref('')
-
-onMounted(() => {
-  fetchUser()
-})
 
 async function onSubmit() {
   try {
