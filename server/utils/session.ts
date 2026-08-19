@@ -2,7 +2,12 @@ import type { H3Event } from 'h3'
 import { deleteCookie, getCookie, setCookie } from 'h3'
 import { AuthService, type SessionUser } from '../services/auth.service'
 
-export const SESSION_COOKIE_NAME = 'session_id'
+// Precisa ser exatamente "__session": é o único nome de cookie que o
+// Firebase Hosting repassa pro Cloud Run em requisições GET — qualquer
+// outro nome é descartado pela CDN antes de chegar no servidor (quebra
+// silenciosamente toda checagem de sessão em SSR).
+// https://firebase.google.com/docs/hosting/cloud-run
+export const SESSION_COOKIE_NAME = '__session'
 
 export function setSessionCookie(event: H3Event, sessionId: string, expiresAt: Date) {
   setCookie(event, SESSION_COOKIE_NAME, sessionId, {
