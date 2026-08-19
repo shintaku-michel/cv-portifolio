@@ -1,5 +1,6 @@
-import { createError, deleteCookie, defineEventHandler, getCookie, getQuery, getRequestURL, sendRedirect } from 'h3'
+import { createError, deleteCookie, defineEventHandler, getCookie, getQuery, sendRedirect } from 'h3'
 import { AuthService } from '../../../services/auth.service'
+import { getPublicOrigin } from '../../../utils/public-origin'
 import { setSessionCookie } from '../../../utils/session'
 import { OAUTH_REDIRECT_COOKIE, OAUTH_STATE_COOKIE } from '../google.get'
 
@@ -29,7 +30,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Falha na autenticação com o Google (state inválido)' })
   }
 
-  const callbackUrl = new URL('/api/auth/google/callback', getRequestURL(event).origin)
+  const callbackUrl = new URL('/api/auth/google/callback', getPublicOrigin(event))
 
   const tokenResponse = await $fetch<GoogleTokenResponse>('https://oauth2.googleapis.com/token', {
     method: 'POST',

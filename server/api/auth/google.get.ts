@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto'
-import { createError, defineEventHandler, getQuery, getRequestURL, sendRedirect, setCookie } from 'h3'
+import { createError, defineEventHandler, getQuery, sendRedirect, setCookie } from 'h3'
+import { getPublicOrigin } from '../../utils/public-origin'
 
 export const OAUTH_STATE_COOKIE = 'google_oauth_state'
 
@@ -19,7 +20,7 @@ export default defineEventHandler((event) => {
   const redirectTarget = String(getQuery(event).redirect ?? '/')
   setCookie(event, OAUTH_REDIRECT_COOKIE, redirectTarget, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/', maxAge: 600 })
 
-  const callbackUrl = new URL('/api/auth/google/callback', getRequestURL(event).origin)
+  const callbackUrl = new URL('/api/auth/google/callback', getPublicOrigin(event))
 
   const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth')
   authUrl.searchParams.set('client_id', process.env.GOOGLE_CLIENT_ID)
