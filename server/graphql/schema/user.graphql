@@ -17,7 +17,15 @@ extend type Query {
   users: [User!]!
 }
 
+input UpdateProfileInput {
+  bio: String
+  avatarUrl: String
+}
+
 extend type Mutation {
   """Altera a role de um usuário. Exige ADMIN; não permite auto-rebaixamento."""
   updateUserRole(id: ID!, role: UserRole!): User!
+
+  """Atualiza bio/foto do próprio admin autenticado. Exige ADMIN."""
+  updateProfile(input: UpdateProfileInput!): User!
 }

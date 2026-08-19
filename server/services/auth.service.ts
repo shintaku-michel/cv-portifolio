@@ -24,7 +24,8 @@ export const AuthService = {
     // para não permitir enumeração de contas.
     const invalidCredentialsError = createError({ statusCode: 401, message: 'Credenciais inválidas' })
 
-    if (!user) {
+    // Contas Google não têm senha (passwordHash null) — nunca autenticam por aqui.
+    if (!user || !user.passwordHash) {
       throw invalidCredentialsError
     }
 
@@ -39,6 +40,58 @@ export const AuthService = {
     await db.insert(sessions).values({ id: sessionId, userId: user.id, expiresAt })
 
     return { sessionId, expiresAt, user: toSessionUser(user) }
+  },
+
+  // Cria sessão a partir do perfil devolvido pelo Google — cria a conta no
+  // primeiro acesso (sem senha) ou atualiza nome/foto se já existir.
+  async loginWithGoogle(profile: { googleId: string, email: string, name: string, avatarUrl: string | null }) {
+    const normalizedEmail = profile.email.trim().toLowerCase()
+
+    const [existing] = await db
+      .select()
+      .from(users)
+      .where(eq(users.googleId, profile.googleId))
+      .limit(1)
+
+    let user = existing
+
+    if (!user) {
+      const [existingByEmail] = await db.select().from(users).where(eq(users.email, normalizedEmail)).limit(1)
+
+      if (existingByEmail) {
+        const [updated] = await db
+          .update(users)
+          .set({ googleId: profile.googleId, name: profile.name, avatarUrl: profile.avatarUrl, updatedAt: new Date() })
+          .where(eq(users.id, existingByEmail.id))
+          .returning()
+        user = updated
+      } else {
+        const [created] = await db
+          .insert(users)
+          .values({
+            name: profile.name,
+            email: normalizedEmail,
+            googleId: profile.googleId,
+            avatarUrl: profile.avatarUrl,
+            role: 'USER'
+          })
+          .returning()
+        user = created
+      }
+    } else {
+      const [updated] = await db
+        .update(users)
+        .set({ name: profile.name, avatarUrl: profile.avatarUrl, updatedAt: new Date() })
+        .where(eq(users.id, user.id))
+        .returning()
+      user = updated
+    }
+
+    const sessionId = randomBytes(32).toString('hex')
+    const expiresAt = new Date(Date.now() + SESSION_TTL_MS)
+    await db.insert(sessions).values({ id: sessionId, userId: user!.id, expiresAt })
+
+    return { sessionId, expiresAt, user: toSessionUser(user!) }
   },
 
   async logout(sessionId: string): Promise<void> {

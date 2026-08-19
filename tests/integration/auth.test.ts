@@ -81,4 +81,47 @@ describe('AuthService (integração)', () => {
 
     await db.delete(users).where(eq(users.email, newEmail))
   })
+
+  describe('loginWithGoogle', () => {
+    const googleEmail = `test-google-${randomUUID()}@example.com`
+    const googleId = `google-${randomUUID()}`
+
+    afterAll(async () => {
+      await db.delete(users).where(eq(users.email, googleEmail))
+    })
+
+    it('cria a conta no primeiro acesso, sem senha', async () => {
+      const { user } = await AuthService.loginWithGoogle({
+        googleId,
+        email: googleEmail,
+        name: 'Leitor Google',
+        avatarUrl: 'https://example.com/foto.png'
+      })
+
+      expect(user.email).toBe(googleEmail)
+      expect(user.role).toBe('USER')
+
+      const [row] = await db.select().from(users).where(eq(users.email, googleEmail))
+      expect(row!.passwordHash).toBeNull()
+      expect(row!.googleId).toBe(googleId)
+    })
+
+    it('reconhece o mesmo usuário em acessos seguintes e atualiza nome/foto', async () => {
+      const { user } = await AuthService.loginWithGoogle({
+        googleId,
+        email: googleEmail,
+        name: 'Leitor Google Renomeado',
+        avatarUrl: 'https://example.com/nova-foto.png'
+      })
+
+      expect(user.name).toBe('Leitor Google Renomeado')
+
+      const all = await db.select().from(users).where(eq(users.email, googleEmail))
+      expect(all).toHaveLength(1)
+    })
+
+    it('conta Google (sem senha) não consegue logar com senha', async () => {
+      await expect(AuthService.login(googleEmail, 'qualquerSenha123')).rejects.toMatchObject({ statusCode: 401 })
+    })
+  })
 })

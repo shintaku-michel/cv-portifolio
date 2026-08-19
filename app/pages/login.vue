@@ -7,9 +7,13 @@ import { Label } from '@/components/ui/label'
 useHead({ title: 'Login' })
 
 const { user, pending, error, login, logout } = useAuth()
+const route = useRoute()
 
 const email = ref('')
 const password = ref('')
+
+const redirectTarget = typeof route.query.redirect === 'string' ? route.query.redirect : '/'
+const googleLoginUrl = computed(() => `/api/auth/google?redirect=${encodeURIComponent(redirectTarget)}`)
 
 async function onSubmit() {
   try {
@@ -33,33 +37,47 @@ async function onSubmit() {
           <p class="text-sm">
             Autenticado como <strong>{{ user.name }}</strong> ({{ user.role }})
           </p>
+          <Button v-if="user.role === 'ADMIN'" variant="outline" as-child>
+            <NuxtLink to="/admin/perfil">Editar perfil</NuxtLink>
+          </Button>
           <Button variant="outline" @click="logout">
             Sair
           </Button>
         </div>
 
-        <form v-else class="flex flex-col gap-4" @submit.prevent="onSubmit">
+        <div v-else class="flex flex-col gap-6">
           <div class="flex flex-col gap-2">
-            <Label for="email">Email</Label>
-            <Input id="email" v-model="email" type="email" autocomplete="email" required />
+            <Button as-child>
+              <a :href="googleLoginUrl">Entrar com Google</a>
+            </Button>
+            <p class="text-center text-xs text-muted-foreground">
+              Para comentar e curtir posts.
+            </p>
           </div>
-          <div class="flex flex-col gap-2">
-            <Label for="password">Senha</Label>
-            <Input id="password" v-model="password" type="password" autocomplete="current-password" required />
+
+          <div class="flex items-center gap-3 text-xs text-muted-foreground">
+            <span class="h-px flex-1 bg-border" />
+            Acesso administrativo
+            <span class="h-px flex-1 bg-border" />
           </div>
-          <p v-if="error" role="alert" class="text-sm text-destructive">
-            {{ error }}
-          </p>
-          <Button type="submit" :disabled="pending">
-            {{ pending ? 'Entrando…' : 'Entrar' }}
-          </Button>
-          <p class="text-center text-sm text-muted-foreground">
-            Não tem conta?
-            <NuxtLink to="/registro" class="underline">
-              Cadastre-se
-            </NuxtLink>
-          </p>
-        </form>
+
+          <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
+            <div class="flex flex-col gap-2">
+              <Label for="email">Email</Label>
+              <Input id="email" v-model="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="flex flex-col gap-2">
+              <Label for="password">Senha</Label>
+              <Input id="password" v-model="password" type="password" autocomplete="current-password" required />
+            </div>
+            <p v-if="error" role="alert" class="text-sm text-destructive">
+              {{ error }}
+            </p>
+            <Button type="submit" variant="outline" :disabled="pending">
+              {{ pending ? 'Entrando…' : 'Entrar' }}
+            </Button>
+          </form>
+        </div>
       </CardContent>
     </Card>
   </div>

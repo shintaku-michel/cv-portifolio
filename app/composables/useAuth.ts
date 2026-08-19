@@ -40,27 +40,10 @@ export function useAuth() {
     }
   }
 
-  async function register(name: string, email: string, password: string) {
-    pending.value = true
-    error.value = null
-    try {
-      const response = await $fetch<{ user: SessionUser }>('/api/auth/register', {
-        method: 'POST',
-        body: { name, email, password }
-      })
-      user.value = response.user
-    } catch (err) {
-      error.value = extractErrorMessage(err, 'Não foi possível concluir o cadastro.')
-      throw new Error('register failed', { cause: err })
-    } finally {
-      pending.value = false
-    }
-  }
-
   async function logout() {
     await $fetch('/api/auth/logout', { method: 'POST' })
     user.value = null
   }
 
-  return { user, pending, error, fetchUser, login, register, logout }
+  return { user, pending, error, fetchUser, login, logout }
 }

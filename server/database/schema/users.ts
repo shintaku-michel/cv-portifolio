@@ -6,7 +6,9 @@ export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
-  passwordHash: text('password_hash').notNull(),
+  // Null para contas Google (leitores) — só o ADMIN tem senha.
+  passwordHash: text('password_hash'),
+  googleId: text('google_id').unique(),
   role: userRoleEnum('role').notNull().default('USER'),
   avatarUrl: text('avatar_url'),
   bio: text('bio'),

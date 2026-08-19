@@ -58,4 +58,23 @@ describe('UserService (integração)', () => {
     const updated = await UserService.updateRole(adminId, adminId, 'ADMIN')
     expect(updated.role).toBe('ADMIN')
   })
+
+  it('atualiza bio e avatarUrl do perfil', async () => {
+    const updated = await UserService.updateProfile(otherId, {
+      bio: 'Uma bio de teste',
+      avatarUrl: 'https://example.com/avatar.png'
+    })
+    expect(updated.bio).toBe('Uma bio de teste')
+    expect(updated.avatarUrl).toBe('https://example.com/avatar.png')
+  })
+
+  it('rejeita bio maior que o limite', async () => {
+    await expect(UserService.updateProfile(otherId, { bio: 'x'.repeat(281) })).rejects.toMatchObject({ statusCode: 400 })
+  })
+
+  it('permite limpar bio e avatarUrl enviando string vazia', async () => {
+    const updated = await UserService.updateProfile(otherId, { bio: '', avatarUrl: '' })
+    expect(updated.bio).toBeNull()
+    expect(updated.avatarUrl).toBeNull()
+  })
 })
