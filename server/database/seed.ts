@@ -102,7 +102,12 @@ async function seed() {
       .onConflictDoNothing()
   }
 
-  await seedUsers()
+  // Contas de teste com senha fixa e conhecida — só em dev. Em produção
+  // (NODE_ENV=production) ficam de fora por padrão; force com
+  // SEED_DEMO_ACCOUNTS=true se precisar delas lá mesmo assim.
+  if (process.env.NODE_ENV !== 'production' || process.env.SEED_DEMO_ACCOUNTS === 'true') {
+    await seedUsers()
+  }
   await promoteOwnerToAdmin()
 
   console.log('Seed concluído: technologies, categories, tags, projeto de exemplo e usuários.')

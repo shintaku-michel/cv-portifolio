@@ -1,0 +1,17 @@
+node_modules
+.nuxt
+.output
+.nitro
+.cache
+dist
+.git
+.env
+.env.*
+!.env.example
+tests
+test-results
+playwright-report
+blob-report
+playwright/.cache
+drizzle
+README.md

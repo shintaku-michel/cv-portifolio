@@ -1,6 +1,10 @@
 import { defineConfig } from 'drizzle-kit'
 
-process.loadEnvFile('.env')
+// Em CI/produção, DATABASE_URL já vem do ambiente — sem .env pra carregar
+// (o arquivo é gitignored, não existe no checkout).
+if (!process.env.DATABASE_URL) {
+  process.loadEnvFile('.env')
+}
 
 export default defineConfig({
   schema: './server/database/schema/index.ts',
