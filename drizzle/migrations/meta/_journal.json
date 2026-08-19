@@ -15,6 +15,13 @@
       "when": 1787018299238,
       "tag": "0001_clumsy_robin_chapel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787166770572,
+      "tag": "0002_giant_inertia",
+      "breakpoints": true
     }
   ]
 }

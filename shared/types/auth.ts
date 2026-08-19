@@ -5,4 +5,6 @@ export interface SessionUser {
   name: string
   email: string
   role: UserRole
+  avatarUrl?: string | null
+  bio?: string | null
 }
