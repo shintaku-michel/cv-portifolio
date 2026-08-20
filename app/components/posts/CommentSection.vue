@@ -131,10 +131,10 @@ function formatDate(value: string) {
         </div>
 
         <ul v-if="comment.replies.length" class="ml-4 flex flex-col gap-4 border-l pl-4">
-          <li v-for="reply in comment.replies" :key="reply.id" class="flex flex-col gap-1">
+          <li v-for="reply in comment.replies" :key="reply.id" class="flex flex-col">
             <span class="text-sm font-medium">{{ reply.user.name }}</span>
-            <span class="text-xs text-muted-foreground">{{ formatDate(reply.createdAt) }}</span>
-            <p class="mt-1 text-sm">
+            <span class="mt-2 text-xs text-muted-foreground">{{ formatDate(reply.createdAt) }}</span>
+            <p class="mt-2 text-sm">
               {{ reply.content }}
             </p>
           </li>
