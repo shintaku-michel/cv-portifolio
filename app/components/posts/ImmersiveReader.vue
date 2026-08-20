@@ -294,9 +294,9 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
           v-if="currentChunkIndex >= 0"
           class="pointer-events-none col-start-1 row-start-1 flex flex-col"
         >
-          <div class="bg-reader-mask/95" style="height: calc(50% - 10rem);" />
+          <div class="bg-background/90" style="height: calc(50% - 10rem);" />
           <div class="flex-1" />
-          <div class="bg-reader-mask/95" style="height: calc(50% - 10rem);" />
+          <div class="bg-background/90" style="height: calc(50% - 10rem);" />
         </div>
 
         <Transition
