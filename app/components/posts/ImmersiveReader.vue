@@ -27,7 +27,7 @@ interface ReaderSettings {
 const DEFAULT_SETTINGS: ReaderSettings = {
   textSize: 'large',
   theme: 'light',
-  focusMode: 'line',
+  focusMode: 'block',
   voiceGender: 'female',
   speed: 1.5
 }
@@ -48,7 +48,7 @@ const contentRef = ref<HTMLElement | null>(null)
 const textSizeClasses: Record<TextSize, string> = {
   small: 'text-lg',
   medium: 'text-2xl',
-  large: 'text-4xl'
+  large: 'text-6xl'
 }
 
 // Configurações ficam salvas no navegador — reabrir o leitor (mesmo em
@@ -216,12 +216,12 @@ onUnmounted(() => {
   window.speechSynthesis.cancel()
 })
 
-function isDimmed(blockIndex: number, sentenceIndex: number): boolean {
+function isActive(blockIndex: number, sentenceIndex: number): boolean {
   if (currentChunkIndex.value < 0) return false
   const current = chunks.value[currentChunkIndex.value]
   if (!current) return false
-  if (focusMode.value === 'block') return current.blockIndex !== blockIndex
-  return !(current.blockIndex === blockIndex && current.sentenceIndex === sentenceIndex)
+  if (focusMode.value === 'block') return current.blockIndex === blockIndex
+  return current.blockIndex === blockIndex && current.sentenceIndex === sentenceIndex
 }
 </script>
 
@@ -270,10 +270,10 @@ function isDimmed(blockIndex: number, sentenceIndex: number): boolean {
           tabindex="0"
           role="region"
           :aria-label="`Conteúdo do post: ${title}`"
-          class="col-start-1 row-start-1 overflow-y-auto px-6 py-10 sm:px-[10%]"
+          class="col-start-1 row-start-1 overflow-y-auto px-6 py-10 sm:px-12"
         >
           <div
-            class="mx-auto flex max-w-3xl flex-col gap-6 leading-relaxed font-medium"
+            class="flex w-full flex-col gap-6 leading-relaxed font-medium text-foreground"
             :class="textSizeClasses[textSize]"
           >
             <p v-for="(sentences, blockIndex) in blockSentences" :key="blockIndex">
@@ -281,11 +281,22 @@ function isDimmed(blockIndex: number, sentenceIndex: number): boolean {
                 v-for="(sentence, sentenceIndex) in sentences"
                 :key="sentenceIndex"
                 :data-chunk="chunks.findIndex(c => c.blockIndex === blockIndex && c.sentenceIndex === sentenceIndex)"
-                class="transition-colors duration-150"
-                :class="isDimmed(blockIndex, sentenceIndex) ? 'text-muted-foreground' : 'text-foreground'"
+                class="transition-[font-weight] duration-150"
+                :class="isActive(blockIndex, sentenceIndex) ? 'font-semibold' : 'font-normal'"
               >{{ sentence + ' ' }}</span>
             </p>
           </div>
+        </div>
+
+        <!-- Máscara de leitura: escurece tudo fora de uma janela central
+             fixa — o auto-scroll mantém a linha/bloco em foco dentro dela. -->
+        <div
+          v-if="currentChunkIndex >= 0"
+          class="pointer-events-none col-start-1 row-start-1 flex flex-col"
+        >
+          <div class="bg-background/90" style="height: calc(50% - 10rem);" />
+          <div class="flex-1" />
+          <div class="bg-background/90" style="height: calc(50% - 10rem);" />
         </div>
 
         <Transition
