@@ -46,37 +46,36 @@ const currentChunkIndex = ref(-1)
 const contentRef = ref<HTMLElement | null>(null)
 const wrapperRef = ref<HTMLElement | null>(null)
 
-// Janela da máscara: sempre 3 linhas de altura (igual ao Immersive
-// Reader de referência), centrada na frase em foco — não o tamanho
-// exato da frase, que variaria demais (uma frase de 1 linha deixaria a
-// janela minúscula, uma de 3 linhas encheria tudo).
+// Janela da máscara: sempre 3 linhas de altura, sempre centralizada no
+// meio da área de leitura — ela nunca se move. É a página que rola pra
+// trazer a frase em foco até dentro dela (não o contrário).
 const LINES_IN_WINDOW = 3
 const maskWindowTop = ref(0)
 const maskWindowHeight = ref(0)
-let maskUpdateRaf: number | null = null
 
 function updateMaskWindow() {
-  if (focusMode.value !== 'line' || currentChunkIndex.value < 0 || !contentRef.value || !wrapperRef.value) return
-  const el = contentRef.value.querySelector(`[data-chunk="${currentChunkIndex.value}"]`) as HTMLElement | null
-  if (!el) return
-  const wrapperRect = wrapperRef.value.getBoundingClientRect()
-  const elRect = el.getBoundingClientRect()
-  const lineHeight = Number.parseFloat(getComputedStyle(el).lineHeight) || elRect.height
+  if (focusMode.value !== 'line' || !contentRef.value) return
+  const referenceEl = contentRef.value.querySelector('[data-chunk]')
+  if (!referenceEl) return
+  const lineHeight = Number.parseFloat(getComputedStyle(referenceEl).lineHeight) || 0
+  if (!lineHeight) return
   const windowHeight = lineHeight * LINES_IN_WINDOW
-  const elCenter = elRect.top + elRect.height / 2
-  maskWindowTop.value = elCenter - windowHeight / 2 - wrapperRect.top
   maskWindowHeight.value = windowHeight
+  maskWindowTop.value = contentRef.value.clientHeight / 2 - windowHeight / 2
 }
 
-// O scroll suave até a frase em foco leva um tempinho pra terminar — em
-// vez de medir só uma vez (pegaria a posição errada, no meio da
-// animação), a máscara acompanha cada passo do scroll em tempo real.
-function scheduleMaskUpdate() {
-  if (maskUpdateRaf !== null) return
-  maskUpdateRaf = requestAnimationFrame(() => {
-    maskUpdateRaf = null
-    updateMaskWindow()
-  })
+// Rola o conteúdo pra alinhar o centro da frase em foco exatamente com o
+// centro da janela fixa da máscara (scrollIntoView por si só não garante
+// esse alinhamento preciso).
+function scrollChunkIntoMaskWindow(index: number) {
+  if (!contentRef.value) return
+  const el = contentRef.value.querySelector(`[data-chunk="${index}"]`) as HTMLElement | null
+  if (!el) return
+  const containerRect = contentRef.value.getBoundingClientRect()
+  const elRect = el.getBoundingClientRect()
+  const elCenterInScroll = contentRef.value.scrollTop + (elRect.top - containerRect.top) + elRect.height / 2
+  const target = elCenterInScroll - contentRef.value.clientHeight / 2
+  contentRef.value.scrollTo({ top: target, behavior: 'smooth' })
 }
 
 const textSizeClasses: Record<TextSize, string> = {
@@ -224,22 +223,31 @@ watch(open, (isOpen) => {
   }
 })
 
-// A linha em foco acompanha o scroll — some do campo de visão enquanto
-// lê e a página rola sozinha atrás dela.
+// A janela da máscara não se move — é o conteúdo que rola até a frase
+// em foco ficar alinhada com ela.
 watch(currentChunkIndex, async (index) => {
   if (index < 0) {
     return
   }
   await nextTick()
-  contentRef.value?.querySelector(`[data-chunk="${index}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   updateMaskWindow()
+  scrollChunkIntoMaskWindow(index)
 })
 
 watch(focusMode, async (mode) => {
   if (mode === 'line') {
     await nextTick()
     updateMaskWindow()
+    if (currentChunkIndex.value >= 0) scrollChunkIntoMaskWindow(currentChunkIndex.value)
   }
+})
+
+// O tamanho da linha (e por isso da janela de 3 linhas) muda com o
+// tamanho do texto — recalcula e realinha quando o leitor troca.
+watch(textSize, async () => {
+  await nextTick()
+  updateMaskWindow()
+  if (currentChunkIndex.value >= 0) scrollChunkIntoMaskWindow(currentChunkIndex.value)
 })
 
 function onEscapeKeyDown(event: KeyboardEvent) {
@@ -249,20 +257,22 @@ function onEscapeKeyDown(event: KeyboardEvent) {
   }
 }
 
+function handleResize() {
+  updateMaskWindow()
+  if (currentChunkIndex.value >= 0) scrollChunkIntoMaskWindow(currentChunkIndex.value)
+}
+
 onMounted(() => {
   loadSettings()
   loadVoices()
   window.speechSynthesis.addEventListener('voiceschanged', loadVoices)
-  contentRef.value?.addEventListener('scroll', scheduleMaskUpdate)
-  window.addEventListener('resize', scheduleMaskUpdate)
+  window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
   window.speechSynthesis.removeEventListener('voiceschanged', loadVoices)
   window.speechSynthesis.cancel()
-  contentRef.value?.removeEventListener('scroll', scheduleMaskUpdate)
-  window.removeEventListener('resize', scheduleMaskUpdate)
-  if (maskUpdateRaf !== null) cancelAnimationFrame(maskUpdateRaf)
+  window.removeEventListener('resize', handleResize)
 })
 
 function isActive(blockIndex: number, sentenceIndex: number): boolean {
