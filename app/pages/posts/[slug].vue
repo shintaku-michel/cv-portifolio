@@ -144,7 +144,7 @@ function formatDate(value: string | null) {
       <div class="flex flex-col gap-6 rounded-lg border p-6 lg:sticky lg:top-6 lg:self-start">
         <div class="flex gap-3">
           <LikeButton :post-id="post.id" :liked="post.likedByMe" :count="post.likesCount" />
-          <ShareButton :title="post.title" :url="postUrl" />
+          <ShareButton :url="postUrl" />
         </div>
 
         <CommentSection :post-id="post.id" />

@@ -81,7 +81,8 @@ function formatDate(value: string) {
       Comentários ({{ data?.comments.length ?? 0 }})
     </h2>
 
-    <div v-if="user" class="flex flex-col gap-2">
+    <!-- Admin só responde comentários existentes, não abre comentário novo. -->
+    <div v-if="user && user.role !== 'ADMIN'" class="flex flex-col gap-2">
       <Textarea v-model="newCommentContent" rows="3" placeholder="Escreva um comentário…" aria-label="Comentário" />
       <Button class="self-start" :disabled="submitting || !newCommentContent.trim()" @click="submitComment">
         {{ submitting ? 'Enviando…' : 'Comentar' }}
@@ -90,7 +91,7 @@ function formatDate(value: string) {
         Comentário enviado — aparece publicamente após aprovação de um administrador.
       </p>
     </div>
-    <p v-else class="text-sm text-muted-foreground">
+    <p v-else-if="!user" class="text-sm text-muted-foreground">
       <NuxtLink to="/login" class="underline">Faça login</NuxtLink> para comentar.
     </p>
 
@@ -130,12 +131,10 @@ function formatDate(value: string) {
         </div>
 
         <ul v-if="comment.replies.length" class="ml-4 flex flex-col gap-4 border-l pl-4">
-          <li v-for="reply in comment.replies" :key="reply.id" class="flex flex-col gap-2">
-            <div class="flex items-baseline gap-2 text-sm">
-              <span class="font-medium">{{ reply.user.name }}</span>
-              <span class="text-muted-foreground">{{ formatDate(reply.createdAt) }}</span>
-            </div>
-            <p class="text-sm">
+          <li v-for="reply in comment.replies" :key="reply.id" class="flex flex-col gap-1">
+            <span class="text-sm font-medium">{{ reply.user.name }}</span>
+            <span class="text-xs text-muted-foreground">{{ formatDate(reply.createdAt) }}</span>
+            <p class="mt-1 text-sm">
               {{ reply.content }}
             </p>
           </li>
