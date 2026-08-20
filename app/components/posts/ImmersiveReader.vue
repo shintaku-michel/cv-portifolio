@@ -29,7 +29,7 @@ const DEFAULT_SETTINGS: ReaderSettings = {
   theme: 'light',
   focusEnabled: true,
   voiceGender: 'female',
-  speed: 1
+  speed: 1.25
 }
 
 const STORAGE_KEY = 'portfolio-cms:immersive-reader-settings'
@@ -47,7 +47,7 @@ const contentRef = ref<HTMLElement | null>(null)
 
 const textSizeClasses: Record<TextSize, string> = {
   small: 'text-lg',
-  medium: 'text-2xl',
+  medium: 'text-4xl',
   large: 'text-6xl'
 }
 
@@ -331,9 +331,9 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
                 <legend class="mb-2 text-sm font-medium">
                   Foco de leitura
                 </legend>
-                <label class="flex items-center justify-between gap-2 text-sm">
-                  Destacar texto
+                <label class="flex items-center justify-start gap-2 text-sm">
                   <Switch v-model="focusEnabled" class="data-checked:bg-blue-600" />
+                  Destacar texto
                 </label>
               </fieldset>
 
