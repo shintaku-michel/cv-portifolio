@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { HeartIcon, MessageCircleIcon } from '@lucide/vue'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
@@ -18,7 +20,8 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/posts` }] })
 const QUERY = `
   query PublicPosts {
     posts {
-      id title slug excerpt coverImage publishedAt
+      id title slug excerpt coverImage publishedAt likesCount commentsCount
+      author { name avatarUrl bio }
       category { id name }
       tags { id name }
     }
@@ -32,6 +35,15 @@ const { data, pending, error } = await useAsyncData('posts', () =>
 function formatDate(value: string | null) {
   if (!value) return null
   return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+}
+
+function authorInitials(name: string) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map(part => part[0]!.toUpperCase())
+    .join('')
 }
 </script>
 
@@ -62,18 +74,48 @@ function formatDate(value: string | null) {
           class="aspect-video w-full rounded-md object-cover sm:w-48 sm:shrink-0"
         >
         <div class="flex flex-col gap-2">
-          <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span v-if="post.publishedAt">{{ formatDate(post.publishedAt) }}</span>
-            <Badge v-if="post.category" variant="outline">
-              {{ post.category.name }}
-            </Badge>
+          <div class="flex items-center gap-2">
+            <Avatar size="sm">
+              <AvatarImage v-if="post.author.avatarUrl" :src="post.author.avatarUrl" :alt="post.author.name" />
+              <AvatarFallback>{{ authorInitials(post.author.name) }}</AvatarFallback>
+            </Avatar>
+            <div class="min-w-0">
+              <p class="truncate text-sm font-medium leading-tight">
+                {{ post.author.name }}
+              </p>
+              <p v-if="post.author.bio" class="truncate text-xs leading-tight text-muted-foreground">
+                {{ post.author.bio }}
+              </p>
+            </div>
           </div>
+
           <h2 class="text-lg font-medium">
             {{ post.title }}
           </h2>
           <p class="text-sm text-muted-foreground">
             {{ post.excerpt }}
           </p>
+
+          <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <span v-if="post.publishedAt">{{ formatDate(post.publishedAt) }}</span>
+            <Badge v-if="post.category" variant="outline">
+              {{ post.category.name }}
+            </Badge>
+            <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
+              {{ tag.name }}
+            </Badge>
+
+            <span class="ml-auto flex items-center gap-3">
+              <span class="flex items-center gap-1">
+                <HeartIcon class="size-3.5" />
+                {{ post.likesCount }}
+              </span>
+              <span class="flex items-center gap-1">
+                <MessageCircleIcon class="size-3.5" />
+                {{ post.commentsCount }}
+              </span>
+            </span>
+          </div>
         </div>
       </NuxtLink>
     </div>

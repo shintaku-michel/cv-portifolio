@@ -27,6 +27,7 @@ export interface Post {
   tags: Tag[]
   likesCount: number
   likedByMe: boolean
+  commentsCount: number
   publishedAt: string | null
   createdAt: string
   updatedAt: string

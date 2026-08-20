@@ -27,5 +27,5 @@ export const resolvers = {
     ...likeResolvers.Mutation
   },
   Comment: commentResolvers.Comment,
-  Post: likeResolvers.Post
+  Post: { ...likeResolvers.Post, ...commentResolvers.Post }
 }

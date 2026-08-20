@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { and, count, eq } from 'drizzle-orm'
 import { createError } from 'h3'
 import { db } from '../database/client'
 import { comments } from '../database/schema'
@@ -27,6 +27,16 @@ export const CommentService = {
       where: (c, { and, eq, isNull }) => and(eq(c.postId, postId), eq(c.status, 'VISIBLE'), isNull(c.parentId)),
       orderBy: (c, { asc }) => [asc(c.createdAt)]
     })
+  },
+
+  // Conta comentários VISIBLE (raiz + respostas) — usado na listagem
+  // pública do blog, não precisa da árvore inteira pra isso.
+  async countVisible(postId: string) {
+    const [row] = await db
+      .select({ value: count() })
+      .from(comments)
+      .where(and(eq(comments.postId, postId), eq(comments.status, 'VISIBLE')))
+    return row?.value ?? 0
   },
 
   async getPending() {

@@ -92,4 +92,21 @@ describe('CommentService (integração)', () => {
     expect(found).toBeDefined()
     expect(found!.post.id).toBe(postId)
   })
+
+  it('countVisible conta só comentários VISIBLE (raiz + respostas), não PENDING/HIDDEN', async () => {
+    const before = await CommentService.countVisible(postId)
+
+    const pending = await CommentService.create(userId, { postId, content: 'Ainda pendente' })
+    expect(await CommentService.countVisible(postId)).toBe(before)
+
+    await CommentService.approve(pending!.id)
+    expect(await CommentService.countVisible(postId)).toBe(before + 1)
+
+    const reply = await CommentService.create(userId, { postId, content: 'Resposta', parentId: pending!.id })
+    await CommentService.approve(reply!.id)
+    expect(await CommentService.countVisible(postId)).toBe(before + 2)
+
+    await CommentService.hide(pending!.id)
+    expect(await CommentService.countVisible(postId)).toBe(before + 1)
+  })
 })

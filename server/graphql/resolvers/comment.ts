@@ -6,6 +6,7 @@ import { assertAdmin, assertAuthenticated } from '../../utils/authorize'
 import type { GraphQLContext } from '../context'
 
 type CommentRow = { id: string, userId: string, status: 'PENDING' | 'VISIBLE' | 'HIDDEN', replies?: unknown }
+type PostRow = { id: string }
 
 function canView(comment: { status: string, userId: string }, context: GraphQLContext): boolean {
   return comment.status === 'VISIBLE' || context.user?.role === 'ADMIN' || context.user?.id === comment.userId
@@ -61,6 +62,10 @@ export const commentResolvers = {
       }
       return CommentService.delete(id)
     }
+  },
+
+  Post: {
+    commentsCount: (parent: PostRow) => CommentService.countVisible(parent.id)
   },
 
   Comment: {

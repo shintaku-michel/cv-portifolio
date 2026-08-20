@@ -24,6 +24,11 @@ input CreateCommentInput {
   parentId: ID
 }
 
+extend type Post {
+  """Total de comentários VISIBLE (raiz + respostas)."""
+  commentsCount: Int!
+}
+
 extend type Query {
   """Apenas comentários VISIBLE de 1º nível (com respostas VISIBLE aninhadas)."""
   comments(postId: ID!): [Comment!]!
