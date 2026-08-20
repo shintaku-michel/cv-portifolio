@@ -13,7 +13,7 @@ const open = defineModel<boolean>('open', { default: false })
 
 type TextSize = 'small' | 'medium' | 'large'
 type Theme = 'light' | 'dark'
-type FocusMode = 'none' | 'line' | 'block'
+type FocusMode = 'none' | 'line'
 type VoiceGender = 'female' | 'male'
 
 interface ReaderSettings {
@@ -44,6 +44,36 @@ const sidebarOpen = ref(false)
 const isPlaying = ref(false)
 const currentChunkIndex = ref(-1)
 const contentRef = ref<HTMLElement | null>(null)
+const wrapperRef = ref<HTMLElement | null>(null)
+
+// Janela da máscara: posição/altura exatas da frase em foco (não um
+// tamanho fixo) — assim ela sempre mostra exatamente o texto sendo lido
+// naquele momento, nem mais nem menos, do tamanho real que ele ocupa
+// (uma frase pode quebrar em mais de uma linha visual).
+const maskWindowTop = ref(0)
+const maskWindowHeight = ref(0)
+let maskUpdateRaf: number | null = null
+
+function updateMaskWindow() {
+  if (focusMode.value !== 'line' || currentChunkIndex.value < 0 || !contentRef.value || !wrapperRef.value) return
+  const el = contentRef.value.querySelector(`[data-chunk="${currentChunkIndex.value}"]`)
+  if (!el) return
+  const wrapperRect = wrapperRef.value.getBoundingClientRect()
+  const elRect = el.getBoundingClientRect()
+  maskWindowTop.value = elRect.top - wrapperRect.top
+  maskWindowHeight.value = elRect.height
+}
+
+// O scroll suave até a frase em foco leva um tempinho pra terminar — em
+// vez de medir só uma vez (pegaria a posição errada, no meio da
+// animação), a máscara acompanha cada passo do scroll em tempo real.
+function scheduleMaskUpdate() {
+  if (maskUpdateRaf !== null) return
+  maskUpdateRaf = requestAnimationFrame(() => {
+    maskUpdateRaf = null
+    updateMaskWindow()
+  })
+}
 
 const textSizeClasses: Record<TextSize, string> = {
   small: 'text-lg',
@@ -190,12 +220,22 @@ watch(open, (isOpen) => {
   }
 })
 
-// A linha/bloco em foco acompanha o scroll — some do campo de visão
-// enquanto lê e a página rola sozinha atrás dele.
+// A linha em foco acompanha o scroll — some do campo de visão enquanto
+// lê e a página rola sozinha atrás dela.
 watch(currentChunkIndex, async (index) => {
-  if (index < 0) return
+  if (index < 0) {
+    return
+  }
   await nextTick()
   contentRef.value?.querySelector(`[data-chunk="${index}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  updateMaskWindow()
+})
+
+watch(focusMode, async (mode) => {
+  if (mode === 'line') {
+    await nextTick()
+    updateMaskWindow()
+  }
 })
 
 function onEscapeKeyDown(event: KeyboardEvent) {
@@ -209,18 +249,22 @@ onMounted(() => {
   loadSettings()
   loadVoices()
   window.speechSynthesis.addEventListener('voiceschanged', loadVoices)
+  contentRef.value?.addEventListener('scroll', scheduleMaskUpdate)
+  window.addEventListener('resize', scheduleMaskUpdate)
 })
 
 onUnmounted(() => {
   window.speechSynthesis.removeEventListener('voiceschanged', loadVoices)
   window.speechSynthesis.cancel()
+  contentRef.value?.removeEventListener('scroll', scheduleMaskUpdate)
+  window.removeEventListener('resize', scheduleMaskUpdate)
+  if (maskUpdateRaf !== null) cancelAnimationFrame(maskUpdateRaf)
 })
 
 function isActive(blockIndex: number, sentenceIndex: number): boolean {
-  if (focusMode.value === 'none' || currentChunkIndex.value < 0) return false
+  if (focusMode.value !== 'line' || currentChunkIndex.value < 0) return false
   const current = chunks.value[currentChunkIndex.value]
   if (!current) return false
-  if (focusMode.value === 'block') return current.blockIndex === blockIndex
   return current.blockIndex === blockIndex && current.sentenceIndex === sentenceIndex
 }
 </script>
@@ -264,7 +308,7 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
         </Button>
       </header>
 
-      <div class="relative grid min-h-0 grid-cols-1">
+      <div ref="wrapperRef" class="relative grid min-h-0 grid-cols-1">
         <div
           ref="contentRef"
           tabindex="0"
@@ -288,15 +332,14 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
           </div>
         </div>
 
-        <!-- Máscara de leitura: escurece tudo fora de uma janela central
-             fixa — o auto-scroll mantém a linha/bloco em foco dentro dela. -->
+        <!-- Máscara de leitura: escurece tudo fora da frase em foco — a
+             janela é medida e posicionada exatamente sobre ela. -->
         <div
-          v-if="focusMode !== 'none' && currentChunkIndex >= 0"
-          class="pointer-events-none col-start-1 row-start-1 flex flex-col"
+          v-if="focusMode === 'line' && currentChunkIndex >= 0"
+          class="pointer-events-none col-start-1 row-start-1"
         >
-          <div class="bg-reader-mask/95" style="height: calc(50% - 10rem);" />
-          <div class="flex-1" />
-          <div class="bg-reader-mask/95" style="height: calc(50% - 10rem);" />
+          <div class="absolute inset-x-0 top-0 bg-reader-mask/95" :style="{ height: `${maskWindowTop}px` }" />
+          <div class="absolute inset-x-0 bottom-0 bg-reader-mask/95" :style="{ top: `${maskWindowTop + maskWindowHeight}px` }" />
         </div>
 
         <Transition
@@ -342,10 +385,6 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
                 <label class="flex items-center gap-2 text-sm">
                   <input v-model="focusMode" type="radio" name="reader-focus-mode" value="line">
                   Em linha
-                </label>
-                <label class="flex items-center gap-2 text-sm">
-                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="block">
-                  Em bloco
                 </label>
               </fieldset>
 
