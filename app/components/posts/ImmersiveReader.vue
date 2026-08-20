@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PauseIcon, PlayIcon, XIcon } from '@lucide/vue'
+import { PanelRightOpenIcon, PauseIcon, PlayIcon, XIcon } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { extractReadableBlocks, renderMarkdown, splitSentences } from '@/utils/markdown'
@@ -14,21 +14,74 @@ const open = defineModel<boolean>('open', { default: false })
 type TextSize = 'small' | 'medium' | 'large'
 type Theme = 'light' | 'dark'
 type FocusMode = 'line' | 'block'
+type VoiceGender = 'female' | 'male'
 
-const textSize = ref<TextSize>('medium')
-const theme = ref<Theme>('light')
-const focusMode = ref<FocusMode>('line')
-const speed = ref(1)
-const voiceGender = ref<'female' | 'male'>('female')
+interface ReaderSettings {
+  textSize: TextSize
+  theme: Theme
+  focusMode: FocusMode
+  voiceGender: VoiceGender
+  speed: number
+}
 
+const DEFAULT_SETTINGS: ReaderSettings = {
+  textSize: 'large',
+  theme: 'light',
+  focusMode: 'line',
+  voiceGender: 'female',
+  speed: 1.5
+}
+
+const STORAGE_KEY = 'portfolio-cms:immersive-reader-settings'
+
+const textSize = ref<TextSize>(DEFAULT_SETTINGS.textSize)
+const theme = ref<Theme>(DEFAULT_SETTINGS.theme)
+const focusMode = ref<FocusMode>(DEFAULT_SETTINGS.focusMode)
+const voiceGender = ref<VoiceGender>(DEFAULT_SETTINGS.voiceGender)
+const speed = ref(DEFAULT_SETTINGS.speed)
+
+const sidebarOpen = ref(false)
 const isPlaying = ref(false)
 const currentChunkIndex = ref(-1)
+const contentRef = ref<HTMLElement | null>(null)
 
 const textSizeClasses: Record<TextSize, string> = {
   small: 'text-lg',
   medium: 'text-2xl',
   large: 'text-4xl'
 }
+
+// Configurações ficam salvas no navegador — reabrir o leitor (mesmo em
+// outro post) mantém as preferências do usuário.
+function loadSettings() {
+  if (typeof window === 'undefined') return
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY)
+    if (!raw) return
+    const saved = JSON.parse(raw) as Partial<ReaderSettings>
+    if (saved.textSize) textSize.value = saved.textSize
+    if (saved.theme) theme.value = saved.theme
+    if (saved.focusMode) focusMode.value = saved.focusMode
+    if (saved.voiceGender) voiceGender.value = saved.voiceGender
+    if (typeof saved.speed === 'number') speed.value = saved.speed
+  } catch {
+    // configuração salva corrompida — segue com os padrões, sem travar o leitor.
+  }
+}
+
+function persistSettings() {
+  if (typeof window === 'undefined') return
+  const settings: ReaderSettings = {
+    textSize: textSize.value,
+    theme: theme.value,
+    focusMode: focusMode.value,
+    voiceGender: voiceGender.value,
+    speed: speed.value
+  }
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
+}
+
+watch([textSize, theme, focusMode, voiceGender, speed], persistSettings)
 
 const blocks = computed(() => extractReadableBlocks(renderMarkdown(props.content)))
 const blockSentences = computed(() => blocks.value.map(splitSentences))
@@ -131,10 +184,29 @@ watch([speed, selectedVoice], () => {
 })
 
 watch(open, (isOpen) => {
-  if (!isOpen) stop()
+  if (!isOpen) {
+    stop()
+    sidebarOpen.value = false
+  }
 })
 
+// A linha/bloco em foco acompanha o scroll — some do campo de visão
+// enquanto lê e a página rola sozinha atrás dele.
+watch(currentChunkIndex, async (index) => {
+  if (index < 0) return
+  await nextTick()
+  contentRef.value?.querySelector(`[data-chunk="${index}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+})
+
+function onEscapeKeyDown(event: KeyboardEvent) {
+  if (sidebarOpen.value) {
+    event.preventDefault()
+    sidebarOpen.value = false
+  }
+}
+
 onMounted(() => {
+  loadSettings()
   loadVoices()
   window.speechSynthesis.addEventListener('voiceschanged', loadVoices)
 })
@@ -159,144 +231,144 @@ function isDimmed(blockIndex: number, sentenceIndex: number): boolean {
       :show-close-button="false"
       class="inset-0 top-0 left-0 grid h-screen w-screen max-w-none translate-x-0 translate-y-0 grid-rows-[auto_1fr] gap-0 rounded-none bg-background p-0 text-foreground sm:max-w-none"
       :class="theme === 'dark' ? 'dark' : ''"
+      @escape-key-down="onEscapeKeyDown"
     >
       <DialogTitle class="sr-only">
         Leitor imersivo — {{ title }}
       </DialogTitle>
 
-      <header class="flex flex-wrap items-center gap-4 border-b border-current/10 px-6 py-3">
+      <header class="flex items-center gap-4 border-b border-current/10 px-6 py-3">
         <DialogClose as-child>
           <Button variant="ghost" size="icon" aria-label="Fechar leitor imersivo">
             <XIcon class="size-5" />
           </Button>
         </DialogClose>
 
-        <span class="truncate text-sm font-medium">{{ title }}</span>
+        <span class="flex-1 truncate text-sm font-medium">{{ title }}</span>
 
-        <div class="ml-auto flex flex-wrap items-center gap-4">
-          <div role="group" aria-label="Tamanho do texto" class="flex gap-1">
-            <Button
-              v-for="size in (['small', 'medium', 'large'] as const)"
-              :key="size"
-              type="button"
-              size="sm"
-              :variant="textSize === size ? 'default' : 'outline'"
-              :aria-pressed="textSize === size"
-              @click="textSize = size"
-            >
-              <span :class="{ 'text-xs': size === 'small', 'text-sm': size === 'medium', 'text-base': size === 'large' }">A</span>
-              <span class="sr-only">
-                {{ size === 'small' ? 'Pequeno' : size === 'medium' ? 'Médio' : 'Grande' }}
-              </span>
-            </Button>
-          </div>
+        <Button type="button" size="sm" :aria-pressed="isPlaying" @click="togglePlay">
+          <PauseIcon v-if="isPlaying" class="size-4" />
+          <PlayIcon v-else class="size-4" />
+          {{ isPlaying ? 'Pausar' : 'Escutar' }}
+        </Button>
 
-          <div role="group" aria-label="Tema" class="flex gap-1">
-            <Button
-              type="button"
-              size="sm"
-              :variant="theme === 'light' ? 'default' : 'outline'"
-              :aria-pressed="theme === 'light'"
-              @click="theme = 'light'"
-            >
-              Claro
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              :variant="theme === 'dark' ? 'default' : 'outline'"
-              :aria-pressed="theme === 'dark'"
-              @click="theme = 'dark'"
-            >
-              Escuro
-            </Button>
-          </div>
-
-          <div role="group" aria-label="Modo de foco de leitura" class="flex gap-1">
-            <Button
-              type="button"
-              size="sm"
-              :variant="focusMode === 'line' ? 'default' : 'outline'"
-              :aria-pressed="focusMode === 'line'"
-              @click="focusMode = 'line'"
-            >
-              Por linha
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              :variant="focusMode === 'block' ? 'default' : 'outline'"
-              :aria-pressed="focusMode === 'block'"
-              @click="focusMode = 'block'"
-            >
-              Bloco
-            </Button>
-          </div>
-
-          <div role="group" aria-label="Voz" class="flex gap-1">
-            <Button
-              type="button"
-              size="sm"
-              :variant="voiceGender === 'female' ? 'default' : 'outline'"
-              :aria-pressed="voiceGender === 'female'"
-              :disabled="!femaleVoice"
-              @click="voiceGender = 'female'"
-            >
-              Feminina
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              :variant="voiceGender === 'male' ? 'default' : 'outline'"
-              :aria-pressed="voiceGender === 'male'"
-              :disabled="!maleVoice"
-              @click="voiceGender = 'male'"
-            >
-              Masculina
-            </Button>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <label for="reader-speed" class="text-sm">Velocidade</label>
-            <input
-              id="reader-speed"
-              v-model.number="speed"
-              type="range"
-              min="0.5"
-              max="2"
-              step="0.25"
-              class="w-24"
-            >
-            <span class="w-10 text-sm tabular-nums">{{ speed }}x</span>
-          </div>
-
-          <Button type="button" size="sm" :aria-pressed="isPlaying" @click="togglePlay">
-            <PauseIcon v-if="isPlaying" class="size-4" />
-            <PlayIcon v-else class="size-4" />
-            {{ isPlaying ? 'Pausar' : 'Escutar' }}
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          :aria-expanded="sidebarOpen"
+          aria-controls="reader-settings-panel"
+          :aria-label="sidebarOpen ? 'Fechar configurações do leitor' : 'Abrir configurações do leitor'"
+          @click="sidebarOpen = !sidebarOpen"
+        >
+          <PanelRightOpenIcon class="size-5" />
+        </Button>
       </header>
 
-      <div
-        tabindex="0"
-        role="region"
-        :aria-label="`Conteúdo do post: ${title}`"
-        class="overflow-y-auto px-6 py-10 sm:px-[10%]"
-      >
+      <div class="relative grid min-h-0 grid-cols-1">
         <div
-          class="mx-auto flex max-w-3xl flex-col gap-6 leading-relaxed font-medium"
-          :class="textSizeClasses[textSize]"
+          ref="contentRef"
+          tabindex="0"
+          role="region"
+          :aria-label="`Conteúdo do post: ${title}`"
+          class="col-start-1 row-start-1 overflow-y-auto px-6 py-10 sm:px-[10%]"
         >
-          <p v-for="(sentences, blockIndex) in blockSentences" :key="blockIndex">
-            <span
-              v-for="(sentence, sentenceIndex) in sentences"
-              :key="sentenceIndex"
-              class="transition-opacity duration-150"
-              :class="isDimmed(blockIndex, sentenceIndex) ? 'opacity-30' : 'opacity-100'"
-            >{{ sentence + ' ' }}</span>
-          </p>
+          <div
+            class="mx-auto flex max-w-3xl flex-col gap-6 leading-relaxed font-medium"
+            :class="textSizeClasses[textSize]"
+          >
+            <p v-for="(sentences, blockIndex) in blockSentences" :key="blockIndex">
+              <span
+                v-for="(sentence, sentenceIndex) in sentences"
+                :key="sentenceIndex"
+                :data-chunk="chunks.findIndex(c => c.blockIndex === blockIndex && c.sentenceIndex === sentenceIndex)"
+                class="transition-colors duration-150"
+                :class="isDimmed(blockIndex, sentenceIndex) ? 'text-muted-foreground' : 'text-foreground'"
+              >{{ sentence + ' ' }}</span>
+            </p>
+          </div>
         </div>
+
+        <Transition
+          enter-active-class="transition-transform duration-200"
+          enter-from-class="translate-x-full"
+          leave-active-class="transition-transform duration-200"
+          leave-to-class="translate-x-full"
+        >
+          <aside
+            v-if="sidebarOpen"
+            id="reader-settings-panel"
+            aria-label="Configurações do leitor imersivo"
+            class="col-start-1 row-start-1 ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto border-l border-current/10 bg-background text-foreground shadow-lg"
+          >
+            <div class="flex items-center justify-between border-b border-current/10 px-4 py-3">
+              <h2 class="font-medium">
+                Configurações
+              </h2>
+              <Button variant="ghost" size="icon" aria-label="Fechar configurações do leitor" @click="sidebarOpen = false">
+                <XIcon class="size-4" />
+              </Button>
+            </div>
+
+            <div class="flex flex-col gap-6 px-4 py-4">
+              <fieldset class="flex flex-col gap-2">
+                <legend class="mb-2 text-sm font-medium">
+                  Tamanho do texto
+                </legend>
+                <label v-for="size in (['small', 'medium', 'large'] as const)" :key="size" class="flex items-center gap-2 text-sm">
+                  <input v-model="textSize" type="radio" name="reader-text-size" :value="size">
+                  {{ size === 'small' ? 'Pequeno' : size === 'medium' ? 'Médio' : 'Grande' }}
+                </label>
+              </fieldset>
+
+              <fieldset class="flex flex-col gap-2">
+                <legend class="mb-2 text-sm font-medium">
+                  Foco de leitura
+                </legend>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="line">
+                  Em linha
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="block">
+                  Em bloco
+                </label>
+              </fieldset>
+
+              <fieldset class="flex flex-col gap-3">
+                <legend class="mb-1 text-sm font-medium">
+                  Voz
+                </legend>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="voiceGender" type="radio" name="reader-voice-gender" value="female" :disabled="!femaleVoice">
+                  Feminina
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="voiceGender" type="radio" name="reader-voice-gender" value="male" :disabled="!maleVoice">
+                  Masculina
+                </label>
+
+                <div class="mt-2 flex flex-col gap-1">
+                  <label for="reader-speed" class="text-sm">Velocidade ({{ speed }}x)</label>
+                  <input id="reader-speed" v-model.number="speed" type="range" min="0.5" max="2" step="0.25">
+                </div>
+              </fieldset>
+
+              <fieldset class="flex flex-col gap-2">
+                <legend class="mb-2 text-sm font-medium">
+                  Tema
+                </legend>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="theme" type="radio" name="reader-theme" value="light">
+                  Claro
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="theme" type="radio" name="reader-theme" value="dark">
+                  Escuro
+                </label>
+              </fieldset>
+            </div>
+          </aside>
+        </Transition>
       </div>
     </DialogContent>
   </Dialog>
