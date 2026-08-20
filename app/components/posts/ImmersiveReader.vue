@@ -46,22 +46,26 @@ const currentChunkIndex = ref(-1)
 const contentRef = ref<HTMLElement | null>(null)
 const wrapperRef = ref<HTMLElement | null>(null)
 
-// Janela da máscara: posição/altura exatas da frase em foco (não um
-// tamanho fixo) — assim ela sempre mostra exatamente o texto sendo lido
-// naquele momento, nem mais nem menos, do tamanho real que ele ocupa
-// (uma frase pode quebrar em mais de uma linha visual).
+// Janela da máscara: sempre 3 linhas de altura (igual ao Immersive
+// Reader de referência), centrada na frase em foco — não o tamanho
+// exato da frase, que variaria demais (uma frase de 1 linha deixaria a
+// janela minúscula, uma de 3 linhas encheria tudo).
+const LINES_IN_WINDOW = 3
 const maskWindowTop = ref(0)
 const maskWindowHeight = ref(0)
 let maskUpdateRaf: number | null = null
 
 function updateMaskWindow() {
   if (focusMode.value !== 'line' || currentChunkIndex.value < 0 || !contentRef.value || !wrapperRef.value) return
-  const el = contentRef.value.querySelector(`[data-chunk="${currentChunkIndex.value}"]`)
+  const el = contentRef.value.querySelector(`[data-chunk="${currentChunkIndex.value}"]`) as HTMLElement | null
   if (!el) return
   const wrapperRect = wrapperRef.value.getBoundingClientRect()
   const elRect = el.getBoundingClientRect()
-  maskWindowTop.value = elRect.top - wrapperRect.top
-  maskWindowHeight.value = elRect.height
+  const lineHeight = Number.parseFloat(getComputedStyle(el).lineHeight) || elRect.height
+  const windowHeight = lineHeight * LINES_IN_WINDOW
+  const elCenter = elRect.top + elRect.height / 2
+  maskWindowTop.value = elCenter - windowHeight / 2 - wrapperRect.top
+  maskWindowHeight.value = windowHeight
 }
 
 // O scroll suave até a frase em foco leva um tempinho pra terminar — em
