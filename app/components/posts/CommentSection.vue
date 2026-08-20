@@ -102,7 +102,7 @@ function formatDate(value: string) {
 
     <ul v-else class="scrollbar-elegant flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pr-1">
       <li v-for="comment in data.comments" :key="comment.id" class="flex flex-col gap-2">
-        <div class="flex items-baseline gap-2 text-sm">
+        <div class="flex flex-col items-baseline text-sm">
           <span class="font-medium">{{ comment.user.name }}</span>
           <span class="text-muted-foreground">{{ formatDate(comment.createdAt) }}</span>
         </div>
