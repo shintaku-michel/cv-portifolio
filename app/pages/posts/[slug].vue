@@ -4,12 +4,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import CommentSection from '@/components/posts/CommentSection.vue'
+import ImmersiveReader from '@/components/posts/ImmersiveReader.vue'
 import LikeButton from '@/components/posts/LikeButton.vue'
 import ShareButton from '@/components/posts/ShareButton.vue'
 import type { Post } from '#shared/types/post'
 
 const route = useRoute()
 const slug = route.params.slug as string
+const readerOpen = ref(false)
 
 const QUERY = `
   query PostDetail($slug: String!) {
@@ -87,10 +89,11 @@ function formatDate(value: string | null) {
 </script>
 
 <template>
-  <article class="mx-auto max-w-6xl px-4 py-12">
-    <NuxtLink to="/posts" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
-      ← Voltar para o blog
-    </NuxtLink>
+  <div>
+    <article class="mx-auto max-w-6xl px-4 py-12">
+      <NuxtLink to="/posts" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
+        ← Voltar para o blog
+      </NuxtLink>
 
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_1fr] lg:gap-12">
       <div class="min-w-0">
@@ -120,7 +123,7 @@ function formatDate(value: string | null) {
             </Badge>
           </div>
 
-          <Button variant="ghost" size="sm" class="gap-2 text-muted-foreground">
+          <Button variant="ghost" size="sm" class="gap-2 text-muted-foreground" @click="readerOpen = true">
             <BookOpenTextIcon class="size-4" />
             Leitor imersivo
           </Button>
@@ -150,5 +153,8 @@ function formatDate(value: string | null) {
         <CommentSection :post-id="post.id" class="min-h-0 flex-1" />
       </div>
     </div>
-  </article>
+    </article>
+
+    <ImmersiveReader v-model:open="readerOpen" :title="post.title" :content="post.content" />
+  </div>
 </template>
