@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MessageCircleCheckIcon, MessageCircleIcon, MessagesSquareIcon } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import ErrorState from '@/components/common/ErrorState.vue'
@@ -73,11 +74,25 @@ async function submitReply(parentId: string) {
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
 }
+
+// Respostas começam escondidas — só expandem quando o leitor pede.
+const expandedReplies = ref(new Set<string>())
+
+function toggleReplies(commentId: string) {
+  const next = new Set(expandedReplies.value)
+  if (next.has(commentId)) {
+    next.delete(commentId)
+  } else {
+    next.add(commentId)
+  }
+  expandedReplies.value = next
+}
 </script>
 
 <template>
   <section class="flex min-h-0 flex-col gap-6">
-    <h2 class="shrink-0 text-xl font-medium">
+    <h2 class="flex shrink-0 items-center gap-2 text-xl font-medium">
+      <MessageCircleIcon class="size-5" />
       Comentários ({{ data?.comments.length ?? 0 }})
     </h2>
 
@@ -109,14 +124,27 @@ function formatDate(value: string) {
         <p class="text-sm">
           {{ comment.content }}
         </p>
-        <button
-          v-if="user"
-          type="button"
-          class="self-start text-xs text-muted-foreground hover:underline"
-          @click="startReply(comment.id)"
-        >
-          Responder
-        </button>
+        <div class="flex items-center gap-4">
+          <button
+            v-if="user"
+            type="button"
+            class="flex items-center gap-1 text-xs text-muted-foreground hover:underline"
+            @click="startReply(comment.id)"
+          >
+            <MessagesSquareIcon class="size-3.5" />
+            Responder
+          </button>
+
+          <button
+            v-if="comment.replies.length"
+            type="button"
+            class="flex items-center gap-1 text-xs text-muted-foreground hover:underline"
+            @click="toggleReplies(comment.id)"
+          >
+            <MessageCircleCheckIcon class="size-3.5" />
+            {{ expandedReplies.has(comment.id) ? 'Ocultar respostas' : 'Mostrar respostas' }} ({{ comment.replies.length }})
+          </button>
+        </div>
 
         <div v-if="replyingToId === comment.id" class="ml-4 flex flex-col gap-2">
           <Textarea v-model="replyContent" rows="2" placeholder="Escreva uma resposta…" aria-label="Resposta" />
@@ -130,7 +158,7 @@ function formatDate(value: string) {
           </div>
         </div>
 
-        <ul v-if="comment.replies.length" class="ml-4 flex flex-col gap-4 border-l pl-4">
+        <ul v-if="comment.replies.length && expandedReplies.has(comment.id)" class="ml-4 flex flex-col gap-4 border-l pl-4">
           <li v-for="reply in comment.replies" :key="reply.id" class="flex flex-col">
             <span class="text-sm font-medium">{{ reply.user.name }}</span>
             <span class="text-xs text-muted-foreground">{{ formatDate(reply.createdAt) }}</span>
