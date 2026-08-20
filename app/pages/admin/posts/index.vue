@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import type { Post } from '#shared/types/post'
+import { EllipsisIcon, EyeIcon, EyeOffIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import type { Post } from '#shared/types/post'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Posts' })
@@ -16,6 +19,7 @@ const QUERY = `
       id title slug status createdAt
       author { name }
       category { id name }
+      tags { id name }
     }
   }
 `
@@ -74,6 +78,7 @@ async function remove(post: Post) {
           <TableHead>Título</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Categoria</TableHead>
+          <TableHead>Tags</TableHead>
           <TableHead>Autor</TableHead>
           <TableHead class="text-right">
             Ações
@@ -91,34 +96,41 @@ async function remove(post: Post) {
             </Badge>
           </TableCell>
           <TableCell>{{ post.category?.name ?? '—' }}</TableCell>
+          <TableCell>
+            <div v-if="post.tags.length" class="flex flex-wrap gap-1">
+              <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
+                {{ tag.name }}
+              </Badge>
+            </div>
+            <span v-else>—</span>
+          </TableCell>
           <TableCell>{{ post.author.name }}</TableCell>
-          <TableCell class="flex flex-wrap justify-end gap-2">
-            <NuxtLink :to="`/admin/posts/${post.id}/editar`">
-              <Button size="sm" variant="outline">
-                Editar
-              </Button>
-            </NuxtLink>
-            <NuxtLink :to="`/posts/${post.slug}`">
-              <Button size="sm" variant="outline">
-                Visualizar
-              </Button>
-            </NuxtLink>
-            <Button
-              size="sm"
-              variant="outline"
-              :disabled="actionPending === post.id"
-              @click="togglePublish(post)"
-            >
-              {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              :disabled="actionPending === post.id"
-              @click="remove(post)"
-            >
-              Excluir
-            </Button>
+          <TableCell class="text-right">
+            <ButtonGroup class="justify-end">
+              <DropdownMenu :modal="false">
+                <DropdownMenuTrigger as-child>
+                  <Button size="icon" variant="outline" :disabled="actionPending === post.id" aria-label="Ações do post">
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem @select="navigateTo(`/admin/posts/${post.id}/editar`)">
+                    <PencilIcon /> Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="navigateTo(`/posts/${post.slug}`)">
+                    <EyeIcon /> Visualizar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="togglePublish(post)">
+                    <component :is="post.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                    {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" @select="remove(post)">
+                    <Trash2Icon /> Excluir
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </ButtonGroup>
           </TableCell>
         </TableRow>
       </TableBody>
