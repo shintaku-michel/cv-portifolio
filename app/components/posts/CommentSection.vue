@@ -76,13 +76,13 @@ function formatDate(value: string) {
 </script>
 
 <template>
-  <section class="flex flex-col gap-6">
-    <h2 class="text-xl font-medium">
+  <section class="flex min-h-0 flex-col gap-6">
+    <h2 class="shrink-0 text-xl font-medium">
       Comentários ({{ data?.comments.length ?? 0 }})
     </h2>
 
     <!-- Admin só responde comentários existentes, não abre comentário novo. -->
-    <div v-if="user && user.role !== 'ADMIN'" class="flex flex-col gap-2">
+    <div v-if="user && user.role !== 'ADMIN'" class="flex shrink-0 flex-col gap-2">
       <Textarea v-model="newCommentContent" rows="3" placeholder="Escreva um comentário…" aria-label="Comentário" />
       <Button class="self-start" :disabled="submitting || !newCommentContent.trim()" @click="submitComment">
         {{ submitting ? 'Enviando…' : 'Comentar' }}
@@ -91,7 +91,7 @@ function formatDate(value: string) {
         Comentário enviado — aparece publicamente após aprovação de um administrador.
       </p>
     </div>
-    <p v-else-if="!user" class="text-sm text-muted-foreground">
+    <p v-else-if="!user" class="shrink-0 text-sm text-muted-foreground">
       <NuxtLink to="/login" class="underline">Faça login</NuxtLink> para comentar.
     </p>
 
@@ -100,7 +100,7 @@ function formatDate(value: string) {
       Nenhum comentário ainda.
     </p>
 
-    <ul v-else class="flex flex-col gap-6">
+    <ul v-else class="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pr-1">
       <li v-for="comment in data.comments" :key="comment.id" class="flex flex-col gap-2">
         <div class="flex items-baseline gap-2 text-sm">
           <span class="font-medium">{{ comment.user.name }}</span>

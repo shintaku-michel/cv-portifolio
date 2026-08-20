@@ -141,13 +141,13 @@ function formatDate(value: string | null) {
         <div class="prose prose-neutral max-w-none dark:prose-invert" v-html="renderedContent" />
       </div>
 
-      <div class="flex flex-col gap-6 rounded-lg border p-6 lg:sticky lg:top-6 lg:self-start">
-        <div class="flex gap-3">
+      <div class="flex flex-col gap-6 rounded-lg border p-6 lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)] lg:self-start">
+        <div class="flex shrink-0 gap-3">
           <LikeButton :post-id="post.id" :liked="post.likedByMe" :count="post.likesCount" />
           <ShareButton :url="postUrl" />
         </div>
 
-        <CommentSection :post-id="post.id" />
+        <CommentSection :post-id="post.id" class="min-h-0 flex-1" />
       </div>
     </div>
   </article>
