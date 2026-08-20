@@ -2,7 +2,6 @@
 import { PanelRightOpenIcon, PauseIcon, PlayIcon, XIcon } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { Switch } from '@/components/ui/switch'
 import { extractReadableBlocks, renderMarkdown, splitSentences } from '@/utils/markdown'
 
 const props = defineProps<{
@@ -14,12 +13,13 @@ const open = defineModel<boolean>('open', { default: false })
 
 type TextSize = 'small' | 'medium' | 'large'
 type Theme = 'light' | 'dark'
+type FocusMode = 'line' | 'block'
 type VoiceGender = 'female' | 'male'
 
 interface ReaderSettings {
   textSize: TextSize
   theme: Theme
-  focusEnabled: boolean
+  focusMode: FocusMode
   voiceGender: VoiceGender
   speed: number
 }
@@ -27,7 +27,7 @@ interface ReaderSettings {
 const DEFAULT_SETTINGS: ReaderSettings = {
   textSize: 'large',
   theme: 'light',
-  focusEnabled: false,
+  focusMode: 'block',
   voiceGender: 'female',
   speed: 1.5
 }
@@ -36,7 +36,7 @@ const STORAGE_KEY = 'portfolio-cms:immersive-reader-settings'
 
 const textSize = ref<TextSize>(DEFAULT_SETTINGS.textSize)
 const theme = ref<Theme>(DEFAULT_SETTINGS.theme)
-const focusEnabled = ref(DEFAULT_SETTINGS.focusEnabled)
+const focusMode = ref<FocusMode>(DEFAULT_SETTINGS.focusMode)
 const voiceGender = ref<VoiceGender>(DEFAULT_SETTINGS.voiceGender)
 const speed = ref(DEFAULT_SETTINGS.speed)
 
@@ -61,7 +61,7 @@ function loadSettings() {
     const saved = JSON.parse(raw) as Partial<ReaderSettings>
     if (saved.textSize) textSize.value = saved.textSize
     if (saved.theme) theme.value = saved.theme
-    if (typeof saved.focusEnabled === 'boolean') focusEnabled.value = saved.focusEnabled
+    if (saved.focusMode) focusMode.value = saved.focusMode
     if (saved.voiceGender) voiceGender.value = saved.voiceGender
     if (typeof saved.speed === 'number') speed.value = saved.speed
   } catch {
@@ -74,14 +74,14 @@ function persistSettings() {
   const settings: ReaderSettings = {
     textSize: textSize.value,
     theme: theme.value,
-    focusEnabled: focusEnabled.value,
+    focusMode: focusMode.value,
     voiceGender: voiceGender.value,
     speed: speed.value
   }
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
 }
 
-watch([textSize, theme, focusEnabled, voiceGender, speed], persistSettings)
+watch([textSize, theme, focusMode, voiceGender, speed], persistSettings)
 
 const blocks = computed(() => extractReadableBlocks(renderMarkdown(props.content)))
 const blockSentences = computed(() => blocks.value.map(splitSentences))
@@ -217,18 +217,11 @@ onUnmounted(() => {
 })
 
 function isActive(blockIndex: number, sentenceIndex: number): boolean {
-  if (!focusEnabled.value || currentChunkIndex.value < 0) return false
+  if (currentChunkIndex.value < 0) return false
   const current = chunks.value[currentChunkIndex.value]
   if (!current) return false
+  if (focusMode.value === 'block') return current.blockIndex === blockIndex
   return current.blockIndex === blockIndex && current.sentenceIndex === sentenceIndex
-}
-
-// Frase em foco: negrito. Resto do texto: cinza claro quando o foco está
-// ativo e a leitura está em andamento; senão, cor normal.
-function sentenceClass(blockIndex: number, sentenceIndex: number): string {
-  if (isActive(blockIndex, sentenceIndex)) return 'font-semibold text-foreground'
-  if (focusEnabled.value && currentChunkIndex.value >= 0) return 'font-normal text-muted-foreground'
-  return 'font-normal text-foreground'
 }
 </script>
 
@@ -288,11 +281,22 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
                 v-for="(sentence, sentenceIndex) in sentences"
                 :key="sentenceIndex"
                 :data-chunk="chunks.findIndex(c => c.blockIndex === blockIndex && c.sentenceIndex === sentenceIndex)"
-                class="transition-colors duration-150"
-                :class="sentenceClass(blockIndex, sentenceIndex)"
+                class="transition-[font-weight] duration-150"
+                :class="isActive(blockIndex, sentenceIndex) ? 'font-semibold' : 'font-normal'"
               >{{ sentence + ' ' }}</span>
             </p>
           </div>
+        </div>
+
+        <!-- Máscara de leitura: escurece tudo fora de uma janela central
+             fixa — o auto-scroll mantém a linha/bloco em foco dentro dela. -->
+        <div
+          v-if="currentChunkIndex >= 0"
+          class="pointer-events-none col-start-1 row-start-1 flex flex-col"
+        >
+          <div class="bg-background/90" style="height: calc(50% - 10rem);" />
+          <div class="flex-1" />
+          <div class="bg-background/90" style="height: calc(50% - 10rem);" />
         </div>
 
         <Transition
@@ -331,9 +335,13 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
                 <legend class="mb-2 text-sm font-medium">
                   Foco de leitura
                 </legend>
-                <label class="flex items-center justify-between gap-2 text-sm">
-                  Destacar frase em leitura
-                  <Switch v-model="focusEnabled" />
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="line">
+                  Em linha
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="block">
+                  Em bloco
                 </label>
               </fieldset>
 
