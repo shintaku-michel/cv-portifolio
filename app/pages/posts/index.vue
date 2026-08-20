@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { HeartIcon, MessageCircleIcon } from '@lucide/vue'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import type { Post } from '#shared/types/post'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import type { Post } from '#shared/types/post'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { HeartIcon, MessageCircleIcon } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -53,7 +53,7 @@ function authorInitials(name: string) {
       Blog
     </h1>
     <p class="mb-8 text-muted-foreground">
-      Artigos técnicos, tutoriais e relatos de projetos.
+      Notícias sobre tecnologia, artigos técnicos, tutoriais e relatos de projetos.
     </p>
 
     <LoadingState v-if="pending" />
@@ -62,29 +62,31 @@ function authorInitials(name: string) {
 
     <div v-else class="flex flex-col gap-6">
       <NuxtLink
-        v-for="post in data.posts"
-        :key="post.id"
-        :to="`/posts/${post.slug}`"
-        class="flex flex-col gap-3 rounded-lg border p-5 transition-colors hover:bg-accent sm:flex-row"
-      >
+v-for="post in data.posts" :key="post.id" :to="`/posts/${post.slug}`"
+        class="flex flex-col gap-3 rounded-lg border p-5 transition-colors hover:bg-accent sm:flex-row">
         <img
-          v-if="post.coverImage"
-          :src="post.coverImage"
-          :alt="post.title"
-          class="aspect-video w-full rounded-md object-cover sm:w-48 sm:shrink-0"
-        >
+v-if="post.coverImage" :src="post.coverImage" :alt="post.title"
+          class="aspect-video w-full rounded-md object-cover sm:w-48 sm:shrink-0">
         <div class="flex flex-col gap-2">
-          <div class="flex items-center gap-2">
-            <Avatar size="sm">
-              <AvatarImage v-if="post.author.avatarUrl" :src="post.author.avatarUrl" :alt="post.author.name" />
-              <AvatarFallback>{{ authorInitials(post.author.name) }}</AvatarFallback>
-            </Avatar>
-            <div class="min-w-0">
-              <p class="truncate text-sm font-medium leading-tight">
-                {{ post.author.name }}
-              </p>
-              <p v-if="post.author.bio" class="truncate text-xs leading-tight text-muted-foreground">
-                {{ post.author.bio }}
+          <div class="flex justify-between items-center gap-2 mb-4">
+            <div class="flex items-center gap-2">
+              <Avatar size="md">
+                <AvatarImage v-if="post.author.avatarUrl" :src="post.author.avatarUrl" :alt="post.author.name" />
+                <AvatarFallback>{{ authorInitials(post.author.name) }}</AvatarFallback>
+              </Avatar>
+              <div class="min-w-0">
+                <p class="truncate text-sm font-medium leading-tight">
+                  {{ post.author.name }}
+                </p>
+                <p v-if="post.author.bio" class="truncate text-xs leading-tight text-muted-foreground">
+                  {{ post.author.bio }}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <p class="text-xs text-muted-foreground">
+                <span v-if="post.publishedAt">{{ formatDate(post.publishedAt) }}</span>
               </p>
             </div>
           </div>
@@ -96,8 +98,7 @@ function authorInitials(name: string) {
             {{ post.excerpt }}
           </p>
 
-          <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span v-if="post.publishedAt">{{ formatDate(post.publishedAt) }}</span>
+          <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mt-4 border-t pt-4">
             <Badge v-if="post.category" variant="outline">
               {{ post.category.name }}
             </Badge>
