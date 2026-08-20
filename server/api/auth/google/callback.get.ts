@@ -1,8 +1,8 @@
-import { createError, deleteCookie, defineEventHandler, getCookie, getQuery, sendRedirect } from 'h3'
+import { createError, defineEventHandler, getQuery, sendRedirect } from 'h3'
 import { AuthService } from '../../../services/auth.service'
+import { verifyOAuthState } from '../../../utils/oauth-state'
 import { getPublicOrigin } from '../../../utils/public-origin'
 import { setSessionCookie } from '../../../utils/session'
-import { OAUTH_REDIRECT_COOKIE, OAUTH_STATE_COOKIE } from '../google.get'
 
 interface GoogleTokenResponse {
   access_token: string
@@ -18,17 +18,16 @@ interface GoogleUserInfo {
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const rawRedirect = getCookie(event, OAUTH_REDIRECT_COOKIE)
-  deleteCookie(event, OAUTH_REDIRECT_COOKIE, { path: '/' })
-  // Só aceita caminho relativo interno — evita open redirect via cookie manipulado.
-  const redirectTarget = rawRedirect && rawRedirect.startsWith('/') && !rawRedirect.startsWith('//') ? rawRedirect : '/'
 
-  const expectedState = getCookie(event, OAUTH_STATE_COOKIE)
-  deleteCookie(event, OAUTH_STATE_COOKIE, { path: '/' })
+  if (!query.code || typeof query.state !== 'string') {
+    throw createError({ statusCode: 400, message: 'Falha na autenticação com o Google (parâmetros ausentes)' })
+  }
 
-  if (!query.code || !query.state || query.state !== expectedState) {
+  const verifiedState = verifyOAuthState(query.state)
+  if (!verifiedState) {
     throw createError({ statusCode: 400, message: 'Falha na autenticação com o Google (state inválido)' })
   }
+  const redirectTarget = verifiedState.redirect
 
   const callbackUrl = new URL('/api/auth/google/callback', getPublicOrigin(event))
 
