@@ -146,7 +146,7 @@ function toggleReplies(commentId: string) {
           </button>
         </div>
 
-        <div v-if="replyingToId === comment.id" class="ml-4 flex flex-col gap-2">
+        <div v-if="replyingToId === comment.id" class="flex flex-col gap-2">
           <Textarea v-model="replyContent" rows="2" placeholder="Escreva uma resposta…" aria-label="Resposta" />
           <div class="flex gap-2">
             <Button size="sm" :disabled="replySubmitting || !replyContent.trim()" @click="submitReply(comment.id)">
