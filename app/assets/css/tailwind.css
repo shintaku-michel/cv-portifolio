@@ -82,9 +82,10 @@
     --sidebar-accent-foreground: oklch(0.205 0 0);
     --sidebar-border: oklch(0.922 0 0);
     --sidebar-ring: oklch(0.708 0 0);
-    /* Leitor imersivo: fundo da área fora de foco — um pouco mais escuro
-       que --background (oklch 1 0 0), perceptível mas não pesado. */
-    --reader-mask: oklch(0.9 0 0);
+    /* Leitor imersivo: fundo da área fora de foco. Mesmo valor no claro
+       e no escuro — de propósito, pra dar contraste forte com o bloco em
+       foco nos dois temas, não só "um pouco mais escuro que o fundo". */
+    --reader-mask: #333333;
 }
 
 .dark {
@@ -119,9 +120,8 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
-    /* Leitor imersivo: fundo da área fora de foco — um pouco mais escuro
-       que --background (oklch 0.145 0 0) aqui também. */
-    --reader-mask: oklch(0.1 0 0);
+    /* Mesmo valor do :root — ver comentário lá. */
+    --reader-mask: #333333;
 }
 
 @layer base {

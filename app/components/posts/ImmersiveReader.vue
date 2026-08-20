@@ -13,7 +13,7 @@ const open = defineModel<boolean>('open', { default: false })
 
 type TextSize = 'small' | 'medium' | 'large'
 type Theme = 'light' | 'dark'
-type FocusMode = 'line' | 'block'
+type FocusMode = 'none' | 'line' | 'block'
 type VoiceGender = 'female' | 'male'
 
 interface ReaderSettings {
@@ -27,7 +27,7 @@ interface ReaderSettings {
 const DEFAULT_SETTINGS: ReaderSettings = {
   textSize: 'large',
   theme: 'light',
-  focusMode: 'block',
+  focusMode: 'none',
   voiceGender: 'female',
   speed: 1.5
 }
@@ -217,7 +217,7 @@ onUnmounted(() => {
 })
 
 function isActive(blockIndex: number, sentenceIndex: number): boolean {
-  if (currentChunkIndex.value < 0) return false
+  if (focusMode.value === 'none' || currentChunkIndex.value < 0) return false
   const current = chunks.value[currentChunkIndex.value]
   if (!current) return false
   if (focusMode.value === 'block') return current.blockIndex === blockIndex
@@ -291,7 +291,7 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
         <!-- Máscara de leitura: escurece tudo fora de uma janela central
              fixa — o auto-scroll mantém a linha/bloco em foco dentro dela. -->
         <div
-          v-if="currentChunkIndex >= 0"
+          v-if="focusMode !== 'none' && currentChunkIndex >= 0"
           class="pointer-events-none col-start-1 row-start-1 flex flex-col"
         >
           <div class="bg-reader-mask/95" style="height: calc(50% - 10rem);" />
@@ -335,6 +335,10 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
                 <legend class="mb-2 text-sm font-medium">
                   Foco de leitura
                 </legend>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="none">
+                  Sem foco
+                </label>
                 <label class="flex items-center gap-2 text-sm">
                   <input v-model="focusMode" type="radio" name="reader-focus-mode" value="line">
                   Em linha
