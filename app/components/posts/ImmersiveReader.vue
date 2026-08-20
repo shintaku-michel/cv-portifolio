@@ -13,7 +13,7 @@ const open = defineModel<boolean>('open', { default: false })
 
 type TextSize = 'small' | 'medium' | 'large'
 type Theme = 'light' | 'dark'
-type FocusMode = 'none' | 'line'
+type FocusMode = 'line' | 'block'
 type VoiceGender = 'female' | 'male'
 
 interface ReaderSettings {
@@ -27,7 +27,7 @@ interface ReaderSettings {
 const DEFAULT_SETTINGS: ReaderSettings = {
   textSize: 'large',
   theme: 'light',
-  focusMode: 'none',
+  focusMode: 'line',
   voiceGender: 'female',
   speed: 1.5
 }
@@ -44,44 +44,11 @@ const sidebarOpen = ref(false)
 const isPlaying = ref(false)
 const currentChunkIndex = ref(-1)
 const contentRef = ref<HTMLElement | null>(null)
-const wrapperRef = ref<HTMLElement | null>(null)
-
-// Janela da máscara: sempre 3 linhas de altura, sempre centralizada no
-// meio da área de leitura — ela nunca se move. É a página que rola pra
-// trazer a frase em foco até dentro dela (não o contrário).
-const LINES_IN_WINDOW = 3
-const maskWindowTop = ref(0)
-const maskWindowHeight = ref(0)
-
-function updateMaskWindow() {
-  if (focusMode.value !== 'line' || !contentRef.value) return
-  const referenceEl = contentRef.value.querySelector('[data-chunk]')
-  if (!referenceEl) return
-  const lineHeight = Number.parseFloat(getComputedStyle(referenceEl).lineHeight) || 0
-  if (!lineHeight) return
-  const windowHeight = lineHeight * LINES_IN_WINDOW
-  maskWindowHeight.value = windowHeight
-  maskWindowTop.value = contentRef.value.clientHeight / 2 - windowHeight / 2
-}
-
-// Rola o conteúdo pra alinhar o centro da frase em foco exatamente com o
-// centro da janela fixa da máscara (scrollIntoView por si só não garante
-// esse alinhamento preciso).
-function scrollChunkIntoMaskWindow(index: number) {
-  if (!contentRef.value) return
-  const el = contentRef.value.querySelector(`[data-chunk="${index}"]`) as HTMLElement | null
-  if (!el) return
-  const containerRect = contentRef.value.getBoundingClientRect()
-  const elRect = el.getBoundingClientRect()
-  const elCenterInScroll = contentRef.value.scrollTop + (elRect.top - containerRect.top) + elRect.height / 2
-  const target = elCenterInScroll - contentRef.value.clientHeight / 2
-  contentRef.value.scrollTo({ top: target, behavior: 'smooth' })
-}
 
 const textSizeClasses: Record<TextSize, string> = {
   small: 'text-lg',
   medium: 'text-2xl',
-  large: 'text-6xl'
+  large: 'text-4xl'
 }
 
 // Configurações ficam salvas no navegador — reabrir o leitor (mesmo em
@@ -223,31 +190,12 @@ watch(open, (isOpen) => {
   }
 })
 
-// A janela da máscara não se move — é o conteúdo que rola até a frase
-// em foco ficar alinhada com ela.
+// A linha/bloco em foco acompanha o scroll — some do campo de visão
+// enquanto lê e a página rola sozinha atrás dele.
 watch(currentChunkIndex, async (index) => {
-  if (index < 0) {
-    return
-  }
+  if (index < 0) return
   await nextTick()
-  updateMaskWindow()
-  scrollChunkIntoMaskWindow(index)
-})
-
-watch(focusMode, async (mode) => {
-  if (mode === 'line') {
-    await nextTick()
-    updateMaskWindow()
-    if (currentChunkIndex.value >= 0) scrollChunkIntoMaskWindow(currentChunkIndex.value)
-  }
-})
-
-// O tamanho da linha (e por isso da janela de 3 linhas) muda com o
-// tamanho do texto — recalcula e realinha quando o leitor troca.
-watch(textSize, async () => {
-  await nextTick()
-  updateMaskWindow()
-  if (currentChunkIndex.value >= 0) scrollChunkIntoMaskWindow(currentChunkIndex.value)
+  contentRef.value?.querySelector(`[data-chunk="${index}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 })
 
 function onEscapeKeyDown(event: KeyboardEvent) {
@@ -257,29 +205,23 @@ function onEscapeKeyDown(event: KeyboardEvent) {
   }
 }
 
-function handleResize() {
-  updateMaskWindow()
-  if (currentChunkIndex.value >= 0) scrollChunkIntoMaskWindow(currentChunkIndex.value)
-}
-
 onMounted(() => {
   loadSettings()
   loadVoices()
   window.speechSynthesis.addEventListener('voiceschanged', loadVoices)
-  window.addEventListener('resize', handleResize)
 })
 
 onUnmounted(() => {
   window.speechSynthesis.removeEventListener('voiceschanged', loadVoices)
   window.speechSynthesis.cancel()
-  window.removeEventListener('resize', handleResize)
 })
 
-function isActive(blockIndex: number, sentenceIndex: number): boolean {
-  if (focusMode.value !== 'line' || currentChunkIndex.value < 0) return false
+function isDimmed(blockIndex: number, sentenceIndex: number): boolean {
+  if (currentChunkIndex.value < 0) return false
   const current = chunks.value[currentChunkIndex.value]
   if (!current) return false
-  return current.blockIndex === blockIndex && current.sentenceIndex === sentenceIndex
+  if (focusMode.value === 'block') return current.blockIndex !== blockIndex
+  return !(current.blockIndex === blockIndex && current.sentenceIndex === sentenceIndex)
 }
 </script>
 
@@ -322,16 +264,16 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
         </Button>
       </header>
 
-      <div ref="wrapperRef" class="relative grid min-h-0 grid-cols-1">
+      <div class="relative grid min-h-0 grid-cols-1">
         <div
           ref="contentRef"
           tabindex="0"
           role="region"
           :aria-label="`Conteúdo do post: ${title}`"
-          class="col-start-1 row-start-1 overflow-y-auto px-6 py-10 sm:px-12"
+          class="col-start-1 row-start-1 overflow-y-auto px-6 py-10 sm:px-[10%]"
         >
           <div
-            class="flex w-full flex-col gap-6 leading-relaxed font-medium text-foreground"
+            class="mx-auto flex max-w-3xl flex-col gap-6 leading-relaxed font-medium"
             :class="textSizeClasses[textSize]"
           >
             <p v-for="(sentences, blockIndex) in blockSentences" :key="blockIndex">
@@ -339,21 +281,11 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
                 v-for="(sentence, sentenceIndex) in sentences"
                 :key="sentenceIndex"
                 :data-chunk="chunks.findIndex(c => c.blockIndex === blockIndex && c.sentenceIndex === sentenceIndex)"
-                class="transition-[font-weight] duration-150"
-                :class="isActive(blockIndex, sentenceIndex) ? 'font-semibold' : 'font-normal'"
+                class="transition-colors duration-150"
+                :class="isDimmed(blockIndex, sentenceIndex) ? 'text-muted-foreground' : 'text-foreground'"
               >{{ sentence + ' ' }}</span>
             </p>
           </div>
-        </div>
-
-        <!-- Máscara de leitura: escurece tudo fora da frase em foco — a
-             janela é medida e posicionada exatamente sobre ela. -->
-        <div
-          v-if="focusMode === 'line' && currentChunkIndex >= 0"
-          class="pointer-events-none col-start-1 row-start-1"
-        >
-          <div class="absolute inset-x-0 top-0 bg-reader-mask/95" :style="{ height: `${maskWindowTop}px` }" />
-          <div class="absolute inset-x-0 bottom-0 bg-reader-mask/95" :style="{ top: `${maskWindowTop + maskWindowHeight}px` }" />
         </div>
 
         <Transition
@@ -393,12 +325,12 @@ function isActive(blockIndex: number, sentenceIndex: number): boolean {
                   Foco de leitura
                 </legend>
                 <label class="flex items-center gap-2 text-sm">
-                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="none">
-                  Sem foco
-                </label>
-                <label class="flex items-center gap-2 text-sm">
                   <input v-model="focusMode" type="radio" name="reader-focus-mode" value="line">
                   Em linha
+                </label>
+                <label class="flex items-center gap-2 text-sm">
+                  <input v-model="focusMode" type="radio" name="reader-focus-mode" value="block">
+                  Em bloco
                 </label>
               </fieldset>
 
