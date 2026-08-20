@@ -125,4 +125,24 @@
     @apply bg-background text-foreground;
     @apply font-sans;
     }
+
+  /* Barra de rolagem discreta (trilho invisível, alça arredondada) para
+     áreas de scroll interno, como a lista de comentários. */
+  .scrollbar-elegant {
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted-foreground) transparent;
+  }
+  .scrollbar-elegant::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-elegant::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-elegant::-webkit-scrollbar-thumb {
+    background-color: var(--muted-foreground);
+    border-radius: 9999px;
+  }
+  .scrollbar-elegant::-webkit-scrollbar-thumb:hover {
+    background-color: var(--foreground);
+  }
 }
