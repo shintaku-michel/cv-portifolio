@@ -130,7 +130,7 @@
      áreas de scroll interno, como a lista de comentários. */
   .scrollbar-elegant {
     scrollbar-width: thin;
-    scrollbar-color: var(--muted-foreground) transparent;
+    scrollbar-color: #ebebeb transparent;
   }
   .scrollbar-elegant::-webkit-scrollbar {
     width: 6px;
@@ -139,7 +139,7 @@
     background: transparent;
   }
   .scrollbar-elegant::-webkit-scrollbar-thumb {
-    background-color: var(--muted-foreground);
+    background-color: #ebebeb;
     border-radius: 9999px;
   }
   .scrollbar-elegant::-webkit-scrollbar-thumb:hover {
