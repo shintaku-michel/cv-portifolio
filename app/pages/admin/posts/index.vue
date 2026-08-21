@@ -76,28 +76,38 @@ async function confirmDelete() {
     <ErrorState v-else-if="error" message="Não foi possível carregar os posts." />
     <EmptyState v-else-if="!data?.posts.length" message="Nenhum post cadastrado ainda." />
 
-    <Table v-else>
+    <Table v-else class="table-fixed">
       <TableHeader>
         <TableRow>
-          <TableHead>Título/Autor</TableHead>
-          <TableHead>Categoria</TableHead>
-          <TableHead>Tags</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead class="text-right">
+          <TableHead class="w-[35%]">
+            Título/Autor
+          </TableHead>
+          <TableHead class="w-[15%]">
+            Categoria
+          </TableHead>
+          <TableHead class="w-[25%]">
+            Tags
+          </TableHead>
+          <TableHead class="w-[10%]">
+            Status
+          </TableHead>
+          <TableHead class="w-[15%] text-right">
             Ações
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         <TableRow v-for="post in data?.posts ?? []" :key="post.id">
-          <TableCell class="font-medium">
+          <TableCell class="font-medium whitespace-normal wrap-break-word">
             <p>{{ post.title }}</p>
             <p class="text-sm text-muted-foreground">{{ post.author.name }}</p>
           </TableCell>
 
-          <TableCell>{{ post.category?.name ?? '—' }}</TableCell>
+          <TableCell class="whitespace-normal wrap-break-word">
+            {{ post.category?.name ?? '—' }}
+          </TableCell>
 
-          <TableCell>
+          <TableCell class="whitespace-normal">
             <div v-if="post.tags.length" class="flex flex-wrap gap-1">
               <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
                 {{ tag.name }}

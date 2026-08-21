@@ -95,23 +95,27 @@ async function confirmDelete() {
     <ErrorState v-else-if="error" message="Não foi possível carregar os comentários." />
     <EmptyState v-else-if="!data?.adminComments.length" message="Nenhum comentário nesse status." />
 
-    <Table v-else>
+    <Table v-else class="table-fixed">
       <TableHeader>
         <TableRow>
-          <TableHead>Post/Comentário</TableHead>
-          <TableHead>Autor</TableHead>
-          <TableHead class="text-right">
+          <TableHead class="w-[55%]">
+            Post/Comentário
+          </TableHead>
+          <TableHead class="w-[25%]">
+            Autor
+          </TableHead>
+          <TableHead class="w-[20%] text-right">
             Ações
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         <TableRow v-for="comment in data.adminComments" :key="comment.id">
-          <TableCell>
+          <TableCell class="whitespace-normal wrap-break-word">
             <p>{{ comment.post.title }}</p>
             <p class="text-sm text-muted-foreground">{{ comment.content }}</p>
           </TableCell>
-          <TableCell>
+          <TableCell class="whitespace-normal wrap-break-word">
             <div class="flex flex-col">
               <span>{{ comment.user.name }}</span>
               <span class="text-xs text-muted-foreground">{{ comment.user.email }}</span>

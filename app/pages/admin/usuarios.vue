@@ -58,23 +58,31 @@ async function confirmToggleRole() {
     <LoadingState v-if="pending" />
     <ErrorState v-else-if="error" message="Não foi possível carregar os usuários." />
 
-    <Table v-else>
+    <Table v-else class="table-fixed">
       <TableHeader>
         <TableRow>
-          <TableHead>Nome</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Tipo de perfil</TableHead>
-          <TableHead class="text-right">
+          <TableHead class="w-[25%]">
+            Nome
+          </TableHead>
+          <TableHead class="w-[35%]">
+            Email
+          </TableHead>
+          <TableHead class="w-[20%]">
+            Tipo de perfil
+          </TableHead>
+          <TableHead class="w-[20%] text-right">
             Ações
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         <TableRow v-for="u in data?.users ?? []" :key="u.id">
-          <TableCell class="font-medium">
+          <TableCell class="font-medium whitespace-normal wrap-break-word">
             {{ u.name }}
           </TableCell>
-          <TableCell>{{ u.email }}</TableCell>
+          <TableCell class="whitespace-normal wrap-break-word">
+            {{ u.email }}
+          </TableCell>
           <TableCell>
             <Badge :variant="u.role === 'ADMIN' ? 'default' : 'secondary'">
               {{ u.role }}

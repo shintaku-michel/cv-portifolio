@@ -74,22 +74,32 @@ async function confirmDelete() {
     <ErrorState v-else-if="error" message="Não foi possível carregar os projetos." />
     <EmptyState v-else-if="!data?.projects.length" message="Nenhum projeto cadastrado ainda." />
 
-    <Table v-else>
+    <Table v-else class="table-fixed">
       <TableHeader>
         <TableRow>
-          <TableHead>Título</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Destaque</TableHead>
-          <TableHead>Tecnologias</TableHead>
-          <TableHead>Ordem</TableHead>
-          <TableHead class="text-right">
+          <TableHead class="w-[25%]">
+            Título
+          </TableHead>
+          <TableHead class="w-[12%]">
+            Status
+          </TableHead>
+          <TableHead class="w-[10%]">
+            Destaque
+          </TableHead>
+          <TableHead class="w-[33%]">
+            Tecnologias
+          </TableHead>
+          <TableHead class="w-[8%]">
+            Ordem
+          </TableHead>
+          <TableHead class="w-[12%] text-right">
             Ações
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         <TableRow v-for="project in data?.projects ?? []" :key="project.id">
-          <TableCell class="font-medium">
+          <TableCell class="font-medium whitespace-normal wrap-break-word">
             {{ project.title }}
           </TableCell>
           <TableCell>
@@ -98,7 +108,9 @@ async function confirmDelete() {
             </Badge>
           </TableCell>
           <TableCell>{{ project.featured ? 'Sim' : 'Não' }}</TableCell>
-          <TableCell>{{project.technologies.map(t => t.name).join(', ')}}</TableCell>
+          <TableCell class="whitespace-normal wrap-break-word">
+            {{ project.technologies.map(t => t.name).join(', ') }}
+          </TableCell>
           <TableCell>{{ project.displayOrder }}</TableCell>
           <TableCell class="text-right">
             <ButtonGroup class="justify-end w-full">
