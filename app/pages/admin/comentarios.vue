@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { CheckIcon, EllipsisIcon, EyeOffIcon, Trash2Icon } from '@lucide/vue'
+import { CheckIcon, EllipsisIcon, EyeIcon, EyeOffIcon, Trash2Icon } from '@lucide/vue'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Comentários' })
@@ -104,9 +104,7 @@ async function remove(comment: Comment) {
       <TableBody>
         <TableRow v-for="comment in data.adminComments" :key="comment.id">
           <TableCell>
-            <NuxtLink :to="`/posts/${comment.post.slug}`" class="hover:underline">
-              {{ comment.post.title }}
-            </NuxtLink>
+            <p>{{ comment.post.title }}</p>
             <p class="text-sm text-muted-foreground">{{ comment.content }}</p>
           </TableCell>
           <TableCell>
@@ -125,6 +123,9 @@ async function remove(comment: Comment) {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem @select="navigateTo(`/posts/${comment.post.slug}`)">
+                    <EyeIcon /> Visualizar
+                  </DropdownMenuItem>
                   <DropdownMenuItem v-if="comment.status !== 'VISIBLE'" @select="approve(comment)">
                     <CheckIcon /> Aprovar
                   </DropdownMenuItem>
