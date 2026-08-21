@@ -62,14 +62,6 @@ async function togglePublish() {
   await useGraphQL(mutation, { id })
   await refresh()
 }
-
-async function remove() {
-  if (!confirm(`Excluir o projeto "${project.value.title}"? Essa ação não pode ser desfeita.`)) {
-    return
-  }
-  await useGraphQL(`mutation ($id: ID!) { deleteProject(id: $id) }`, { id })
-  await navigateTo('/admin/projetos')
-}
 </script>
 
 <template>
@@ -81,9 +73,6 @@ async function remove() {
       <div class="flex gap-2">
         <Button variant="outline" @click="togglePublish">
           {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-        </Button>
-        <Button variant="destructive" @click="remove">
-          Excluir
         </Button>
       </div>
     </div>
