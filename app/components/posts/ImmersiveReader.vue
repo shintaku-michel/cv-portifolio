@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PanelRightOpenIcon, PauseIcon, PlayIcon, XIcon } from '@lucide/vue'
+import { PanelRightCloseIcon, PanelRightOpenIcon, PauseIcon, PlayIcon, XIcon } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
@@ -267,7 +267,8 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
           :aria-label="sidebarOpen ? 'Fechar configurações do leitor' : 'Abrir configurações do leitor'"
           @click="sidebarOpen = !sidebarOpen"
         >
-          <PanelRightOpenIcon class="size-5" />
+          <PanelRightCloseIcon v-if="sidebarOpen" class="size-5" />
+          <PanelRightOpenIcon v-else class="size-5" />
         </Button>
       </header>
 
