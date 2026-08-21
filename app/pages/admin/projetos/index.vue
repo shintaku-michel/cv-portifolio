@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import type { Project } from '#shared/types/project'
+import { EllipsisIcon, EyeIcon, EyeOffIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import type { Project } from '#shared/types/project'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Projetos' })
@@ -93,33 +96,32 @@ async function remove(project: Project) {
           <TableCell>{{ project.featured ? 'Sim' : 'Não' }}</TableCell>
           <TableCell>{{ project.technologies.map(t => t.name).join(', ') }}</TableCell>
           <TableCell>{{ project.displayOrder }}</TableCell>
-          <TableCell class="flex flex-wrap justify-end gap-2">
-            <NuxtLink :to="`/admin/projetos/${project.id}/editar`">
-              <Button size="sm" variant="outline">
-                Editar
-              </Button>
-            </NuxtLink>
-            <NuxtLink :to="`/projetos/${project.slug}`">
-              <Button size="sm" variant="outline">
-                Visualizar
-              </Button>
-            </NuxtLink>
-            <Button
-              size="sm"
-              variant="outline"
-              :disabled="actionPending === project.id"
-              @click="togglePublish(project)"
-            >
-              {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              :disabled="actionPending === project.id"
-              @click="remove(project)"
-            >
-              Excluir
-            </Button>
+          <TableCell class="text-right">
+            <ButtonGroup class="justify-end">
+              <DropdownMenu :modal="false">
+                <DropdownMenuTrigger as-child>
+                  <Button size="icon" variant="outline" :disabled="actionPending === project.id" aria-label="Ações do projeto">
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem @select="navigateTo(`/admin/projetos/${project.id}/editar`)">
+                    <PencilIcon /> Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="navigateTo(`/projetos/${project.slug}`)">
+                    <EyeIcon /> Visualizar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="togglePublish(project)">
+                    <component :is="project.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                    {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" @select="remove(project)">
+                    <Trash2Icon /> Excluir
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </ButtonGroup>
           </TableCell>
         </TableRow>
       </TableBody>
