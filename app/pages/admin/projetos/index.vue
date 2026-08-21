@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { Project } from '#shared/types/project'
-import { EllipsisIcon, EyeIcon, EyeOffIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { EllipsisIcon, EyeIcon, EyeOffIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Projetos' })
@@ -41,14 +42,17 @@ async function togglePublish(project: Project) {
   }
 }
 
-async function remove(project: Project) {
-  if (!confirm(`Excluir o projeto "${project.title}"? Essa ação não pode ser desfeita.`)) {
-    return
-  }
-  actionPending.value = project.id
+const confirmDeleteTarget = ref<Project | null>(null)
+
+async function confirmDelete() {
+  const target = confirmDeleteTarget.value
+  if (!target) return
+
+  actionPending.value = target.id
   try {
-    await useGraphQL(`mutation ($id: ID!) { deleteProject(id: $id) }`, { id: project.id })
+    await useGraphQL(`mutation ($id: ID!) { deleteProject(id: $id) }`, { id: target.id })
     await refresh()
+    confirmDeleteTarget.value = null
   } finally {
     actionPending.value = null
   }
@@ -94,13 +98,14 @@ async function remove(project: Project) {
             </Badge>
           </TableCell>
           <TableCell>{{ project.featured ? 'Sim' : 'Não' }}</TableCell>
-          <TableCell>{{ project.technologies.map(t => t.name).join(', ') }}</TableCell>
+          <TableCell>{{project.technologies.map(t => t.name).join(', ')}}</TableCell>
           <TableCell>{{ project.displayOrder }}</TableCell>
           <TableCell class="text-right">
-            <ButtonGroup class="justify-end">
+            <ButtonGroup class="justify-end w-full">
               <DropdownMenu :modal="false">
                 <DropdownMenuTrigger as-child>
-                  <Button size="icon" variant="outline" :disabled="actionPending === project.id" aria-label="Ações do projeto">
+                  <Button size="icon" variant="outline" :disabled="actionPending === project.id"
+                    aria-label="Ações do projeto">
                     <EllipsisIcon />
                   </Button>
                 </DropdownMenuTrigger>
@@ -116,7 +121,7 @@ async function remove(project: Project) {
                     {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" @select="remove(project)">
+                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = project">
                     <Trash2Icon /> Excluir
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -126,5 +131,29 @@ async function remove(project: Project) {
         </TableRow>
       </TableBody>
     </Table>
+
+    <Dialog :open="!!confirmDeleteTarget" @update:open="(open) => { if (!open) confirmDeleteTarget = null }">
+      <DialogContent v-if="confirmDeleteTarget">
+        <DialogHeader>
+          <DialogTitle>Excluir projeto</DialogTitle>
+          <DialogDescription>
+            Tem certeza que deseja excluir o projeto <strong>{{ confirmDeleteTarget.title }}</strong>? Essa ação não pode ser desfeita.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" :disabled="actionPending === confirmDeleteTarget.id" @click="confirmDeleteTarget = null">
+            Cancelar
+          </Button>
+          <Button
+            variant="destructive"
+            class="bg-destructive text-white hover:bg-destructive/90"
+            :disabled="actionPending === confirmDeleteTarget.id"
+            @click="confirmDelete"
+          >
+            Excluir
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>

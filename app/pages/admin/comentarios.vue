@@ -5,6 +5,7 @@ import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { CheckIcon, EllipsisIcon, EyeIcon, EyeOffIcon, Trash2Icon } from '@lucide/vue'
@@ -58,14 +59,17 @@ async function hide(comment: Comment) {
   }
 }
 
-async function remove(comment: Comment) {
-  if (!confirm('Excluir este comentário? Essa ação não pode ser desfeita.')) {
-    return
-  }
-  actionPending.value = comment.id
+const confirmDeleteTarget = ref<Comment | null>(null)
+
+async function confirmDelete() {
+  const target = confirmDeleteTarget.value
+  if (!target) return
+
+  actionPending.value = target.id
   try {
-    await useGraphQL(`mutation ($id: ID!) { deleteComment(id: $id) }`, { id: comment.id })
+    await useGraphQL(`mutation ($id: ID!) { deleteComment(id: $id) }`, { id: target.id })
     await refresh()
+    confirmDeleteTarget.value = null
   } finally {
     actionPending.value = null
   }
@@ -133,7 +137,7 @@ async function remove(comment: Comment) {
                     <EyeOffIcon /> Ocultar
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" @select="remove(comment)">
+                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = comment">
                     <Trash2Icon /> Excluir
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -143,5 +147,30 @@ async function remove(comment: Comment) {
         </TableRow>
       </TableBody>
     </Table>
+
+    <Dialog :open="!!confirmDeleteTarget" @update:open="(open) => { if (!open) confirmDeleteTarget = null }">
+      <DialogContent v-if="confirmDeleteTarget">
+        <DialogHeader>
+          <DialogTitle>Excluir comentário</DialogTitle>
+          <DialogDescription>
+            Tem certeza que deseja excluir o comentário de <strong>{{ confirmDeleteTarget.user.name }}</strong>
+            ("{{ confirmDeleteTarget.content }}")? Essa ação não pode ser desfeita.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" :disabled="actionPending === confirmDeleteTarget.id" @click="confirmDeleteTarget = null">
+            Cancelar
+          </Button>
+          <Button
+            variant="destructive"
+            class="bg-destructive text-white hover:bg-destructive/90"
+            :disabled="actionPending === confirmDeleteTarget.id"
+            @click="confirmDelete"
+          >
+            Excluir
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
