@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import type { SessionUser, UserRole } from '#shared/types/auth'
+import { EllipsisIcon, ShieldCheckIcon, ShieldOffIcon } from '@lucide/vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import type { SessionUser, UserRole } from '#shared/types/auth'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Usuários' })
@@ -71,15 +74,27 @@ async function toggleRole(targetUser: SessionUser) {
             </Badge>
           </TableCell>
           <TableCell class="text-right">
-            <Button
-              size="sm"
-              variant="outline"
-              :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
-              :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
-              @click="toggleRole(u)"
-            >
-              {{ u.role === 'ADMIN' ? 'Tornar USER' : 'Tornar ADMIN' }}
-            </Button>
+            <ButtonGroup class="justify-end">
+              <DropdownMenu :modal="false">
+                <DropdownMenuTrigger as-child>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
+                    :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
+                    aria-label="Ações do usuário"
+                  >
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem @select="toggleRole(u)">
+                    <component :is="u.role === 'ADMIN' ? ShieldOffIcon : ShieldCheckIcon" />
+                    {{ u.role === 'ADMIN' ? 'Tornar USER' : 'Tornar ADMIN' }}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </ButtonGroup>
           </TableCell>
         </TableRow>
       </TableBody>
