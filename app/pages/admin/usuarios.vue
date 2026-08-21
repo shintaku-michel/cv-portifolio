@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { SessionUser, UserRole } from '#shared/types/auth'
-import { EllipsisIcon, ShieldCheckIcon, ShieldOffIcon } from '@lucide/vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { ShieldCheckIcon, ShieldOffIcon } from '@lucide/vue'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Usuários' })
@@ -20,17 +19,25 @@ const { data, pending, error, refresh } = await useAsyncData('admin-usuarios', (
 
 const actionPending = ref<string | null>(null)
 const errorMessage = ref<string | null>(null)
+const confirmTarget = ref<SessionUser | null>(null)
 
-async function toggleRole(targetUser: SessionUser) {
-  const newRole: UserRole = targetUser.role === 'ADMIN' ? 'USER' : 'ADMIN'
+function newRoleFor(targetUser: SessionUser): UserRole {
+  return targetUser.role === 'ADMIN' ? 'USER' : 'ADMIN'
+}
+
+async function confirmToggleRole() {
+  const targetUser = confirmTarget.value
+  if (!targetUser) return
+
   actionPending.value = targetUser.id
   errorMessage.value = null
   try {
     await useGraphQL(
       `mutation ($id: ID!, $role: UserRole!) { updateUserRole(id: $id, role: $role) { id } }`,
-      { id: targetUser.id, role: newRole }
+      { id: targetUser.id, role: newRoleFor(targetUser) }
     )
     await refresh()
+    confirmTarget.value = null
   } catch (err) {
     errorMessage.value = err instanceof Error ? err.message : 'Erro ao atualizar usuário'
   } finally {
@@ -56,7 +63,7 @@ async function toggleRole(targetUser: SessionUser) {
         <TableRow>
           <TableHead>Nome</TableHead>
           <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
+          <TableHead>Tipo de perfil</TableHead>
           <TableHead class="text-right">
             Ações
           </TableHead>
@@ -74,30 +81,39 @@ async function toggleRole(targetUser: SessionUser) {
             </Badge>
           </TableCell>
           <TableCell class="text-right">
-            <ButtonGroup class="justify-end">
-              <DropdownMenu :modal="false">
-                <DropdownMenuTrigger as-child>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
-                    :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
-                    aria-label="Ações do usuário"
-                  >
-                    <EllipsisIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem @select="toggleRole(u)">
-                    <component :is="u.role === 'ADMIN' ? ShieldOffIcon : ShieldCheckIcon" />
-                    {{ u.role === 'ADMIN' ? 'Tornar USER' : 'Tornar ADMIN' }}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </ButtonGroup>
+            <Button
+              size="sm"
+              variant="outline"
+              :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
+              :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
+              @click="confirmTarget = u"
+            >
+              <component :is="u.role === 'ADMIN' ? ShieldOffIcon : ShieldCheckIcon" />
+              Alterar
+            </Button>
           </TableCell>
         </TableRow>
       </TableBody>
     </Table>
+
+    <Dialog :open="!!confirmTarget" @update:open="(open) => { if (!open) confirmTarget = null }">
+      <DialogContent v-if="confirmTarget">
+        <DialogHeader>
+          <DialogTitle>Alterar tipo de perfil</DialogTitle>
+          <DialogDescription>
+            Tem certeza que deseja alterar o perfil de <strong>{{ confirmTarget.name }}</strong> de
+            <strong>{{ confirmTarget.role }}</strong> para <strong>{{ newRoleFor(confirmTarget) }}</strong>?
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" :disabled="actionPending === confirmTarget.id" @click="confirmTarget = null">
+            Cancelar
+          </Button>
+          <Button :disabled="actionPending === confirmTarget.id" @click="confirmToggleRole">
+            Confirmar
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
