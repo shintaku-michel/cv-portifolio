@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import type { Post } from '#shared/types/post'
+import type { Project } from '#shared/types/project'
+import { Code2Icon, CoffeeIcon } from '@lucide/vue'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Code2Icon } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -12,11 +15,38 @@ useSeoMeta({
 })
 useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
 
+const { data: projectsData } = await useAsyncData('home-featured-projects', () =>
+  useGraphQL<{ featuredProjects: Project[] }>(`
+    query FeaturedProjects {
+      featuredProjects {
+        id title slug shortDescription coverImage
+        technologies { id name slug }
+      }
+    }
+  `)
+)
+
+const { data: postsData } = await useAsyncData('home-latest-posts', () =>
+  useGraphQL<{ posts: Post[] }>(`
+    query LatestPosts {
+      posts {
+        id title slug excerpt publishedAt
+      }
+    }
+  `)
+)
+
+const latestPosts = computed(() => (postsData.value?.posts ?? []).slice(0, 3))
+
+function formatDate(value: string | null) {
+  if (!value) return null
+  return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+}
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl px-4 py-16">
-    <div class="mb-16 flex flex-col items-center gap-4 text-center">
+  <div class="flex flex-col gap-24">
+    <section id="inicio" class="flex flex-col items-center gap-4 pt-8 text-center">
       <div class="relative">
         <div class="relative h-32 w-32 overflow-hidden rounded-full ring-3 ring-[#0d9373]">
           <img src="https://avatars.githubusercontent.com/u/12748346?v=4" alt="michel shintaku">
@@ -45,6 +75,136 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
           <Button variant="outline">Ler o blog</Button>
         </NuxtLink>
       </div>
-    </div>
+    </section>
+
+    <section id="perfil" class="scroll-mt-8">
+      <h2 class="mb-4 text-2xl font-semibold">
+        Perfil
+      </h2>
+      <p class="text-muted-foreground">
+        Em construção.
+      </p>
+    </section>
+
+    <section id="valores" class="scroll-mt-8">
+      <h2 class="mb-4 text-2xl font-semibold">
+        Valores
+      </h2>
+      <p class="text-muted-foreground">
+        Em construção.
+      </p>
+    </section>
+
+    <section id="formacao" class="scroll-mt-8">
+      <h2 class="mb-4 text-2xl font-semibold">
+        Formação
+      </h2>
+      <p class="text-muted-foreground">
+        Em construção.
+      </p>
+    </section>
+
+    <section id="cursos" class="scroll-mt-8">
+      <h2 class="mb-4 text-2xl font-semibold">
+        Cursos
+      </h2>
+      <p class="text-muted-foreground">
+        Em construção.
+      </p>
+    </section>
+
+    <section id="experiencia" class="scroll-mt-8">
+      <h2 class="mb-4 text-2xl font-semibold">
+        Experiência
+      </h2>
+      <p class="text-muted-foreground">
+        Em construção.
+      </p>
+    </section>
+
+    <section id="projetos" class="scroll-mt-8">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">
+          Projetos em destaque
+        </h2>
+        <NuxtLink to="/projetos" class="text-sm text-muted-foreground hover:underline">
+          Ver todos
+        </NuxtLink>
+      </div>
+
+      <div v-if="projectsData?.featuredProjects.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <NuxtLink v-for="project in projectsData.featuredProjects" :key="project.id" :to="`/projetos/${project.slug}`"
+          class="flex flex-col gap-3 rounded-lg border p-5 transition-colors hover:bg-accent">
+          <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
+            class="aspect-video w-full rounded-md object-cover">
+          <h3 class="text-lg font-medium">
+            {{ project.title }}
+          </h3>
+          <p class="text-sm text-muted-foreground">
+            {{ project.shortDescription }}
+          </p>
+          <div v-if="project.technologies.length" class="flex flex-wrap gap-1">
+            <Badge v-for="tech in project.technologies" :key="tech.id" variant="outline">
+              {{ tech.name }}
+            </Badge>
+          </div>
+        </NuxtLink>
+      </div>
+      <p v-else class="text-muted-foreground">
+        Nenhum projeto em destaque no momento.
+      </p>
+    </section>
+
+    <section id="blog" class="scroll-mt-8">
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-2xl font-semibold">
+          Blog
+        </h2>
+        <NuxtLink to="/posts" class="text-sm text-muted-foreground hover:underline">
+          Ver todos
+        </NuxtLink>
+      </div>
+
+      <div v-if="latestPosts.length" class="flex flex-col gap-4">
+        <NuxtLink v-for="post in latestPosts" :key="post.id" :to="`/posts/${post.slug}`"
+          class="flex flex-col gap-1 rounded-lg border p-5 transition-colors hover:bg-accent">
+          <span v-if="post.publishedAt" class="text-xs text-muted-foreground">{{ formatDate(post.publishedAt) }}</span>
+          <h3 class="text-lg font-medium">
+            {{ post.title }}
+          </h3>
+          <p class="text-sm text-muted-foreground">
+            {{ post.excerpt }}
+          </p>
+        </NuxtLink>
+      </div>
+      <p v-else class="text-muted-foreground">
+        Nenhum post publicado ainda.
+      </p>
+    </section>
+
+    <section id="contato" class="scroll-mt-8">
+      <h2 class="mb-4 text-2xl font-semibold">
+        Contato
+      </h2>
+      <p class="text-muted-foreground">
+        Em construção.
+      </p>
+    </section>
+
+    <section id="pagar-um-cafe" class="scroll-mt-8 pb-24">
+      <div class="flex flex-col items-start gap-4 rounded-lg border p-8">
+        <CoffeeIcon class="size-8 text-muted-foreground" />
+        <h2 class="text-2xl font-semibold">
+          Pagar um café
+        </h2>
+        <p class="max-w-2xl text-muted-foreground">
+          Tem um problema técnico ou uma dúvida de arquitetura e quer trocar uma ideia? Descreva o que você precisa
+          e a gente marca um café (virtual) para conversar sobre o diagnóstico e possíveis formas de resolver.
+        </p>
+        <NuxtLink to="/pagar-um-cafe">
+          <Button>Pagar um café</Button>
+        </NuxtLink>
+      </div>
+    </section>
   </div>
 </template>
