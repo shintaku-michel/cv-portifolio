@@ -8,9 +8,12 @@ import {
   GraduationCapIcon,
   HouseIcon,
   MailIcon,
+  MoonIcon,
   NewspaperIcon,
+  SunIcon,
   UserIcon
 } from '@lucide/vue'
+import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 const navItems = [
@@ -25,27 +28,55 @@ const navItems = [
   { id: 'contato', label: 'Contato', icon: MailIcon },
   { id: 'pagar-um-cafe', label: 'Pagar um café', icon: CoffeeIcon }
 ]
+
+const { theme, setTheme } = useTheme()
+
+function toggleTheme() {
+  setTheme(theme.value === 'dark' ? 'light' : 'dark')
+}
+
+const themeToggleLabel = computed(() => theme.value === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro')
 </script>
 
 <template>
   <div class="min-h-dvh">
     <nav
-      class="fixed inset-y-0 left-0 z-40 flex w-16 flex-col items-center justify-center gap-1 overflow-y-auto border-r bg-background py-4"
+      class="fixed inset-y-0 left-0 z-40 flex w-16 flex-col items-center overflow-y-auto border-r bg-background py-4"
       aria-label="Menu principal"
     >
       <TooltipProvider>
-        <Tooltip v-for="item in navItems" :key="item.id">
+        <div class="flex flex-1 flex-col items-center justify-center gap-1">
+          <Tooltip v-for="item in navItems" :key="item.id">
+            <TooltipTrigger as-child>
+              <NuxtLink
+                :to="`/#${item.id}`"
+                :aria-label="item.label"
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                <component :is="item.icon" class="size-5" />
+              </NuxtLink>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              {{ item.label }}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+        <Tooltip>
           <TooltipTrigger as-child>
-            <NuxtLink
-              :to="`/#${item.id}`"
-              :aria-label="item.label"
-              class="flex size-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            <Button
+              variant="ghost"
+              size="icon"
+              :aria-label="themeToggleLabel"
+              class="mt-2 shrink-0 text-muted-foreground"
+              @click="toggleTheme"
             >
-              <component :is="item.icon" class="size-5" />
-            </NuxtLink>
+              <SunIcon v-if="theme === 'light'" class="size-5" />
+              <MoonIcon v-else class="size-5" />
+            </Button>
           </TooltipTrigger>
           <TooltipContent side="right">
-            {{ item.label }}
+            {{ themeToggleLabel }}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
