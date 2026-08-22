@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Post } from '#shared/types/post'
 import type { Project } from '#shared/types/project'
-import { Code2Icon, CoffeeIcon } from '@lucide/vue'
+import TechMarquee from '@/components/common/TechMarquee.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Code2Icon, CoffeeIcon } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -62,19 +63,12 @@ function formatDate(value: string | null) {
       <h1 class="text-3xl font-semibold">
         Desenvolvedor Fullstack
       </h1>
-      <p>
+      <p class="max-w-xl text-muted-foreground">
         MISSÃO: Desenvolver produtos digitais inovadores que integrem tecnologia, estratégia e experiência humana
         verdadeira.
       </p>
 
-      <div class="flex gap-3">
-        <NuxtLink to="/projetos">
-          <Button>Ver projetos</Button>
-        </NuxtLink>
-        <NuxtLink to="/posts">
-          <Button variant="outline">Ler o blog</Button>
-        </NuxtLink>
-      </div>
+      <TechMarquee class="max-w-xl" />
     </section>
 
     <section id="perfil" class="scroll-mt-8">
