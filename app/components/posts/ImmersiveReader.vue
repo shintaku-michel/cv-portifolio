@@ -13,12 +13,10 @@ const props = defineProps<{
 const open = defineModel<boolean>('open', { default: false })
 
 type TextSize = 'small' | 'medium' | 'large'
-type Theme = 'light' | 'dark'
 type VoiceGender = 'female' | 'male'
 
 interface ReaderSettings {
   textSize: TextSize
-  theme: Theme
   focusEnabled: boolean
   voiceGender: VoiceGender
   speed: number
@@ -26,7 +24,6 @@ interface ReaderSettings {
 
 const DEFAULT_SETTINGS: ReaderSettings = {
   textSize: 'large',
-  theme: 'light',
   focusEnabled: true,
   voiceGender: 'female',
   speed: 1.25
@@ -35,10 +32,17 @@ const DEFAULT_SETTINGS: ReaderSettings = {
 const STORAGE_KEY = 'portfolio-cms:immersive-reader-settings'
 
 const textSize = ref<TextSize>(DEFAULT_SETTINGS.textSize)
-const theme = ref<Theme>(DEFAULT_SETTINGS.theme)
 const focusEnabled = ref(DEFAULT_SETTINGS.focusEnabled)
 const voiceGender = ref<VoiceGender>(DEFAULT_SETTINGS.voiceGender)
 const speed = ref(DEFAULT_SETTINGS.speed)
+
+// Tema é global — o seletor abaixo reflete e altera o tema de toda a
+// aplicação, não apenas do leitor.
+const { theme, setTheme } = useTheme()
+const themeModel = computed({
+  get: () => theme.value,
+  set: (value) => setTheme(value)
+})
 
 const sidebarOpen = ref(false)
 const isPlaying = ref(false)
@@ -60,7 +64,6 @@ function loadSettings() {
     if (!raw) return
     const saved = JSON.parse(raw) as Partial<ReaderSettings>
     if (saved.textSize) textSize.value = saved.textSize
-    if (saved.theme) theme.value = saved.theme
     if (typeof saved.focusEnabled === 'boolean') focusEnabled.value = saved.focusEnabled
     if (saved.voiceGender) voiceGender.value = saved.voiceGender
     if (typeof saved.speed === 'number') speed.value = saved.speed
@@ -73,7 +76,6 @@ function persistSettings() {
   if (typeof window === 'undefined') return
   const settings: ReaderSettings = {
     textSize: textSize.value,
-    theme: theme.value,
     focusEnabled: focusEnabled.value,
     voiceGender: voiceGender.value,
     speed: speed.value
@@ -81,7 +83,7 @@ function persistSettings() {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
 }
 
-watch([textSize, theme, focusEnabled, voiceGender, speed], persistSettings)
+watch([textSize, focusEnabled, voiceGender, speed], persistSettings)
 
 const blocks = computed(() => extractReadableBlocks(renderMarkdown(props.content)))
 const blockSentences = computed(() => blocks.value.map(splitSentences))
@@ -237,7 +239,6 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
     <DialogContent
       :show-close-button="false"
       class="inset-0 top-0 left-0 grid h-screen w-screen max-w-none translate-x-0 translate-y-0 grid-rows-[auto_1fr] gap-0 rounded-none bg-background p-0 text-foreground sm:max-w-none"
-      :class="theme === 'dark' ? 'dark' : ''"
       @escape-key-down="onEscapeKeyDown"
     >
       <DialogTitle class="sr-only">
@@ -362,11 +363,11 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
                   Tema
                 </legend>
                 <label class="flex items-center gap-2 text-sm">
-                  <input v-model="theme" type="radio" name="reader-theme" value="light">
+                  <input v-model="themeModel" type="radio" name="reader-theme" value="light">
                   Claro
                 </label>
                 <label class="flex items-center gap-2 text-sm">
-                  <input v-model="theme" type="radio" name="reader-theme" value="dark">
+                  <input v-model="themeModel" type="radio" name="reader-theme" value="dark">
                   Escuro
                 </label>
               </fieldset>

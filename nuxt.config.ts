@@ -9,7 +9,15 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'pt-BR' },
       title: 'Portfolio CMS',
-      titleTemplate: '%s · Portfolio CMS'
+      titleTemplate: '%s · Portfolio CMS',
+      script: [
+        {
+          // Aplica o tema salvo ao <html> antes da hidratação, evitando
+          // flash de tema claro seguido de escuro (ou vice-versa).
+          innerHTML: `(function(){try{var t=localStorage.getItem('portfolio-cms:theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}})();`,
+          type: 'text/javascript'
+        }
+      ]
     }
   },
   modules: ['@nuxt/eslint'],
