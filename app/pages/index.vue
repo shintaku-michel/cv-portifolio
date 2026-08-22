@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import type { Project } from '#shared/types/project'
-import EmptyState from '@/components/common/EmptyState.vue'
-import ErrorState from '@/components/common/ErrorState.vue'
-import LoadingState from '@/components/common/LoadingState.vue'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Code2Icon } from '@lucide/vue'
 
@@ -17,16 +12,6 @@ useSeoMeta({
 })
 useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
 
-const { data, pending, error } = await useAsyncData('home-featured-projects', () =>
-  useGraphQL<{ featuredProjects: Project[] }>(`
-    query FeaturedProjects {
-      featuredProjects {
-        id title slug shortDescription coverImage
-        technologies { id name slug }
-      }
-    }
-  `)
-)
 </script>
 
 <template>
@@ -61,34 +46,5 @@ const { data, pending, error } = await useAsyncData('home-featured-projects', ()
         </NuxtLink>
       </div>
     </div>
-
-    <section>
-      <h2 class="mb-6 text-xl font-medium">
-        Projetos em destaque
-      </h2>
-
-      <LoadingState v-if="pending" />
-      <ErrorState v-else-if="error" message="Não foi possível carregar os projetos em destaque." />
-      <EmptyState v-else-if="!data?.featuredProjects.length" message="Nenhum projeto em destaque no momento." />
-
-      <div v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <NuxtLink v-for="project in data.featuredProjects" :key="project.id" :to="`/projetos/${project.slug}`"
-          class="flex flex-col gap-3 rounded-lg border p-5 transition-colors hover:bg-accent">
-          <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
-            class="aspect-video w-full rounded-md object-cover">
-          <h3 class="text-lg font-medium">
-            {{ project.title }}
-          </h3>
-          <p class="text-sm text-muted-foreground">
-            {{ project.shortDescription }}
-          </p>
-          <div v-if="project.technologies.length" class="flex flex-wrap gap-1">
-            <Badge v-for="tech in project.technologies" :key="tech.id" variant="outline">
-              {{ tech.name }}
-            </Badge>
-          </div>
-        </NuxtLink>
-      </div>
-    </section>
   </div>
 </template>
