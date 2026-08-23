@@ -43,11 +43,17 @@ function formatDate(value: string | null) {
   if (!value) return null
   return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
 }
+
+// A barra de ícones navega por hash (`/#secao`) — só a seção correspondente
+// fica visível por vez, em vez da página rolar por todas elas.
+const route = useRoute()
+const activeSection = computed(() => (route.hash ? route.hash.slice(1) : 'inicio'))
 </script>
 
 <template>
   <div class="flex flex-col gap-24">
-    <section id="inicio" class="flex flex-col items-center gap-4 pt-8 text-center">
+    <section v-if="activeSection === 'inicio'" id="inicio"
+      class="flex h-dvh flex-col items-center justify-center gap-4 text-center">
       <div class="relative">
         <div class="relative h-32 w-32 overflow-hidden rounded-full ring-3 ring-[#0d9373]">
           <img src="https://avatars.githubusercontent.com/u/12748346?v=4" alt="michel shintaku">
@@ -71,56 +77,56 @@ function formatDate(value: string | null) {
       <TechMarquee class="max-w-xl" />
     </section>
 
-    <section id="perfil" class="scroll-mt-8">
-      <h2 class="mb-4 text-2xl font-semibold">
+    <section v-if="activeSection === 'perfil'" id="perfil" class="scroll-mt-8">
+      <h1 class="mb-4 text-2xl font-semibold">
         Perfil
-      </h2>
+      </h1>
       <p class="text-muted-foreground">
         Em construção.
       </p>
     </section>
 
-    <section id="valores" class="scroll-mt-8">
-      <h2 class="mb-4 text-2xl font-semibold">
+    <section v-if="activeSection === 'valores'" id="valores" class="scroll-mt-8">
+      <h1 class="mb-4 text-2xl font-semibold">
         Valores
-      </h2>
+      </h1>
       <p class="text-muted-foreground">
         Em construção.
       </p>
     </section>
 
-    <section id="formacao" class="scroll-mt-8">
-      <h2 class="mb-4 text-2xl font-semibold">
+    <section v-if="activeSection === 'formacao'" id="formacao" class="scroll-mt-8">
+      <h1 class="mb-4 text-2xl font-semibold">
         Formação
-      </h2>
+      </h1>
       <p class="text-muted-foreground">
         Em construção.
       </p>
     </section>
 
-    <section id="cursos" class="scroll-mt-8">
-      <h2 class="mb-4 text-2xl font-semibold">
+    <section v-if="activeSection === 'cursos'" id="cursos" class="scroll-mt-8">
+      <h1 class="mb-4 text-2xl font-semibold">
         Cursos
-      </h2>
+      </h1>
       <p class="text-muted-foreground">
         Em construção.
       </p>
     </section>
 
-    <section id="experiencia" class="scroll-mt-8">
-      <h2 class="mb-4 text-2xl font-semibold">
+    <section v-if="activeSection === 'experiencia'" id="experiencia" class="scroll-mt-8">
+      <h1 class="mb-4 text-2xl font-semibold">
         Experiência
-      </h2>
+      </h1>
       <p class="text-muted-foreground">
         Em construção.
       </p>
     </section>
 
-    <section id="projetos" class="scroll-mt-8">
+    <section v-if="activeSection === 'projetos'" id="projetos" class="scroll-mt-8">
       <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-2xl font-semibold">
+        <h1 class="text-2xl font-semibold">
           Projetos em destaque
-        </h2>
+        </h1>
         <NuxtLink to="/projetos" class="text-sm text-muted-foreground hover:underline">
           Ver todos
         </NuxtLink>
@@ -131,9 +137,9 @@ function formatDate(value: string | null) {
           class="flex flex-col gap-3 rounded-lg border p-5 transition-colors hover:bg-accent">
           <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
             class="aspect-video w-full rounded-md object-cover">
-          <h3 class="text-lg font-medium">
+          <h2 class="text-lg font-medium">
             {{ project.title }}
-          </h3>
+          </h2>
           <p class="text-sm text-muted-foreground">
             {{ project.shortDescription }}
           </p>
@@ -149,11 +155,11 @@ function formatDate(value: string | null) {
       </p>
     </section>
 
-    <section id="blog" class="scroll-mt-8">
+    <section v-if="activeSection === 'blog'" id="blog" class="scroll-mt-8">
       <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-2xl font-semibold">
+        <h1 class="text-2xl font-semibold">
           Blog
-        </h2>
+        </h1>
         <NuxtLink to="/posts" class="text-sm text-muted-foreground hover:underline">
           Ver todos
         </NuxtLink>
@@ -163,9 +169,9 @@ function formatDate(value: string | null) {
         <NuxtLink v-for="post in latestPosts" :key="post.id" :to="`/posts/${post.slug}`"
           class="flex flex-col gap-1 rounded-lg border p-5 transition-colors hover:bg-accent">
           <span v-if="post.publishedAt" class="text-xs text-muted-foreground">{{ formatDate(post.publishedAt) }}</span>
-          <h3 class="text-lg font-medium">
+          <h2 class="text-lg font-medium">
             {{ post.title }}
-          </h3>
+          </h2>
           <p class="text-sm text-muted-foreground">
             {{ post.excerpt }}
           </p>
@@ -176,21 +182,21 @@ function formatDate(value: string | null) {
       </p>
     </section>
 
-    <section id="contato" class="scroll-mt-8">
-      <h2 class="mb-4 text-2xl font-semibold">
+    <section v-if="activeSection === 'contato'" id="contato" class="scroll-mt-8">
+      <h1 class="mb-4 text-2xl font-semibold">
         Contato
-      </h2>
+      </h1>
       <p class="text-muted-foreground">
         Em construção.
       </p>
     </section>
 
-    <section id="pagar-um-cafe" class="scroll-mt-8 pb-24">
+    <section v-if="activeSection === 'pagar-um-cafe'" id="pagar-um-cafe" class="scroll-mt-8 pb-24">
       <div class="flex flex-col items-start gap-4 rounded-lg border p-8">
         <CoffeeIcon class="size-8 text-muted-foreground" />
-        <h2 class="text-2xl font-semibold">
+        <h1 class="text-2xl font-semibold">
           Pagar um café
-        </h2>
+        </h1>
         <p class="max-w-2xl text-muted-foreground">
           Tem um problema técnico ou uma dúvida de arquitetura e quer trocar uma ideia? Descreva o que você precisa
           e a gente marca um café (virtual) para conversar sobre o diagnóstico e possíveis formas de resolver.
