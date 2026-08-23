@@ -13,8 +13,9 @@ export default defineNuxtConfig({
       script: [
         {
           // Aplica o tema salvo ao <html> antes da hidratação, evitando
-          // flash de tema claro seguido de escuro (ou vice-versa).
-          innerHTML: `(function(){try{var t=localStorage.getItem('portfolio-cms:theme');if(t==='dark')document.documentElement.classList.add('dark')}catch(e){}})();`,
+          // flash de tema claro seguido de escuro (ou vice-versa). Padrão é
+          // escuro — só fica claro se o usuário escolheu isso explicitamente.
+          innerHTML: `(function(){try{var t=localStorage.getItem('portfolio-cms:theme');if(t!=='light')document.documentElement.classList.add('dark')}catch(e){}})();`,
           type: 'text/javascript'
         }
       ]

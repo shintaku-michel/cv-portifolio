@@ -10,7 +10,7 @@ function applyTheme(value: Theme) {
 // Estado compartilhado por toda a aplicação — qualquer componente que use
 // este composable lê/escreve o mesmo tema (não é local a cada instância).
 export function useTheme() {
-  const theme = useState<Theme>('app-theme', () => 'light')
+  const theme = useState<Theme>('app-theme', () => 'dark')
 
   function setTheme(value: Theme) {
     theme.value = value
@@ -22,10 +22,11 @@ export function useTheme() {
 
   // Sincroniza o estado reativo com o que o script inline no <head> já
   // aplicou ao <html> antes da hidratação (evita flash de tema errado).
+  // Padrão é escuro — só cai para claro se o usuário salvou essa escolha.
   function initTheme() {
     if (typeof window === 'undefined') return
     const saved = window.localStorage.getItem(THEME_STORAGE_KEY)
-    theme.value = saved === 'dark' ? 'dark' : 'light'
+    theme.value = saved === 'light' ? 'light' : 'dark'
     applyTheme(theme.value)
   }
 
