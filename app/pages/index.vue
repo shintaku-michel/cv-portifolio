@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Post } from '#shared/types/post'
 import type { Project } from '#shared/types/project'
+import michelDark from '@/assets/img/michel-dark.png'
+import michelLight from '@/assets/img/michel-light.png'
 import TechMarquee from '@/components/common/TechMarquee.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -49,6 +51,10 @@ function formatDate(value: string | null) {
 // seções usa uma transição suave (fade) no lugar do scroll que existia antes.
 const route = useRoute()
 const activeSection = computed(() => (route.hash ? route.hash.slice(1) : 'inicio'))
+
+// Avatar troca de foto junto com o tema global (claro/escuro).
+const { theme } = useTheme()
+const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLight))
 </script>
 
 <template>
@@ -57,8 +63,8 @@ const activeSection = computed(() => (route.hash ? route.hash.slice(1) : 'inicio
       <section v-if="activeSection === 'inicio'" id="inicio" key="inicio"
         class="flex h-dvh flex-col items-center justify-center gap-4 text-center">
         <div class="relative">
-          <div class="relative h-32 w-32 overflow-hidden rounded-full ring-3 ring-[#0d9373]">
-            <img src="https://avatars.githubusercontent.com/u/12748346?v=4" alt="michel shintaku">
+          <div class="relative h-32 w-32 overflow-hidden rounded-full ring-3 ring-[#aaaaaa]">
+            <img :src="avatarSrc" alt="michel shintaku">
           </div>
           <div
             class="absolute -right-1 -bottom-1 flex h-7 w-7 items-center justify-center rounded-full bg-white ring-1 ring-[#999999]">
@@ -170,7 +176,8 @@ const activeSection = computed(() => (route.hash ? route.hash.slice(1) : 'inicio
         <div v-if="latestPosts.length" class="flex flex-col gap-4">
           <NuxtLink v-for="post in latestPosts" :key="post.id" :to="`/posts/${post.slug}`"
             class="flex flex-col gap-1 rounded-lg border p-5 transition-colors hover:bg-accent">
-            <span v-if="post.publishedAt" class="text-xs text-muted-foreground">{{ formatDate(post.publishedAt) }}</span>
+            <span v-if="post.publishedAt" class="text-xs text-muted-foreground">{{ formatDate(post.publishedAt)
+              }}</span>
             <h2 class="text-lg font-medium">
               {{ post.title }}
             </h2>
@@ -193,7 +200,8 @@ const activeSection = computed(() => (route.hash ? route.hash.slice(1) : 'inicio
         </p>
       </section>
 
-      <section v-else-if="activeSection === 'pagar-um-cafe'" id="pagar-um-cafe" key="pagar-um-cafe" class="scroll-mt-8 pb-24">
+      <section v-else-if="activeSection === 'pagar-um-cafe'" id="pagar-um-cafe" key="pagar-um-cafe"
+        class="scroll-mt-8 pb-24">
         <div class="flex flex-col items-start gap-4 rounded-lg border p-8">
           <CoffeeIcon class="size-8 text-muted-foreground" />
           <h1 class="text-2xl font-semibold">
@@ -231,6 +239,7 @@ const activeSection = computed(() => (route.hash ? route.hash.slice(1) : 'inicio
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .section-fade-enter-active,
   .section-fade-leave-active {
     transition: none;
