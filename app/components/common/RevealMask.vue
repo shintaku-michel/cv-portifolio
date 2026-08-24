@@ -53,10 +53,10 @@ function reset() {
 .reveal-mask {
   --reveal-x: 50%;
   --reveal-y: 50%;
-  position: relative;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
   isolation: isolate;
-  height: 100%;
-  width: 100%;
 }
 
 .reveal-mask__background {
@@ -71,6 +71,7 @@ function reset() {
   position: relative;
   z-index: 10;
   height: 100%;
+  overflow-y: auto;
   background: var(--background);
 }
 
