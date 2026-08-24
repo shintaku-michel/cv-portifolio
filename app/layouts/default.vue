@@ -9,6 +9,8 @@ import {
   HouseIcon,
   MailIcon,
   MoonIcon,
+  MouseIcon,
+  MouseOffIcon,
   NewspaperIcon,
   SunIcon,
   UserIcon
@@ -36,6 +38,11 @@ function toggleTheme() {
 }
 
 const themeToggleLabel = computed(() => theme.value === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro')
+
+const { enabled: revealEnabled, toggle: toggleRevealMode } = useRevealMode()
+
+const revealToggleLabel = computed(() =>
+  revealEnabled.value ? 'Desativar efeito de revelação com o mouse' : 'Ativar efeito de revelação com o mouse')
 </script>
 
 <template>
@@ -77,6 +84,26 @@ const themeToggleLabel = computed(() => theme.value === 'dark' ? 'Mudar para tem
           </TooltipTrigger>
           <TooltipContent side="right">
             {{ themeToggleLabel }}
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger as-child>
+            <Button
+              variant="ghost"
+              size="icon"
+              :aria-label="revealToggleLabel"
+              :aria-pressed="revealEnabled"
+              class="mt-2 shrink-0"
+              :class="revealEnabled ? 'text-foreground' : 'text-muted-foreground'"
+              @click="toggleRevealMode"
+            >
+              <MouseIcon v-if="revealEnabled" class="size-5" />
+              <MouseOffIcon v-else class="size-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            {{ revealToggleLabel }}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

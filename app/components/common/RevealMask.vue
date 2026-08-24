@@ -2,9 +2,9 @@
 // Lupa de revelação: o conteúdo (slot) cobre a imagem de fundo por completo.
 // Ao mover o mouse, um círculo ao redor do cursor "recorta" o conteúdo via
 // CSS mask-image, deixando a imagem de fundo aparecer só naquela área.
-// Sem mouse (touch) ou antes do primeiro movimento, o conteúdo fica 100%
-// visível — o efeito é puramente decorativo, não esconde nada de verdade
-// (mask-image não afeta a árvore de acessibilidade).
+// Sem mouse (touch), antes do primeiro movimento ou com o efeito desativado
+// pelo botão no menu, o conteúdo fica 100% visível — é opt-in, não deve
+// reagir ao mouse sozinho (mask-image não afeta a árvore de acessibilidade).
 defineOptions({ inheritAttrs: false })
 
 const props = withDefaults(defineProps<{
@@ -15,11 +15,12 @@ const props = withDefaults(defineProps<{
   radius: 160
 })
 
+const { enabled } = useRevealMode()
 const containerRef = ref<HTMLElement | null>(null)
 const active = ref(false)
 
 function updatePosition(event: MouseEvent) {
-  if (!containerRef.value) return
+  if (!enabled.value || !containerRef.value) return
   const rect = containerRef.value.getBoundingClientRect()
   containerRef.value.style.setProperty('--reveal-x', `${event.clientX - rect.left}px`)
   containerRef.value.style.setProperty('--reveal-y', `${event.clientY - rect.top}px`)
@@ -35,7 +36,7 @@ function reset() {
   <div
     ref="containerRef"
     class="reveal-mask"
-    :class="{ 'reveal-mask--active': active }"
+    :class="{ 'reveal-mask--active': active && enabled }"
     :style="{ '--reveal-radius': `${props.radius}px` }"
     @mousemove="updatePosition"
     @mouseleave="reset"
