@@ -5,8 +5,8 @@ import homeBg from '@/assets/img/bg-home-02.png'
 import profileBg from '@/assets/img/bg-profile-01.png'
 import michelDark from '@/assets/img/michel-dark.png'
 import michelLight from '@/assets/img/michel-light.png'
+import TechBadge from '@/components/common/TechBadge.vue'
 import TechMarquee from '@/components/common/TechMarquee.vue'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Code2Icon, FileBadge, FolderGit2Icon, MailIcon } from '@lucide/vue'
 
@@ -143,22 +143,27 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         :style="{ backgroundImage: `url(${profileBg})` }">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:ml-16 md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <h1 class="mb-4 text-2xl font-semibold">
-                Perfil
-              </h1>
+            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+              <div>
+                <h1 class="text-2xl font-semibold">
+                  Perfil
+                </h1>
+                <p class="font-cursive text-xl text-muted-foreground">
+                  Um pouco de hereditariedade e um bocado de compromisso com quem escolhi me tornar.
+                </p>
+              </div>
 
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Nasci em Goiânia e cresci em Brasília. Desde cedo, a arte esteve presente na minha vida e se tornou
                 parte importante da minha formação.
               </p>
-              <p class="text-muted-foreground mb-4">
+              <p>
                 A tecnologia, o design, a música e a cultura japonesa estão entre as principais influências que
                 despertaram minha criatividade e ajudaram a moldar quem sou
                 hoje.
               </p>
 
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Aos 14 anos, tive a oportunidade de viver por quase uma década no Japão, uma experiência que
                 transformou minha forma de enxergar o mundo e aprofundou valores como disciplina, honestidade,
                 organização,
@@ -166,13 +171,13 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 carrego comigo e que, até hoje, fazem parte de quem sou.
               </p>
 
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Hoje, sou desenvolvedor Full Stack e tenho mais de 18 anos de experiência na criação de produtos
                 digitais. Minha trajetória na tecnologia começou em 2005 e, desde 2007, trabalho profissionalmente
                 transformando ideias e necessidades em soluções digitais.
               </p>
 
-              <p class="text-muted-foreground">
+              <p>
                 Ao longo dessa trajetória, busco criar experiências que equilibrem tecnologia, usabilidade,
                 acessibilidade e regras de negócio, sem perder de vista o mais importante: as pessoas que estão do outro
                 lado da tela usando o produto.
@@ -186,44 +191,45 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:ml-16 md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <h1 class="mb-4 text-2xl font-semibold">
-                Valores
-              </h1>
-              <p class="text-muted-foreground mb-4">
+            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+              <div>
+                <h1 class="text-2xl font-semibold">
+                  Valores
+                </h1>
+                <p class="font-cursive text-xl text-muted-foreground">
+                  Experiências que vivi e que carrego para uma vida mais equilibrada
+                </p>
+              </div>
+
+              <p>
                 Acredito que um bom trabalho começa com planejamento, disciplina e aprendizado contínuo. A tecnologia
                 está sempre mudando, e acompanhar essa evolução faz parte do nosso trabalho. Reaprender, experimentar e
                 estar
                 disposto a mudar também são formas de evoluir.
               </p>
-
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Prefiro a comunicação direta e honesta. Problemas devem ser compartilhados o quanto antes, antes que
                 se tornem maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento
                 também
                 fazem parte do trabalho em equipe.
               </p>
-
-              <p class="text-muted-foreground mb-4">
+              <p>
                 A inspiração pode iniciar uma ideia, mas é a consistência que a transforma em resultado. Pequenos
                 avanços,
                 repetidos ao longo do tempo, fazem as coisas acontecerem. Os desafios fazem parte do processo, e
                 enfrentá-los
                 com paciência e persistência também faz parte do trabalho.
               </p>
-
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Os melhores sistemas que construí ao longo da minha carreira nasceram ao lado de pessoas que realmente
                 se importam com o que fazem.
               </p>
-
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Escolha bem as pessoas com quem você trabalha. E, quando não puder escolher, lembre-se: você ainda pode
                 fazer a sua parte, elevar o nível ao seu redor e contribuir para um ambiente mais colaborativo,
                 respeitoso e comprometido com a excelência.
               </p>
-
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Não romantize os erros. Reconheça-os, corrija o que for possível, mude o curso quando necessário,
                 aprenda com eles e siga em frente.
               </p>
@@ -236,11 +242,17 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:ml-16 md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <h1 class="mb-4 text-2xl font-semibold">
-                Formação
-              </h1>
-              <p class="text-muted-foreground mb-4">
+            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+              <div>
+                <h1 class="text-2xl font-semibold">
+                  Formação
+                </h1>
+                <p class="font-cursive text-xl text-muted-foreground">
+                  Acredito na transformação por meio do conhecimento
+                </p>
+              </div>
+
+              <p>
                 Sou graduado em Ciência da Computação pelo Centro Universitário de Brasília (CEUB) e pós-graduado em
                 Full
                 Stack & IA pela Faculdade de Tecnologia Rocketseat. Minha formação, somada a mais de 18 anos de
@@ -249,13 +261,13 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 software e
                 o uso das tecnologias mais adequadas para criar cada solução digital.
               </p>
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Ao longo da minha trajetória, mantenho o hábito de continuar estudando, experimentando novas
                 tecnologias e
                 aprofundando conhecimentos que possam contribuir para a
                 qualidade do meu trabalho.
               </p>
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Humildade para reconhecer que não sei tudo, valorizar o conhecimento e a experiência de outras pessoas,
                 e sabedoria para continuar estudando, aprendendo e evoluindo.
               </p>
@@ -283,11 +295,17 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:ml-16 md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <h1 class="mb-4 text-2xl font-semibold">
-                Cursos
-              </h1>
-              <p class="text-muted-foreground mb-4">
+            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+              <div>
+                <h1 class="text-2xl font-semibold">
+                  Cursos
+                </h1>
+                <p class="font-cursive text-xl text-muted-foreground">
+                  Aprendizados direcionados para desafios e necessidades específicas
+                </p>
+              </div>
+
+              <p>
                 Ao longo da minha carreira, busquei ampliar meus conhecimentos em diferentes áreas do desenvolvimento
                 de
                 software. Tenho cursos em UX/UI Design, acessibilidade (A11y), Frontend, Backend e DevOps. Sempre fui
@@ -296,7 +314,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 explorar
                 novas possibilidades e não ficar limitado por uma única área da tecnologia.
               </p>
-              <p class="text-muted-foreground mb-4">
+              <p>
                 Mais do que acumular certificados, busco conhecimentos que possam ser aplicados na prática e que me
                 ajudem
                 a compreender melhor todo o processo de criação dos produtos digitais que desenvolvo.
@@ -319,42 +337,37 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:ml-16 md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <h1 class="mb-4 text-2xl font-semibold">
-                Experiência
-              </h1>
-              <p class="text-muted-foreground mb-4">
-                Comecei minha carreira no Backend, onde aprendi a construir APIs, aplicar técnicas de segurança de
-                software e trabalhar com padrões de desenvolvimento e diferentes modelos de arquitetura.
+            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+              <div>
+                <h1 class="text-2xl font-semibold">
+                  Experiência
+                </h1>
+                <p class="font-cursive text-xl text-muted-foreground">
+                  A vida como ela é — e o amor por aquilo que perseguimos com genuína dedicação
+                </p>
+              </div>
+
+              <p>
+                Comecei minha carreira no Backend, construindo APIs e aprendendo sobre padrões de desenvolvimento e
+                arquitetura de software. Entre 2010 e 2011, trabalhar com Java exigia conhecer não apenas a linguagem,
+                mas todo um ecossistema de configurações, persistência, empacotamento e servidores de aplicação. Foi
+                quando trabalhei com tecnologias como Java EE, Spring, Hibernate, Maven, Tomcat e JBoss.
               </p>
-              <p class="text-muted-foreground mb-4">
-                Era uma época em que desenvolver em Java exigia muito mais do que dominar a linguagem. Era preciso
-                compreender configurações, empacotamento, servidores de aplicação e toda a infraestrutura necessária
-                para colocar um sistema em funcionamento. Nesse período, trabalhei com tecnologias como Spring,
-                Hibernate, Tomcat e JBoss, além do Angular no Frontend.
+              <p>
+                Com o tempo, minha curiosidade me levou ao Frontend, área em que comecei a me destacar e que se conectou
+                naturalmente ao meu interesse por arte, design e pelo processo de transformar ideias em experiências. Em
+                uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e
+                também me aproximar de UX, ampliando minha percepção sobre a construção de produtos.
               </p>
-              <p class="text-muted-foreground mb-4">
-                Com o tempo, minha curiosidade me levou a explorar cada vez mais o Frontend, uma área em que
-                naturalmente comecei a me destacar. Talvez isso tenha relação com a minha história, minha cultura e,
-                principalmente, com meu interesse por arte, design e pelo processo de transformar ideias em
-                experiências.
+              <p>
+                Mais tarde, voltei ao Backend, dessa vez com Node.js, e percebi o quanto essa experiência havia
+                transformado minha visão como desenvolvedor. Passei a construir APIs pensando também em quem iria
+                consumi-las e a enxergar o desenvolvimento de software de forma mais completa, entendendo como decisões
+                técnicas influenciam o produto e a experiência de quem o utiliza.
               </p>
-              <p class="text-muted-foreground mb-4">
-                Em uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e me
-                aprofundar ainda mais nessa camada que tanto admiro. Nesse período, também me aproximei de UX, uma área
-                que considero fundamental para a construção de produtos melhores — e sobre a qual poderia passar horas
-                conversando também.
-              </p>
-              <p class="text-muted-foreground mb-4">
-                Mais tarde, quando voltei a trabalhar com Backend, dessa vez com Node.js, percebi o quanto a experiência
-                no Frontend havia ampliado minha visão como desenvolvedor. Passei a construir APIs pensando também em
-                quem iria consumi-las, buscando torná-las mais intuitivas, consistentes e fáceis de integrar. Mais do
-                que isso, comecei a enxergar o desenvolvimento de software de forma mais completa, entendendo melhor
-                como cada decisão técnica influencia o produto e a experiência de quem o utiliza.
-              </p>
-              <p class="text-muted-foreground mb-4">
-                Hoje, continuo estudando, experimentando novas tecnologias e aprimorando minhas práticas, sempre
-                buscando evoluir e encontrar maneiras melhores de transformar ideias em soluções.
+              <p>
+                Hoje, continuo estudando, experimentando e aprimorando minhas práticas, sempre buscando evoluir e
+                encontrar maneiras melhores de transformar ideias em soluções.
               </p>
             </div>
           </div>
@@ -366,10 +379,16 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:ml-16 md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <div class="mb-6 flex items-center justify-between gap-2 px-1">
-                <h1 class="text-2xl font-semibold">
-                  Projetos
-                </h1>
+              <div class="mb-6 flex items-center justify-between gap-3 px-1">
+                <div>
+                  <h1 class="text-2xl font-semibold">
+                    Projetos destaque
+                  </h1>
+                  <p class="font-cursive text-xl text-muted-foreground">
+                    Aplicações interessantes e que gostei de desenvolver
+                  </p>
+                </div>
+
                 <NuxtLink to="/projetos" class="text-sm text-muted-foreground hover:underline">
                   Ver todos
                 </NuxtLink>
@@ -387,10 +406,8 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                   <p class="text-sm text-muted-foreground">
                     {{ project.shortDescription }}
                   </p>
-                  <div v-if="project.technologies.length" class="flex flex-wrap gap-1">
-                    <Badge v-for="tech in project.technologies" :key="tech.id" variant="outline">
-                      {{ tech.name }}
-                    </Badge>
+                  <div v-if="project.technologies.length" class="flex flex-wrap gap-2">
+                    <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
                   </div>
                 </NuxtLink>
               </div>
