@@ -8,7 +8,7 @@ import michelLight from '@/assets/img/michel-light.png'
 import TechMarquee from '@/components/common/TechMarquee.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Code2Icon, FolderGit2Icon, MailIcon } from '@lucide/vue'
+import { Code2Icon, FileBadge, FolderGit2Icon, MailIcon } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -192,19 +192,16 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
               </h1>
               <p class="text-muted-foreground mb-4">
                 Acredito que um bom trabalho começa com planejamento, disciplina e aprendizado contínuo. A tecnologia
-                está
-                sempre mudando, e acompanhar essa evolução faz parte do nosso trabalho. Aprender, experimentar e estar
+                está sempre mudando, e acompanhar essa evolução faz parte do nosso trabalho. Reaprender, experimentar e
+                estar
                 disposto a mudar também são formas de evoluir.
               </p>
 
               <p class="text-muted-foreground mb-4">
                 Prefiro a comunicação direta e honesta. Problemas devem ser compartilhados o quanto antes, antes que
-                se
-                tornem
-                maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento também
-                fazem
-                parte
-                do trabalho em equipe.
+                se tornem maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento
+                também
+                fazem parte do trabalho em equipe.
               </p>
 
               <p class="text-muted-foreground mb-4">
@@ -213,6 +210,22 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 repetidos ao longo do tempo, fazem as coisas acontecerem. Os desafios fazem parte do processo, e
                 enfrentá-los
                 com paciência e persistência também faz parte do trabalho.
+              </p>
+
+              <p class="text-muted-foreground mb-4">
+                Os melhores sistemas que construí ao longo da minha carreira nasceram ao lado de pessoas que realmente
+                se importam com o que fazem.
+              </p>
+
+              <p class="text-muted-foreground mb-4">
+                Escolha bem as pessoas com quem você trabalha. E, quando não puder escolher, lembre-se: você ainda pode
+                fazer a sua parte, elevar o nível ao seu redor e contribuir para um ambiente mais colaborativo,
+                respeitoso e comprometido com a excelência.
+              </p>
+
+              <p class="text-muted-foreground mb-4">
+                Não romantize os erros. Reconheça-os, corrija o que for possível, mude o curso quando necessário,
+                aprenda com eles e siga em frente.
               </p>
             </div>
           </div>
@@ -242,6 +255,25 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 aprofundando conhecimentos que possam contribuir para a
                 qualidade do meu trabalho.
               </p>
+              <p class="text-muted-foreground mb-4">
+                Humildade para reconhecer que não sei tudo, valorizar o conhecimento e a experiência de outras pessoas,
+                e sabedoria para continuar estudando, aprendendo e evoluindo.
+              </p>
+
+              <div class="mt-6 flex gap-2">
+                <Button as-child size="lg">
+                  <NuxtLink to="/pos-graduacao" class="flex gap-2">
+                    <FileBadge />
+                    Pós-Graduação
+                  </NuxtLink>
+                </Button>
+                <Button as-child size="lg">
+                  <NuxtLink to="/graduacao" class="flex gap-2">
+                    <FileBadge />
+                    Graduação
+                  </NuxtLink>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -269,6 +301,15 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 ajudem
                 a compreender melhor todo o processo de criação dos produtos digitais que desenvolvo.
               </p>
+
+              <div class="mt-6">
+                <Button as-child size="lg">
+                  <NuxtLink to="/certificados" class="flex gap-2">
+                    <FileBadge />
+                    Certificados
+                  </NuxtLink>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -283,50 +324,37 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 Experiência
               </h1>
               <p class="text-muted-foreground mb-4">
-                Sempre fui muito curioso e gosto de entender como as coisas funcionam. Ao longo da minha carreira,
-                fiz
-                cursos em diferentes áreas do desenvolvimento web, como UX/UI Design, acessibilidade (A11y),
-                Frontend,
-                Backend e
-                DevOps. Essa busca por conhecimentos diversos sempre teve um propósito: ter mais autonomia para
-                transformar ideias em soluções e não ficar limitado por uma única área da tecnologia. Também tive a
-                oportunidade
-                de
-                compartilhar conhecimento como professor de Engenharia de Software e Informática no IFB, experiência
-                que
-                ampliou ainda mais minha forma de aprender e ensinar.
+                Comecei minha carreira no Backend, onde aprendi a construir APIs, aplicar técnicas de segurança de
+                software e trabalhar com padrões de desenvolvimento e diferentes modelos de arquitetura.
               </p>
               <p class="text-muted-foreground mb-4">
-                Comecei minha carreira no Backend, onde aprendi a construir APIs, trabalhar com segurança, padrões de
-                desenvolvimento e arquitetura de software. Foi em uma época em que desenvolver em Java exigia
-                conhecer
-                muito mais do que a linguagem: era preciso entender configuração, empacotamento e toda a
-                infraestrutura
-                necessária para colocar uma aplicação para funcionar, usando tecnologias como Spring, Hibernate,
-                Tomcat ou
-                JBoss, além do Angular no frontend. Mas minha curiosidade acabou me levando também para o Frontend,
-                uma
-                área em
-                que comecei a me destacar. Talvez isso tenha relação com minha história, minha cultura e meu
-                interesse por
-                arte e pelo
-                processo de criação.
+                Era uma época em que desenvolver em Java exigia muito mais do que dominar a linguagem. Era preciso
+                compreender configurações, empacotamento, servidores de aplicação e toda a infraestrutura necessária
+                para colocar um sistema em funcionamento. Nesse período, trabalhei com tecnologias como Spring,
+                Hibernate, Tomcat e JBoss, além do Angular no Frontend.
               </p>
               <p class="text-muted-foreground mb-4">
-                Em uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e
-                me
-                aprofundei ainda mais nessa camada que admiro tanto. Também me aproximei de UX, uma área que
-                considero
-                fundamental para criar produtos melhores — e que renderia muitas horas de conversa. Mais tarde, ao
-                voltar
-                para
-                o Backend, dessa vez com Node.js, percebi o quanto essa experiência em Frontend havia ampliado minha
-                visão:
-                passei a criar APIs mais amigáveis e fáceis de consumir e, principalmente, a enxergar o
-                desenvolvimento de
-                forma mais completa. Hoje, continuo estudando e experimentando novas tecnologias e práticas, sempre
-                buscando
-                evoluir e encontrar formas melhores de transformar ideias em soluções.
+                Com o tempo, minha curiosidade me levou a explorar cada vez mais o Frontend, uma área em que
+                naturalmente comecei a me destacar. Talvez isso tenha relação com a minha história, minha cultura e,
+                principalmente, com meu interesse por arte, design e pelo processo de transformar ideias em
+                experiências.
+              </p>
+              <p class="text-muted-foreground mb-4">
+                Em uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e me
+                aprofundar ainda mais nessa camada que tanto admiro. Nesse período, também me aproximei de UX, uma área
+                que considero fundamental para a construção de produtos melhores — e sobre a qual poderia passar horas
+                conversando também.
+              </p>
+              <p class="text-muted-foreground mb-4">
+                Mais tarde, quando voltei a trabalhar com Backend, dessa vez com Node.js, percebi o quanto a experiência
+                no Frontend havia ampliado minha visão como desenvolvedor. Passei a construir APIs pensando também em
+                quem iria consumi-las, buscando torná-las mais intuitivas, consistentes e fáceis de integrar. Mais do
+                que isso, comecei a enxergar o desenvolvimento de software de forma mais completa, entendendo melhor
+                como cada decisão técnica influencia o produto e a experiência de quem o utiliza.
+              </p>
+              <p class="text-muted-foreground mb-4">
+                Hoje, continuo estudando, experimentando novas tecnologias e aprimorando minhas práticas, sempre
+                buscando evoluir e encontrar maneiras melhores de transformar ideias em soluções.
               </p>
             </div>
           </div>
@@ -392,7 +420,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <NuxtLink v-for="post in latestPosts" :key="post.id" :to="`/posts/${post.slug}`"
                   class="flex flex-col gap-1 rounded-sm border p-5 transition-colors hover:bg-accent">
                   <span v-if="post.publishedAt" class="text-xs text-muted-foreground">{{ formatDate(post.publishedAt)
-                  }}</span>
+                    }}</span>
                   <h2 class="text-lg font-medium">
                     {{ post.title }}
                   </h2>
