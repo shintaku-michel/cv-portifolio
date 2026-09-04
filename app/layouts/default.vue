@@ -43,6 +43,33 @@ const themeToggleLabel = computed(() => theme.value === 'dark' ? 'Mudar para tem
 // seção. Nas demais páginas (posts, projetos, admin) o frame normal permanece.
 const route = useRoute()
 const isHome = computed(() => route.path === '/')
+
+// Mesma proteção contra hydration mismatch usada em `index.vue`: o hash da
+// URL não chega ao servidor, então o SSR sempre renderiza "início" para a
+// home. Só depois do mount é seguro ler `route.hash` de verdade.
+const mounted = ref(false)
+onMounted(() => {
+  mounted.value = true
+})
+
+// Páginas fora da home (ex: /graduacao, /pos-graduacao) não têm item próprio
+// no menu — elas destacam o item da seção da home a que pertencem.
+const routeNavId: Record<string, string> = {
+  '/pagar-um-cafe': 'pagar-um-cafe',
+  '/graduacao': 'formacao',
+  '/pos-graduacao': 'formacao',
+  '/certificados': 'cursos'
+}
+
+const activeNavId = computed(() => {
+  if (route.path === '/') {
+    if (!mounted.value) return 'inicio'
+    return route.hash ? route.hash.slice(1) : 'inicio'
+  }
+  if (route.path.startsWith('/projetos')) return 'projetos'
+  if (route.path.startsWith('/posts')) return 'blog'
+  return routeNavId[route.path] ?? null
+})
 </script>
 
 <template>
@@ -58,7 +85,9 @@ const isHome = computed(() => route.path === '/')
               <NuxtLink
                 :to="`/#${item.id}`"
                 :aria-label="item.label"
-                class="flex size-10 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                :aria-current="item.id === activeNavId ? 'page' : undefined"
+                class="flex size-10 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-accent hover:text-foreground"
+                :class="item.id === activeNavId ? 'bg-accent text-foreground' : 'text-muted-foreground'"
               >
                 <component :is="item.icon" class="size-5" />
               </NuxtLink>
