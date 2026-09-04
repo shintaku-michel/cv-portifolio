@@ -41,7 +41,7 @@ const filteredProjects = computed(() => {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl px-4 py-12">
+  <div class="mx-auto max-w-5xl py-8">
     <h1 class="mb-2 text-3xl font-semibold">
       Projetos
     </h1>
@@ -82,13 +82,13 @@ const filteredProjects = computed(() => {
           v-for="project in filteredProjects"
           :key="project.id"
           :to="`/projetos/${project.slug}`"
-          class="flex flex-col gap-3 rounded-lg border p-5 transition-colors hover:bg-accent"
+          class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent"
         >
           <img
             v-if="project.coverImage"
             :src="project.coverImage"
             :alt="project.title"
-            class="aspect-video w-full rounded-md object-cover"
+            class="aspect-video w-full rounded-sm object-cover"
           >
           <div class="flex items-center gap-2">
             <h2 class="text-lg font-medium">

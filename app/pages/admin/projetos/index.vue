@@ -60,7 +60,7 @@ async function confirmDelete() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl px-4 py-12">
+  <div class="mx-auto max-w-5xl py-8">
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-semibold">
         Projetos

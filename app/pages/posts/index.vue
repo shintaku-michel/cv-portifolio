@@ -48,7 +48,7 @@ function authorInitials(name: string) {
 </script>
 
 <template>
-  <div class="mx-auto max-w-3xl px-4 py-12">
+  <div class="mx-auto max-w-3xl py-8">
     <h1 class="mb-2 text-3xl font-semibold">
       Blog
     </h1>
@@ -63,10 +63,10 @@ function authorInitials(name: string) {
     <div v-else class="flex flex-col gap-6">
       <NuxtLink
 v-for="post in data.posts" :key="post.id" :to="`/posts/${post.slug}`"
-        class="flex flex-col gap-3 rounded-lg border p-5 transition-colors hover:bg-accent sm:flex-row">
+        class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent sm:flex-row">
         <img
 v-if="post.coverImage" :src="post.coverImage" :alt="post.title"
-          class="aspect-video w-full rounded-md object-cover sm:w-48 sm:shrink-0">
+          class="aspect-video w-full rounded-sm object-cover sm:w-48 sm:shrink-0">
         <div class="flex flex-col gap-2">
           <div class="flex justify-between items-center gap-2 mb-4">
             <div class="flex items-center gap-2">

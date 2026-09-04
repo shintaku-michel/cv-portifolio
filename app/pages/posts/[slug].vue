@@ -90,7 +90,7 @@ function formatDate(value: string | null) {
 
 <template>
   <div>
-    <article class="mx-auto max-w-6xl px-4 py-12">
+    <article class="mx-auto max-w-6xl">
       <NuxtLink to="/posts" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
         ← Voltar para o blog
       </NuxtLink>
@@ -142,14 +142,14 @@ function formatDate(value: string | null) {
           v-if="post.coverImage"
           :src="post.coverImage"
           :alt="post.title"
-          class="mb-8 aspect-video w-full rounded-lg object-cover"
+          class="mb-8 aspect-video w-full rounded-sm object-cover"
         >
 
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="prose prose-neutral max-w-none dark:prose-invert" v-html="renderedContent" />
       </div>
 
-      <div class="flex flex-col gap-6 rounded-lg border p-6 lg:sticky lg:top-6 lg:h-[calc(100vh-12rem)] lg:self-start">
+      <div class="flex flex-col gap-6 rounded-sm border p-6 lg:sticky lg:top-6 lg:h-[calc(100vh-12rem)] lg:self-start">
         <div class="flex shrink-0 gap-3">
           <LikeButton :post-id="post.id" :liked="post.likedByMe" :count="post.likesCount" />
           <ShareButton :url="postUrl" />

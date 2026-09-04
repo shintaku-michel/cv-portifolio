@@ -9,8 +9,6 @@ import {
   HouseIcon,
   MailIcon,
   MoonIcon,
-  MouseIcon,
-  MouseOffIcon,
   NewspaperIcon,
   SunIcon,
   UserIcon
@@ -39,10 +37,12 @@ function toggleTheme() {
 
 const themeToggleLabel = computed(() => theme.value === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro')
 
-const { enabled: revealEnabled, toggle: toggleRevealMode } = useRevealMode()
-
-const revealToggleLabel = computed(() =>
-  revealEnabled.value ? 'Desativar efeito de revelação com o mouse' : 'Ativar efeito de revelação com o mouse')
+// A home é uma experiência de seções em tela cheia: o frame de conteúdo não
+// aplica `max-width` nem padding nenhum, para o background de cada `<section>`
+// sangrar até as bordas da tela. O espaçamento fica interno, dentro de cada
+// seção. Nas demais páginas (posts, projetos, admin) o frame normal permanece.
+const route = useRoute()
+const isHome = computed(() => route.path === '/')
 </script>
 
 <template>
@@ -86,26 +86,6 @@ const revealToggleLabel = computed(() =>
             {{ themeToggleLabel }}
           </TooltipContent>
         </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <Button
-              variant="ghost"
-              size="icon"
-              :aria-label="revealToggleLabel"
-              :aria-pressed="revealEnabled"
-              class="mt-2 shrink-0"
-              :class="revealEnabled ? 'text-foreground' : 'text-muted-foreground'"
-              @click="toggleRevealMode"
-            >
-              <MouseIcon v-if="revealEnabled" class="size-5" />
-              <MouseOffIcon v-else class="size-5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right">
-            {{ revealToggleLabel }}
-          </TooltipContent>
-        </Tooltip>
       </TooltipProvider>
     </nav>
 
@@ -117,7 +97,7 @@ const revealToggleLabel = computed(() =>
     </a>
 
     <main id="main" class="pl-16">
-      <div class="mx-auto max-w-7xl px-6 py-8">
+      <div :class="isHome ? '' : 'mx-auto max-w-7xl px-6 py-8'">
         <slot />
       </div>
     </main>

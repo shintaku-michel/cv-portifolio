@@ -83,7 +83,7 @@ function formatPeriod(start: string | null, end: string | null) {
 </script>
 
 <template>
-  <div class="mx-auto max-w-3xl px-4 py-12">
+  <div class="mx-auto max-w-3xl">
     <NuxtLink to="/projetos" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
       ← Voltar para projetos
     </NuxtLink>
@@ -104,7 +104,7 @@ function formatPeriod(start: string | null, end: string | null) {
       v-if="project.coverImage"
       :src="project.coverImage"
       :alt="project.title"
-      class="mb-6 aspect-video w-full rounded-lg object-cover"
+      class="mb-6 aspect-video w-full rounded-sm object-cover"
     >
 
     <div class="mb-6 flex flex-wrap gap-2">
@@ -136,7 +136,7 @@ function formatPeriod(start: string | null, end: string | null) {
         :key="index"
         :src="image"
         :alt="`${project.title} — imagem ${index + 1}`"
-        class="w-full rounded-lg object-cover"
+        class="w-full rounded-sm object-cover"
       >
     </div>
 
@@ -149,7 +149,7 @@ function formatPeriod(start: string | null, end: string | null) {
           v-for="related in relatedProjects"
           :key="related.id"
           :to="`/projetos/${related.slug}`"
-          class="rounded-lg border p-4 text-sm transition-colors hover:bg-accent"
+          class="rounded-sm border p-4 text-sm transition-colors hover:bg-accent"
         >
           {{ related.title }}
         </NuxtLink>
