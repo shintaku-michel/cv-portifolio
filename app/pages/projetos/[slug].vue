@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import TechBadge from '@/components/common/TechBadge.vue'
 import type { Project } from '#shared/types/project'
 
 const route = useRoute()
@@ -108,9 +109,7 @@ function formatPeriod(start: string | null, end: string | null) {
     >
 
     <div class="mb-6 flex flex-wrap gap-2">
-      <Badge v-for="tech in project.technologies" :key="tech.id" variant="outline">
-        {{ tech.name }}
-      </Badge>
+      <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
     </div>
 
     <div class="mb-6 flex flex-wrap gap-3">

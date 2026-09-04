@@ -3,7 +3,8 @@ import { Badge } from '@/components/ui/badge'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import type { Project, Technology } from '#shared/types/project'
+import TechBadge from '@/components/common/TechBadge.vue'
+import type { Project } from '#shared/types/project'
 
 const requestUrl = useRequestURL()
 
@@ -21,23 +22,12 @@ const QUERY = `
       id title slug shortDescription coverImage featured
       technologies { id name slug }
     }
-    technologies { id name slug }
   }
 `
 
 const { data, pending, error } = await useAsyncData('projetos', () =>
-  useGraphQL<{ projects: Project[], technologies: Technology[] }>(QUERY)
+  useGraphQL<{ projects: Project[] }>(QUERY)
 )
-
-const selectedTechnologyId = ref<string>('')
-
-const filteredProjects = computed(() => {
-  const projects = data.value?.projects ?? []
-  if (!selectedTechnologyId.value) {
-    return projects
-  }
-  return projects.filter(p => p.technologies.some(t => t.id === selectedTechnologyId.value))
-})
 </script>
 
 <template>
@@ -52,34 +42,11 @@ const filteredProjects = computed(() => {
     <LoadingState v-if="pending" />
     <ErrorState v-else-if="error" message="Não foi possível carregar os projetos." />
     <template v-else>
-      <div v-if="data?.technologies.length" class="mb-8 flex flex-wrap gap-2">
-        <button
-          type="button"
-          :aria-pressed="!selectedTechnologyId"
-          class="rounded-full border px-3 py-1 text-sm transition-colors"
-          :class="!selectedTechnologyId ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'"
-          @click="selectedTechnologyId = ''"
-        >
-          Todas
-        </button>
-        <button
-          v-for="tech in data.technologies"
-          :key="tech.id"
-          type="button"
-          :aria-pressed="selectedTechnologyId === tech.id"
-          class="rounded-full border px-3 py-1 text-sm transition-colors"
-          :class="selectedTechnologyId === tech.id ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'"
-          @click="selectedTechnologyId = tech.id"
-        >
-          {{ tech.name }}
-        </button>
-      </div>
-
-      <EmptyState v-if="filteredProjects.length === 0" message="Nenhum projeto encontrado." />
+      <EmptyState v-if="!data?.projects.length" message="Nenhum projeto encontrado." />
 
       <div v-else class="grid gap-6 sm:grid-cols-2">
         <NuxtLink
-          v-for="project in filteredProjects"
+          v-for="project in data.projects"
           :key="project.id"
           :to="`/projetos/${project.slug}`"
           class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent"
@@ -101,10 +68,8 @@ const filteredProjects = computed(() => {
           <p class="text-sm text-muted-foreground">
             {{ project.shortDescription }}
           </p>
-          <div v-if="project.technologies.length" class="flex flex-wrap gap-1">
-            <Badge v-for="tech in project.technologies" :key="tech.id" variant="outline">
-              {{ tech.name }}
-            </Badge>
+          <div v-if="project.technologies.length" class="flex flex-wrap gap-2">
+            <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
           </div>
         </NuxtLink>
       </div>
