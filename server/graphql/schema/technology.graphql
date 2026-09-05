@@ -1,7 +1,27 @@
+enum TechnologyCategory {
+  FRONTEND
+  BACKEND
+  API
+  DATABASE
+  ORM
+  CLOUD
+  DEVOPS
+  BUILD_TOOLS
+  TESTING
+  AI
+  SECURITY
+  PAYMENTS
+  ARCHITECTURE
+  INFRASTRUCTURE
+  VERSION_CONTROL
+  OBSERVABILITY
+}
+
 type Technology {
   id: ID!
   name: String!
   slug: String!
+  category: TechnologyCategory!
 }
 
 extend type Query {

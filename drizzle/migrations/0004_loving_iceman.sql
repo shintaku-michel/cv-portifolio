@@ -1,0 +1,2 @@
+CREATE TYPE "public"."technology_category" AS ENUM('FRONTEND', 'BACKEND', 'API', 'DATABASE', 'CLOUD', 'DEVOPS', 'PAYMENTS', 'AI', 'SECURITY');--> statement-breakpoint
+ALTER TABLE "technologies" ADD COLUMN "category" "technology_category" DEFAULT 'FRONTEND' NOT NULL;

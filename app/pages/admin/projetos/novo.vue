@@ -6,7 +6,7 @@ definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Novo projeto' })
 
 const { data } = await useAsyncData('admin-projeto-novo-technologies', () =>
-  useGraphQL<{ technologies: Technology[] }>(`{ technologies { id name slug } }`)
+  useGraphQL<{ technologies: Technology[] }>(`{ technologies { id name slug category } }`)
 )
 
 const submitting = ref(false)

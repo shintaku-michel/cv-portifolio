@@ -15,7 +15,7 @@ const QUERY = `
       displayOrder demoUrl repositoryUrl startDate endDate
       technologies { id name slug }
     }
-    technologies { id name slug }
+    technologies { id name slug category }
   }
 `
 
