@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TechBadge from '@/components/common/TechBadge.vue'
-import { TECH_ICONS } from '@/utils/tech-icons'
+import TechBadge from '@/components/common/TechBadge.vue';
+import { TECH_ICONS } from '@/utils/tech-icons';
 
 // Triplica a lista para o loop de CSS (translateX -33.333%) ficar contínuo
 // sem "salto" visível entre o fim e o início.
@@ -19,7 +19,7 @@ const marqueeItems = [...TECH_ICONS, ...TECH_ICONS, ...TECH_ICONS]
 
 <style scoped>
 .tech-marquee-track {
-  animation: tech-marquee 90s linear infinite;
+  animation: tech-marquee 180s linear infinite;
 }
 
 @keyframes tech-marquee {
