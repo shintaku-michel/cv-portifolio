@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
+import type { Project } from '#shared/types/project'
+import { formatPeriod } from '#shared/utils/format-period'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import TechBadge from '@/components/common/TechBadge.vue'
-import type { Project } from '#shared/types/project'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 const requestUrl = useRequestURL()
 
@@ -19,8 +20,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/projetos` }] })
 const QUERY = `
   query PublicProjects {
     projects {
-      id title slug shortDescription coverImage featured
-      technologies { id name slug }
+      id title slug shortDescription coverImage featured isOnline startDate endDate
     }
   }
 `
@@ -57,19 +57,27 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
             :alt="project.title"
             class="aspect-video w-full rounded-sm object-cover"
           >
-          <div class="flex items-center gap-2">
-            <h2 class="text-lg font-medium">
-              {{ project.title }}
-            </h2>
-            <Badge v-if="project.featured" variant="secondary">
-              Destaque
-            </Badge>
-          </div>
-          <p class="text-sm text-muted-foreground">
+          <h2 class="text-lg font-medium">
+            {{ project.title }}
+          </h2>
+          <p class="min-h-16 text-sm text-muted-foreground">
             {{ project.shortDescription }}
           </p>
-          <div v-if="project.technologies.length" class="flex flex-wrap gap-2">
-            <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
+
+          <Separator />
+
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <Badge v-if="project.featured" variant="secondary">
+                Destaque
+              </Badge>
+              <Badge :variant="project.isOnline ? 'default' : 'secondary'">
+                {{ project.isOnline ? 'Online' : 'Offline' }}
+              </Badge>
+            </div>
+            <span v-if="formatPeriod(project.startDate, project.endDate)" class="text-xs whitespace-nowrap text-muted-foreground">
+              {{ formatPeriod(project.startDate, project.endDate) }}
+            </span>
           </div>
         </NuxtLink>
       </div>

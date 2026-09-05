@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import TechBadge from '@/components/common/TechBadge.vue'
 import type { Project } from '#shared/types/project'
+import { formatPeriod } from '#shared/utils/format-period'
+import TechBadge from '@/components/common/TechBadge.vue'
+import { Button } from '@/components/ui/button'
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -14,15 +14,11 @@ const QUERY = `
       demoUrl repositoryUrl startDate endDate
       technologies { id name slug }
     }
-    projects {
-      id title slug shortDescription coverImage
-      technologies { id name slug }
-    }
   }
 `
 
 const { data, error } = await useAsyncData(`projeto-${slug}`, () =>
-  useGraphQL<{ project: Project | null, projects: Project[] }>(QUERY, { slug })
+  useGraphQL<{ project: Project | null }>(QUERY, { slug })
 )
 
 if (error.value) {
@@ -66,21 +62,6 @@ useHead({
   }]
 })
 
-// "Projeto relacionado" (seção 10): outros projetos publicados que
-// compartilham ao menos uma tecnologia, sem regra explícita no CLAUDE.md.
-const relatedProjects = computed(() => {
-  const currentTechIds = new Set(project.value.technologies.map(t => t.id))
-  return (data.value?.projects ?? [])
-    .filter(p => p.slug !== project.value.slug && p.technologies.some(t => currentTechIds.has(t.id)))
-    .slice(0, 3)
-})
-
-function formatPeriod(start: string | null, end: string | null) {
-  if (!start) return null
-  const startLabel = start.slice(0, 7)
-  const endLabel = end ? end.slice(0, 7) : 'atual'
-  return `${startLabel} — ${endLabel}`
-}
 </script>
 
 <template>
@@ -89,70 +70,46 @@ function formatPeriod(start: string | null, end: string | null) {
       ← Voltar para projetos
     </NuxtLink>
 
-    <div class="mb-2 flex items-center gap-2">
-      <h1 class="text-3xl font-semibold">
+    <div class="mb-2 flex flex-col items-start gap-2">
+      <h1 class="text-2xl font-semibold">
         {{ project.title }}
       </h1>
-      <Badge v-if="project.featured" variant="secondary">
-        Destaque
-      </Badge>
+      <span v-if="formatPeriod(project.startDate, project.endDate)" class="text-xs text-muted-foreground">
+        {{ formatPeriod(project.startDate, project.endDate) }}
+      </span>
     </div>
-    <p class="mb-6 text-lg text-muted-foreground">
+
+    <p class="text-md">
       {{ project.shortDescription }}
     </p>
 
-    <img
-      v-if="project.coverImage"
-      :src="project.coverImage"
-      :alt="project.title"
-      class="mb-6 aspect-video w-full rounded-sm object-cover"
-    >
-
-    <div class="mb-6 flex flex-wrap gap-2">
-      <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
-    </div>
+    <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
+      class="mb-6 aspect-video w-full rounded-sm object-cover">
 
     <div class="mb-6 flex flex-wrap gap-3">
       <Button v-if="project.demoUrl" as="a" :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
         Ver demonstração
       </Button>
-      <Button v-if="project.repositoryUrl" as="a" variant="outline" :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">
+      <Button v-if="project.repositoryUrl" as="a" variant="outline" :href="project.repositoryUrl" target="_blank"
+        rel="noopener noreferrer">
         Ver repositório
       </Button>
     </div>
-
-    <p v-if="formatPeriod(project.startDate, project.endDate)" class="mb-6 text-sm text-muted-foreground">
-      Período: {{ formatPeriod(project.startDate, project.endDate) }}
-    </p>
 
     <div class="prose prose-neutral mb-10 max-w-none whitespace-pre-line dark:prose-invert">
       {{ project.description }}
     </div>
 
-    <div v-if="project.gallery.length" class="mb-10 grid gap-4 sm:grid-cols-2">
-      <img
-        v-for="(image, index) in project.gallery"
-        :key="index"
-        :src="image"
-        :alt="`${project.title} — imagem ${index + 1}`"
-        class="w-full rounded-sm object-cover"
-      >
+    <div class="mb-6">
+      <h2 class="text-md font-semibold mb-4">Stack Tecnológica</h2>
+      <div class="flex flex-wrap gap-1.5">
+        <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
+      </div>
     </div>
 
-    <div v-if="relatedProjects.length">
-      <h2 class="mb-4 text-xl font-medium">
-        Projetos relacionados
-      </h2>
-      <div class="grid gap-4 sm:grid-cols-3">
-        <NuxtLink
-          v-for="related in relatedProjects"
-          :key="related.id"
-          :to="`/projetos/${related.slug}`"
-          class="rounded-sm border p-4 text-sm transition-colors hover:bg-accent"
-        >
-          {{ related.title }}
-        </NuxtLink>
-      </div>
+    <div v-if="project.gallery.length" class="mb-10 grid gap-4 sm:grid-cols-2">
+      <img v-for="(image, index) in project.gallery" :key="index" :src="image"
+        :alt="`${project.title} — imagem ${index + 1}`" class="w-full rounded-sm object-cover">
     </div>
   </div>
 </template>

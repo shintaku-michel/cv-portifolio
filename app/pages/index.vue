@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { Post } from '#shared/types/post'
 import type { Project } from '#shared/types/project'
+import { formatPeriod } from '#shared/utils/format-period'
 import homeBg from '@/assets/img/bg-home-02.png'
 import profileBg from '@/assets/img/bg-profile-01.png'
 import michelDark from '@/assets/img/michel-dark.png'
 import michelLight from '@/assets/img/michel-light.png'
-import TechBadge from '@/components/common/TechBadge.vue'
 import TechMarquee from '@/components/common/TechMarquee.vue'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
 import { Code2Icon, FileBadge, FolderGit2Icon, MailIcon } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
@@ -24,8 +26,7 @@ const { data: projectsData } = await useAsyncData('home-featured-projects', () =
   useGraphQL<{ featuredProjects: Project[] }>(`
     query FeaturedProjects {
       featuredProjects {
-        id title slug shortDescription coverImage
-        technologies { id name slug }
+        id title slug shortDescription coverImage isOnline startDate endDate
       }
     }
   `)
@@ -148,8 +149,8 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <h1 class="text-2xl font-semibold">
                   Perfil
                 </h1>
-                <p class="font-cursive text-xl text-muted-foreground">
-                  Um pouco de hereditariedade e um bocado de compromisso com quem escolhi me tornar.
+                <p class="font-cursive text-[1.4rem] text-muted-foreground">
+                  Hereditariedade e compromisso com quem escolhi me tornar
                 </p>
               </div>
 
@@ -196,7 +197,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <h1 class="text-2xl font-semibold">
                   Valores
                 </h1>
-                <p class="font-cursive text-xl text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground">
                   Experiências que vivi e que carrego para uma vida mais equilibrada
                 </p>
               </div>
@@ -247,7 +248,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <h1 class="text-2xl font-semibold">
                   Formação
                 </h1>
-                <p class="font-cursive text-xl text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground">
                   Acredito na transformação por meio do conhecimento
                 </p>
               </div>
@@ -300,7 +301,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <h1 class="text-2xl font-semibold">
                   Cursos
                 </h1>
-                <p class="font-cursive text-xl text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground">
                   Aprendizados direcionados para desafios e necessidades específicas
                 </p>
               </div>
@@ -342,7 +343,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <h1 class="text-2xl font-semibold">
                   Experiência
                 </h1>
-                <p class="font-cursive text-xl text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground">
                   A vida como ela é — e o amor por aquilo que perseguimos com genuína dedicação
                 </p>
               </div>
@@ -384,7 +385,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                   <h1 class="text-2xl font-semibold">
                     Projetos destaque
                   </h1>
-                  <p class="font-cursive text-xl text-muted-foreground">
+                  <p class="font-cursive text-[1.4rem] text-muted-foreground">
                     Aplicações interessantes e que gostei de desenvolver
                   </p>
                 </div>
@@ -403,11 +404,17 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                   <h2 class="text-lg font-medium">
                     {{ project.title }}
                   </h2>
-                  <p class="text-sm text-muted-foreground">
+                  <p class="text-sm text-muted-foreground min-h-20">
                     {{ project.shortDescription }}
                   </p>
-                  <div v-if="project.technologies.length" class="flex flex-wrap gap-2">
-                    <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
+                  <Separator />
+                  <div class="flex items-center justify-between gap-2">
+                    <Badge :variant="project.isOnline ? 'default' : 'secondary'">
+                      {{ project.isOnline ? 'Online' : 'Offline' }}
+                    </Badge>
+                    <span v-if="formatPeriod(project.startDate, project.endDate)" class="text-xs text-muted-foreground">
+                      {{ formatPeriod(project.startDate, project.endDate) }}
+                    </span>
                   </div>
                 </NuxtLink>
               </div>
@@ -437,7 +444,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <NuxtLink v-for="post in latestPosts" :key="post.id" :to="`/posts/${post.slug}`"
                   class="flex flex-col gap-1 rounded-sm border p-5 transition-colors hover:bg-accent">
                   <span v-if="post.publishedAt" class="text-xs text-muted-foreground">{{ formatDate(post.publishedAt)
-                    }}</span>
+                  }}</span>
                   <h2 class="text-lg font-medium">
                     {{ post.title }}
                   </h2>

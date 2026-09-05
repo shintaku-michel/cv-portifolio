@@ -24,6 +24,7 @@ export type CreateProjectInput = {
   startDate?: string | null
   endDate?: string | null
   featured?: boolean
+  isOnline?: boolean
   displayOrder?: number
   technologyIds?: string[]
 }
@@ -107,6 +108,7 @@ export const ProjectService = {
           startDate: input.startDate,
           endDate: input.endDate,
           featured: input.featured ?? false,
+          isOnline: input.isOnline ?? false,
           displayOrder: input.displayOrder ?? 0
         })
         .returning()

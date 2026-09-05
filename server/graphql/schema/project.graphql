@@ -13,6 +13,7 @@ type Project {
   gallery: [String!]!
   status: ProjectStatus!
   featured: Boolean!
+  isOnline: Boolean!
   displayOrder: Int!
   demoUrl: String
   repositoryUrl: String
@@ -35,6 +36,7 @@ input CreateProjectInput {
   startDate: String
   endDate: String
   featured: Boolean
+  isOnline: Boolean
   displayOrder: Int
   technologyIds: [ID!]
 }
@@ -51,6 +53,7 @@ input UpdateProjectInput {
   startDate: String
   endDate: String
   featured: Boolean
+  isOnline: Boolean
   displayOrder: Int
   technologyIds: [ID!]
 }

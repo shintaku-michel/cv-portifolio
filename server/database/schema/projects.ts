@@ -12,6 +12,7 @@ export const projects = pgTable('projects', {
   gallery: text('gallery').array().notNull().default([]),
   status: projectStatusEnum('status').notNull().default('DRAFT'),
   featured: boolean('featured').notNull().default(false),
+  isOnline: boolean('is_online').notNull().default(false),
   displayOrder: integer('display_order').notNull().default(0),
   demoUrl: text('demo_url'),
   repositoryUrl: text('repository_url'),
