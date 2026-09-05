@@ -29,3 +29,6 @@ playwright/.cache
 .env
 .env.*
 !.env.example
+
+# Scripts que lidam com credenciais de produção — mantidos só localmente.
+scripts/rotate-db-password.sh
