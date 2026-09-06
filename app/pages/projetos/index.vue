@@ -6,6 +6,7 @@ import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { MoveRight } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -32,19 +33,19 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
 
 <template>
   <div class="px-6 py-16 md:mx-auto md:w-3xl">
-    <NuxtLink to="/#projetos" class="mb-6 inline-block px-1 text-sm text-muted-foreground hover:underline">
-      ← Voltar para Projetos destaque
+    <NuxtLink to="/#projetos"
+      class="mb-6 text-sm text-muted-foreground hover:underline flex items-center justify-end gap-2">
+      Projetos destaque
+      <MoveRight class="h-4 w-4" />
     </NuxtLink>
 
-    <div class="mb-6 flex flex-col gap-3 px-1">
-      <div class="flex flex-col gap-1">
+    <div class="mb-6 flex flex-col gap-3">
         <h1 class="text-2xl font-semibold">
-          Todos os projetos
+          Projetos
         </h1>
         <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
           Alguns dos trabalhos, sistemas e funcionalidades que desenvolvi ao longo do tempo
         </p>
-      </div>
     </div>
 
     <LoadingState v-if="pending" />

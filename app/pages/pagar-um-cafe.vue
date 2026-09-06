@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { CoffeeIcon } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -37,14 +36,13 @@ function sendEmail() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-2xl px-4 py-16">
-    <NuxtLink to="/#pagar-um-cafe" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
+  <div class="mx-auto max-w-2xl px-4">
+    <NuxtLink to="/#pagar-um-cafe" class="mb-4 inline-block text-sm text-muted-foreground hover:underline">
       ← Voltar
     </NuxtLink>
 
     <div class="mb-8 flex flex-col gap-3">
-      <CoffeeIcon class="size-8 text-muted-foreground" />
-      <h1 class="text-3xl font-semibold">
+      <h1 class="text-2xl font-semibold">
         Pagar um café
       </h1>
       <p class="text-muted-foreground">
@@ -66,7 +64,8 @@ function sendEmail() {
 
       <div class="flex flex-col gap-2">
         <Label for="description">O que você precisa?</Label>
-        <Textarea id="description" v-model="description" rows="6" required placeholder="Descreva o contexto, o problema e o que já tentou." />
+        <Textarea id="description" v-model="description" rows="6" required
+          placeholder="Descreva o contexto, o problema e o que já tentou." />
       </div>
 
       <Button type="button" :disabled="!isValid" class="self-start" @click="sendEmail">

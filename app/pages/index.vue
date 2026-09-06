@@ -10,7 +10,7 @@ import TechMarquee from '@/components/common/TechMarquee.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Code2Icon, FileBadge, FolderGit2Icon, MailIcon } from '@lucide/vue'
+import { Code2Icon, FileBadge, FolderGit2Icon, MailIcon, MoveRight, SquareText } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -144,12 +144,12 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         :style="{ backgroundImage: `url(${profileBg})` }">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Perfil
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
                   Hereditariedade e compromisso com quem escolhi me tornar
                 </p>
               </div>
@@ -192,12 +192,12 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Valores
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
                   Experiências que vivi e que carrego para uma vida mais equilibrada
                 </p>
               </div>
@@ -243,12 +243,12 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Formação
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
                   Acredito na transformação por meio do conhecimento
                 </p>
               </div>
@@ -296,12 +296,12 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Cursos
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
                   Aprendizados direcionados para desafios e necessidades específicas
                 </p>
               </div>
@@ -338,12 +338,12 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Experiência
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
                   A vida como ela é — e o amor por aquilo que perseguimos com genuína dedicação
                 </p>
               </div>
@@ -379,21 +379,21 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <div class="mb-6 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h1 class="text-2xl font-semibold">
-                    Projetos destaque
-                  </h1>
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl">
+              <NuxtLink to="/projetos"
+                class="mb-6 text-sm text-muted-foreground hover:underline flex items-center justify-end gap-2">
+                Ver todos
+                <MoveRight class="h-4 w-4" />
+              </NuxtLink>
 
-                  <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
-                    Aplicações interessantes e que gostei de desenvolver
-                  </p>
-                </div>
+              <div class="mb-6 flex flex-col gap-3">
+                <h1 class="text-2xl font-semibold">
+                  Projetos destaque
+                </h1>
 
-                <NuxtLink to="/projetos" class="text-sm text-muted-foreground hover:underline hover:text-white">
-                  Ver todos
-                </NuxtLink>
+                <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
+                  Aplicações interessantes e que gostei de desenvolver
+                </p>
               </div>
 
               <div v-if="projectsData?.featuredProjects.length" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
@@ -431,12 +431,19 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <div class="mb-6 flex items-center justify-between px-1">
-                <h1 class="text-2xl font-semibold">
-                  Blog
-                </h1>
-                <NuxtLink to="/posts" class="text-sm text-muted-foreground hover:underline">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl">
+              <div class="mb-6 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h1 class="text-2xl font-semibold">
+                    Blog destaque
+                  </h1>
+
+                  <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-2">
+                    Tecnologia e desenvolvimento de software
+                  </p>
+                </div>
+
+                <NuxtLink to="/posts" class="text-sm text-muted-foreground hover:underline hover:text-white">
                   Ver todos
                 </NuxtLink>
               </div>
@@ -466,7 +473,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 pb-24 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl">
               <div class="flex flex-col items-start gap-4">
                 <div class="flex items-center gap-2 justify-center">
                   <h1 class="text-2xl font-semibold">
@@ -474,7 +481,9 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                   </h1>
                 </div>
                 <p class="text-muted-foreground">
-                  em construção
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nam facilis aut molestiae cupiditate
+                  nesciunt enim quos sed ad. Natus quaerat expedita earum id sed sapiente obcaecati. Sint totam possimus
+                  illo!
                 </p>
               </div>
             </div>
@@ -486,7 +495,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 pb-24 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-24 md:mx-auto md:w-3xl">
+            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl">
               <div class="flex flex-col items-start gap-4">
                 <div class="flex items-center gap-2 justify-center">
                   <h1 class="text-2xl font-semibold">
@@ -498,9 +507,12 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                   precisa
                   e a gente marca um café (virtual) para conversar sobre o diagnóstico e possíveis formas de resolver.
                 </p>
-                <NuxtLink to="/pagar-um-cafe">
-                  <Button>Pagar um café</Button>
-                </NuxtLink>
+                <Button as-child size="lg">
+                  <NuxtLink to="/pagar-um-cafe">
+                    <SquareText />
+                    Descrever o problema
+                  </NuxtLink>
+                </Button>
               </div>
             </div>
           </div>

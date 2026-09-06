@@ -7,5 +7,5 @@ export function formatPeriod(start: string | null, end: string | null) {
   if (!start) return null
   const startLabel = toMonthYear(start)
   const endLabel = end ? toMonthYear(end) : 'Ativo'
-  return `${startLabel} a ${endLabel}`
+  return `${startLabel} - ${endLabel}`
 }

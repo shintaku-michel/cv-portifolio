@@ -3,6 +3,7 @@ import type { Project } from '#shared/types/project'
 import { formatPeriod } from '#shared/utils/format-period'
 import TechBadge from '@/components/common/TechBadge.vue'
 import { Button } from '@/components/ui/button'
+import { Calendar, MoveLeft } from '@lucide/vue'
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -65,23 +66,29 @@ useHead({
 </script>
 
 <template>
-  <div class="px-6 py-16 md:mx-auto md:w-3xl">
-    <NuxtLink to="/projetos" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
-      ← Voltar para projetos
+  <div class="px-1 py-6 md:mx-auto md:w-3xl">
+    <NuxtLink to="/projetos" class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
+      <MoveLeft class="h-4 w-4" />
+      Projetos
     </NuxtLink>
 
     <div class="mb-2 flex flex-col items-start gap-2">
       <h1 class="text-2xl font-semibold">
         {{ project.title }}
       </h1>
-      <span v-if="formatPeriod(project.startDate, project.endDate)" class="text-xs text-muted-foreground">
+      <p class="text-md">
+        {{ project.shortDescription }}
+      </p>
+    </div>
+
+    <div class="mt-4">
+      <span v-if="formatPeriod(project.startDate, project.endDate)"
+        class="text-xs text-muted-foreground flex items-center gap-2">
+        <Calendar class="inline h-4 w-4" />
         {{ formatPeriod(project.startDate, project.endDate) }}
       </span>
     </div>
 
-    <p class="text-md">
-      {{ project.shortDescription }}
-    </p>
 
     <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
       class="mb-4 aspect-video w-full rounded-sm object-cover">
