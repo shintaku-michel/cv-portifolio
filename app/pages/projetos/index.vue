@@ -32,7 +32,7 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
 </script>
 
 <template>
-  <div class="px-6 py-16 md:mx-auto md:w-3xl">
+  <div class="px-6 py-6 md:mx-auto md:w-3xl">
     <NuxtLink to="/#projetos"
       class="mb-6 text-sm text-muted-foreground hover:underline flex items-center justify-end gap-2">
       Projetos destaque
@@ -40,12 +40,12 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
     </NuxtLink>
 
     <div class="mb-6 flex flex-col gap-3">
-        <h1 class="text-2xl font-semibold">
-          Projetos
-        </h1>
-        <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
-          Alguns dos trabalhos, sistemas e funcionalidades que desenvolvi ao longo do tempo
-        </p>
+      <h1 class="text-2xl font-semibold">
+        Projetos
+      </h1>
+      <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
+        Alguns dos trabalhos, sistemas e funcionalidades que desenvolvi ao longo do tempo
+      </p>
     </div>
 
     <LoadingState v-if="pending" />

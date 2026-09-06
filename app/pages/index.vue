@@ -379,7 +379,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
           <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl">
+            <div class="px-6 py-6 md:py-14 md:mx-auto md:w-3xl">
               <NuxtLink to="/projetos"
                 class="mb-6 text-sm text-muted-foreground hover:underline flex items-center justify-end gap-2">
                 Ver todos
