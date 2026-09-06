@@ -31,13 +31,21 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl py-8">
-    <h1 class="mb-2 text-3xl font-semibold">
-      Projetos
-    </h1>
-    <p class="mb-8 text-muted-foreground">
-      Trabalhos, sistemas e experiências que desenvolvi.
-    </p>
+  <div class="px-6 py-16 md:mx-auto md:w-3xl">
+    <NuxtLink to="/#projetos" class="mb-6 inline-block px-1 text-sm text-muted-foreground hover:underline">
+      ← Voltar para Projetos destaque
+    </NuxtLink>
+
+    <div class="mb-6 flex flex-col gap-3 px-1">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-2xl font-semibold">
+          Todos os projetos
+        </h1>
+        <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
+          Alguns dos trabalhos, sistemas e funcionalidades que desenvolvi ao longo do tempo
+        </p>
+      </div>
+    </div>
 
     <LoadingState v-if="pending" />
     <ErrorState v-else-if="error" message="Não foi possível carregar os projetos." />
@@ -45,22 +53,14 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
       <EmptyState v-if="!data?.projects.length" message="Nenhum projeto encontrado." />
 
       <div v-else class="grid gap-6 sm:grid-cols-2">
-        <NuxtLink
-          v-for="project in data.projects"
-          :key="project.id"
-          :to="`/projetos/${project.slug}`"
-          class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent"
-        >
-          <img
-            v-if="project.coverImage"
-            :src="project.coverImage"
-            :alt="project.title"
-            class="aspect-video w-full rounded-sm object-cover"
-          >
+        <NuxtLink v-for="project in data.projects" :key="project.id" :to="`/projetos/${project.slug}`"
+          class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent">
+          <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
+            class="aspect-video w-full rounded-sm object-cover">
           <h2 class="text-lg font-medium">
             {{ project.title }}
           </h2>
-          <p class="min-h-16 text-sm text-muted-foreground">
+          <p class="min-h-20 text-sm text-muted-foreground">
             {{ project.shortDescription }}
           </p>
 
@@ -75,7 +75,8 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
                 {{ project.isOnline ? 'Online' : 'Offline' }}
               </Badge>
             </div>
-            <span v-if="formatPeriod(project.startDate, project.endDate)" class="text-xs whitespace-nowrap text-muted-foreground">
+            <span v-if="formatPeriod(project.startDate, project.endDate)"
+              class="text-xs whitespace-nowrap text-muted-foreground">
               {{ formatPeriod(project.startDate, project.endDate) }}
             </span>
           </div>

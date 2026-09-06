@@ -143,13 +143,13 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         class="relative min-h-screen bg-cover bg-center bg-no-repeat lg:h-dvh lg:min-h-0 lg:overflow-hidden"
         :style="{ backgroundImage: `url(${profileBg})` }">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Perfil
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
                   Hereditariedade e compromisso com quem escolhi me tornar
                 </p>
               </div>
@@ -191,13 +191,13 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'valores'" id="valores" key="valores"
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Valores
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
                   Experiências que vivi e que carrego para uma vida mais equilibrada
                 </p>
               </div>
@@ -242,13 +242,13 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'formacao'" id="formacao" key="formacao"
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Formação
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
                   Acredito na transformação por meio do conhecimento
                 </p>
               </div>
@@ -295,13 +295,13 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'cursos'" id="cursos" key="cursos"
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Cursos
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
                   Aprendizados direcionados para desafios e necessidades específicas
                 </p>
               </div>
@@ -337,13 +337,13 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'experiencia'" id="experiencia" key="experiencia"
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
               <div>
                 <h1 class="text-2xl font-semibold">
                   Experiência
                 </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground">
+                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5">
                   A vida como ela é — e o amor por aquilo que perseguimos com genuína dedicação
                 </p>
               </div>
@@ -378,19 +378,20 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'projetos'" id="projetos" key="projetos"
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl">
-              <div class="mb-6 flex items-center justify-between gap-3 px-1">
+              <div class="mb-6 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h1 class="text-2xl font-semibold">
                     Projetos destaque
                   </h1>
-                  <p class="font-cursive text-[1.4rem] text-muted-foreground">
+
+                  <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
                     Aplicações interessantes e que gostei de desenvolver
                   </p>
                 </div>
 
-                <NuxtLink to="/projetos" class="text-sm text-muted-foreground hover:underline">
+                <NuxtLink to="/projetos" class="text-sm text-muted-foreground hover:underline hover:text-white">
                   Ver todos
                 </NuxtLink>
               </div>
@@ -429,7 +430,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'blog'" id="blog" key="blog"
         class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl">
               <div class="mb-6 flex items-center justify-between px-1">
                 <h1 class="text-2xl font-semibold">
@@ -444,7 +445,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 <NuxtLink v-for="post in latestPosts" :key="post.id" :to="`/posts/${post.slug}`"
                   class="flex flex-col gap-1 rounded-sm border p-5 transition-colors hover:bg-accent">
                   <span v-if="post.publishedAt" class="text-xs text-muted-foreground">{{ formatDate(post.publishedAt)
-                  }}</span>
+                    }}</span>
                   <h2 class="text-lg font-medium">
                     {{ post.title }}
                   </h2>
@@ -464,7 +465,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'contato'" id="contato" key="contato"
         class="min-h-screen scroll-mt-8 pb-24 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl">
               <div class="flex flex-col items-start gap-4">
                 <div class="flex items-center gap-2 justify-center">
@@ -484,7 +485,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
       <section v-else-if="activeSection === 'pagar-um-cafe'" id="pagar-um-cafe" key="pagar-um-cafe"
         class="min-h-screen scroll-mt-8 pb-24 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
         <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:ml-16 md:h-full">
+          <div class="md:h-full">
             <div class="px-6 py-24 md:mx-auto md:w-3xl">
               <div class="flex flex-col items-start gap-4">
                 <div class="flex items-center gap-2 justify-center">

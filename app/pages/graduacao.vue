@@ -24,7 +24,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/graduacao` }] }
         <h1 class="text-3xl font-semibold">
           Graduação
         </h1>
-        <p class="font-cursive text-xl text-muted-foreground">
+        <p class="font-cursive text-xl text-muted-foreground leading-5">
           Bacharelado em Ciência da Computação
         </p>
       </div>

@@ -65,7 +65,7 @@ useHead({
 </script>
 
 <template>
-  <div class="mx-auto max-w-3xl">
+  <div class="px-6 py-16 md:mx-auto md:w-3xl">
     <NuxtLink to="/projetos" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
       ← Voltar para projetos
     </NuxtLink>
@@ -84,9 +84,9 @@ useHead({
     </p>
 
     <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
-      class="mb-6 aspect-video w-full rounded-sm object-cover">
+      class="mb-4 aspect-video w-full rounded-sm object-cover">
 
-    <div class="mb-6 flex flex-wrap gap-3">
+    <div class="mt-4 mb-4 flex flex-wrap gap-3">
       <Button v-if="project.demoUrl" as="a" :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
         Ver demonstração
       </Button>
@@ -96,11 +96,11 @@ useHead({
       </Button>
     </div>
 
-    <div class="prose prose-neutral mb-10 max-w-none whitespace-pre-line dark:prose-invert">
+    <div class="prose prose-neutral mb-8 max-w-none whitespace-pre-line dark:prose-invert">
       {{ project.description }}
     </div>
 
-    <div class="mb-6">
+    <div class="mb-4">
       <h2 class="text-md font-semibold mb-4">Stack Tecnológica</h2>
       <div class="flex flex-wrap gap-1.5">
         <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />

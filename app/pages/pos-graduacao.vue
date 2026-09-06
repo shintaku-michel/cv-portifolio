@@ -15,7 +15,7 @@ import { View } from '@lucide/vue';
         <h1 class="text-3xl font-semibold">
           Pós-Graduação
         </h1>
-        <p class="font-cursive text-xl text-muted-foreground">
+        <p class="font-cursive text-xl text-muted-foreground leading-5">
           Desenvolvimento Full Stack e Inteligência Artificial
         </p>
       </div>
