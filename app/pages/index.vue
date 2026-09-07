@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import homeBg from '@/assets/img/bg-home-02.png'
+import homeBg from '@/assets/img/bg-home.png'
 import michelDark from '@/assets/img/michel-dark.png'
 import michelLight from '@/assets/img/michel-light.png'
 import TechMarquee from '@/components/common/TechMarquee.vue'
@@ -22,7 +22,8 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
 </script>
 
 <template>
-  <section id="inicio" class="relative min-h-screen bg-cover bg-center bg-no-repeat lg:h-dvh lg:min-h-0 lg:overflow-hidden"
+  <section id="inicio"
+    class="relative min-h-screen bg-cover bg-center bg-no-repeat lg:h-dvh lg:min-h-0 lg:overflow-hidden"
     :style="{ backgroundImage: `url(${homeBg})` }">
     <!-- Scrim sobre a foto de fundo para garantir contraste do texto. -->
     <div class="absolute inset-0 bg-background/75" aria-hidden="true">

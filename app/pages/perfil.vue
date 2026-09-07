@@ -18,7 +18,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/perfil` }] })
         Perfil
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        Total compromisso com quem escolhi me tornar
+        Fiel aos meus valores e comprometido com quem escolhi me tornar
       </p>
     </div>
 
@@ -41,9 +41,9 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/perfil` }] })
     </p>
 
     <p>
-      Hoje, sou desenvolvedor Full Stack e tenho mais de 18 anos de experiência na criação de produtos
-      digitais. Minha trajetória na tecnologia começou em 2005 e, desde 2007, trabalho profissionalmente
-      transformando ideias e necessidades em soluções digitais.
+      Hoje, sou desenvolvedor Full Stack e tenho mais de 18 anos de experiência no desenvolvimento web. Minha trajetória
+      na tecnologia começou em 2005 e, desde 2007, trabalho profissionalmente transformando ideias e necessidades em
+      soluções digitais.
     </p>
 
     <p>

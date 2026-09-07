@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { View } from '@lucide/vue';
+import posGraduacaoCertificate from '@/assets/img/pos-graduacao.png'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { ExternalLink, View } from '@lucide/vue'
 
+const ROCKETSEAT_CERTIFICATE_URL = 'https://ftr.rocketseat.com.br/certificates/37443162-c28c-4788-84e7-1e95950dd55c'
+
+const certificateOpen = ref(false)
 </script>
 
 <template>
@@ -36,9 +41,26 @@ import { View } from '@lucide/vue';
       </p>
     </div>
 
-    <Button variant="default" class="px-2.5 py-4.5">
-      <View />
-      Visualizar certificado
-    </Button>
+    <div class="flex flex-wrap gap-3">
+      <Button variant="default" class="px-2.5 py-4.5" @click="certificateOpen = true">
+        <View />
+        Visualizar
+      </Button>
+      <Button as-child variant="outline" class="px-2.5 py-4.5">
+        <a :href="ROCKETSEAT_CERTIFICATE_URL" target="_blank" rel="noopener noreferrer">
+          <ExternalLink />
+          Certificado online
+        </a>
+      </Button>
+    </div>
+
+    <Dialog v-model:open="certificateOpen">
+      <DialogContent class="sm:max-w-3xl">
+        <DialogTitle>Certificado — Pós-Graduação</DialogTitle>
+        <img :src="posGraduacaoCertificate"
+          alt="Certificado de Pós-Graduação em Desenvolvimento Full Stack e Inteligência Artificial"
+          class="w-full rounded-sm">
+      </DialogContent>
+    </Dialog>
   </div>
 </template>

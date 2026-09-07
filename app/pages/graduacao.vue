@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { View } from '@lucide/vue';
+import graduacaoCertificate from '@/assets/img/graduacao.png'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import { View } from '@lucide/vue'
+
+const certificateOpen = ref(false)
 
 const requestUrl = useRequestURL()
 
@@ -51,9 +55,21 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/graduacao` }] }
       </p>
     </div>
 
-    <Button variant="default" class="px-2.5 py-4.5">
-      <View />
-      Visualizar certificado
-    </Button>
+    <div class="flex items-center flex-wrap gap-3">
+      <Button variant="default" class="px-2.5 py-4.5" @click="certificateOpen = true">
+        <View />
+        Visualizar
+      </Button>
+
+      <span class="px-4 text-muted-foreground">Sem certificado digital</span>
+    </div>
+
+    <Dialog v-model:open="certificateOpen">
+      <DialogContent class="sm:max-w-3xl">
+        <DialogTitle>Certificado — Graduação</DialogTitle>
+        <img :src="graduacaoCertificate" alt="Certificado de Graduação em Ciência da Computação"
+          class="w-full rounded-sm">
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
