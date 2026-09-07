@@ -15,7 +15,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/graduacao` }] }
 
 <template>
   <div class="mx-auto max-w-2xl px-4 py-16">
-    <NuxtLink to="/#formacao" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
+    <NuxtLink to="/formacao" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
       ← Voltar
     </NuxtLink>
 

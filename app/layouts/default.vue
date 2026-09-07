@@ -16,17 +16,21 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
+// Perfil, Valores, Formação, Cursos, Experiência, Contato e Pagar um café
+// são páginas reais (não seções por hash) — cada uma indexável com sua
+// própria URL/meta tags. Só Projetos e Blog continuam como seções da home,
+// por hash: são prévias com link para a página completa (/projetos, /posts).
 const navItems = [
-  { id: 'inicio', label: 'Início', icon: HouseIcon },
-  { id: 'perfil', label: 'Perfil', icon: UserIcon },
-  { id: 'valores', label: 'Valores', icon: CompassIcon },
-  { id: 'formacao', label: 'Formação', icon: GraduationCapIcon },
-  { id: 'cursos', label: 'Cursos', icon: BookOpenIcon },
-  { id: 'experiencia', label: 'Experiência', icon: BriefcaseIcon },
-  { id: 'projetos', label: 'Projetos', icon: FolderGit2Icon },
-  { id: 'blog', label: 'Blog', icon: NewspaperIcon },
-  { id: 'contato', label: 'Contato', icon: MailIcon },
-  { id: 'pagar-um-cafe', label: 'Pagar um café', icon: CoffeeIcon }
+  { id: 'inicio', label: 'Início', icon: HouseIcon, to: '/#inicio' },
+  { id: 'perfil', label: 'Perfil', icon: UserIcon, to: '/perfil' },
+  { id: 'valores', label: 'Valores', icon: CompassIcon, to: '/valores' },
+  { id: 'formacao', label: 'Formação', icon: GraduationCapIcon, to: '/formacao' },
+  { id: 'cursos', label: 'Cursos', icon: BookOpenIcon, to: '/cursos' },
+  { id: 'experiencia', label: 'Experiência', icon: BriefcaseIcon, to: '/experiencia' },
+  { id: 'projetos', label: 'Projetos', icon: FolderGit2Icon, to: '/#projetos' },
+  { id: 'blog', label: 'Blog', icon: NewspaperIcon, to: '/#blog' },
+  { id: 'contato', label: 'Contato', icon: MailIcon, to: '/contato' },
+  { id: 'pagar-um-cafe', label: 'Pagar um café', icon: CoffeeIcon, to: '/pagar-um-cafe' }
 ]
 
 const { theme, setTheme } = useTheme()
@@ -46,20 +50,24 @@ const isHome = computed(() => route.path === '/')
 
 // Mesma proteção contra hydration mismatch usada em `index.vue`: o hash da
 // URL não chega ao servidor, então o SSR sempre renderiza "início" para a
-// home. Só depois do mount é seguro ler `route.hash` de verdade.
-const mounted = ref(false)
+// home. Fora da hidratação inicial (ex: voltando pra "/" via navegação
+// client-side) não há risco de mismatch, então dá pra ler a hash real desde
+// o primeiro render — daí o `!nuxtApp.isHydrating` no valor inicial.
+const nuxtApp = useNuxtApp()
+const mounted = ref(import.meta.client && !nuxtApp.isHydrating)
 onMounted(() => {
   mounted.value = true
 })
 
-// Páginas fora da home (ex: /graduacao, /pos-graduacao) não têm item próprio
-// no menu — elas destacam o item da seção da home a que pertencem.
+// Páginas fora da home que não têm item próprio no menu (ex: /graduacao,
+// /pos-graduacao) destacam o item da página-mãe a que pertencem.
 const routeNavId: Record<string, string> = {
-  '/pagar-um-cafe': 'pagar-um-cafe',
   '/graduacao': 'formacao',
   '/pos-graduacao': 'formacao',
   '/certificados': 'cursos'
 }
+
+const realPageNavIds = new Set(navItems.filter(item => !item.to.startsWith('/#')).map(item => item.id))
 
 const activeNavId = computed(() => {
   if (route.path === '/') {
@@ -68,6 +76,8 @@ const activeNavId = computed(() => {
   }
   if (route.path.startsWith('/projetos')) return 'projetos'
   if (route.path.startsWith('/posts')) return 'blog'
+  const id = route.path.slice(1)
+  if (realPageNavIds.has(id)) return id
   return routeNavId[route.path] ?? null
 })
 </script>
@@ -83,7 +93,7 @@ const activeNavId = computed(() => {
           <Tooltip v-for="item in navItems" :key="item.id">
             <TooltipTrigger as-child>
               <NuxtLink
-                :to="`/#${item.id}`"
+                :to="item.to"
                 :aria-label="item.label"
                 :aria-current="item.id === activeNavId ? 'page' : undefined"
                 class="flex size-10 shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-accent hover:text-foreground"

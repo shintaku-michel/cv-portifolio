@@ -36,11 +36,7 @@ function sendEmail() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-2xl px-4">
-    <NuxtLink to="/#pagar-um-cafe" class="mb-4 inline-block text-sm text-muted-foreground hover:underline">
-      ← Voltar
-    </NuxtLink>
-
+  <div class="mx-auto max-w-2xl px-4 py-16">
     <div class="mb-8 flex flex-col gap-3">
       <h1 class="text-2xl font-semibold">
         Pagar um café

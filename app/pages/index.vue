@@ -3,14 +3,13 @@ import type { Post } from '#shared/types/post'
 import type { Project } from '#shared/types/project'
 import { formatPeriod } from '#shared/utils/format-period'
 import homeBg from '@/assets/img/bg-home-02.png'
-import profileBg from '@/assets/img/bg-profile-01.png'
 import michelDark from '@/assets/img/michel-dark.png'
 import michelLight from '@/assets/img/michel-light.png'
 import TechMarquee from '@/components/common/TechMarquee.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Code2Icon, FileBadge, FolderGit2Icon, MailIcon, MoveRight, SquareText } from '@lucide/vue'
+import { Code2Icon, FolderGit2Icon, MailIcon, MoveRight } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -49,25 +48,25 @@ function formatDate(value: string | null) {
   return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
 }
 
-// A barra de ícones navega por hash (`/#secao`) — só a seção correspondente
-// fica visível por vez, em vez da página rolar por todas elas. A troca entre
-// seções usa uma transição suave (fade) no lugar do scroll que existia antes.
+// A barra de ícones navega por hash (`/#secao`) para as seções que continuam
+// aqui (destaque de projetos/blog) — só a seção correspondente fica visível
+// por vez, com uma transição suave (fade).
 //
 // O hash da URL nunca chega ao servidor (é só do navegador) — então o SSR
-// sempre renderiza "início", não importa qual seção a URL pedia. Se
-// activeSection usasse route.hash direto, um load/reload em algo como
-// "/#perfil" faria o cliente trocar de seção JÁ durante a hidratação,
-// bem no meio da reconciliação do <Transition> — o resultado observado era
-// uma mistura quebrada (texto da seção nova com as classes de layout da
-// seção antiga, daí o alinhamento e o clipping "aleatórios"). Isso também
-// explica quebrar ao alternar mobile/desktop no DevTools: isso recarrega a
-// URL atual, e se ela tiver uma hash de seção, cai no mesmo problema.
+// sempre renderiza "início", não importa qual seção a URL pedia. Usar
+// route.hash direto faria o primeiro render do cliente divergir do HTML do
+// servidor bem no meio da hidratação, quebrando a reconciliação.
 //
-// A correção: no primeiro render (client ou server) sempre usar "início",
-// igual ao SSR — só depois do mount (garantidamente pós-hidratação) é que
-// activeSection passa a refletir a hash real, como uma troca reativa normal
-// e não mais um conflito durante a hidratação.
-const mounted = ref(false)
+// A pegadinha: isso só é um risco de fato DURANTE a hidratação inicial (a
+// única vez em que existe HTML de servidor pra reconciliar). Numa navegação
+// client-side pra cá vindo de outra página (ex: voltar de /projetos), não há
+// hidratação nenhuma acontecendo — é só uma montagem normal do Vue, e usar a
+// hash real desde o primeiro render não tem risco de mismatch. Por isso o
+// "fingir início" só se aplica durante nuxtApp.isHydrating; fora disso,
+// activeSection já nasce correto, sem o flash de "início" a cada volta pra
+// esta página.
+const nuxtApp = useNuxtApp()
+const mounted = ref(import.meta.client && !nuxtApp.isHydrating)
 onMounted(() => {
   mounted.value = true
 })
@@ -117,7 +116,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                   </NuxtLink>
                 </Button>
                 <Button as-child size="lg" variant="outline">
-                  <NuxtLink to="/#contato">
+                  <NuxtLink to="/contato">
                     <MailIcon />
                     Fale comigo
                   </NuxtLink>
@@ -134,242 +133,6 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
                 class="absolute -right-1 -bottom-1 flex h-12 w-12 items-center justify-center rounded-full bg-white ring-1 ring-[#999999] lg:h-16 lg:w-16">
                 <Code2Icon class="size-6 text-muted-foreground lg:size-8" />
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="activeSection === 'perfil'" id="perfil" key="perfil"
-        class="relative min-h-screen bg-cover bg-center bg-no-repeat lg:h-dvh lg:min-h-0 lg:overflow-hidden"
-        :style="{ backgroundImage: `url(${profileBg})` }">
-        <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
-              <div>
-                <h1 class="text-2xl font-semibold">
-                  Perfil
-                </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
-                  Hereditariedade e compromisso com quem escolhi me tornar
-                </p>
-              </div>
-
-              <p>
-                Nasci em Goiânia e cresci em Brasília. Desde cedo, a arte esteve presente na minha vida e se tornou
-                parte importante da minha formação.
-              </p>
-              <p>
-                A tecnologia, o design, a música e a cultura japonesa estão entre as principais influências que
-                despertaram minha criatividade e ajudaram a moldar quem sou
-                hoje.
-              </p>
-
-              <p>
-                Aos 14 anos, tive a oportunidade de viver por quase uma década no Japão, uma experiência que
-                transformou minha forma de enxergar o mundo e aprofundou valores como disciplina, honestidade,
-                organização,
-                resiliência e senso de coletividade. Essa vivência ampliou minha perspectiva e fortaleceu princípios que
-                carrego comigo e que, até hoje, fazem parte de quem sou.
-              </p>
-
-              <p>
-                Hoje, sou desenvolvedor Full Stack e tenho mais de 18 anos de experiência na criação de produtos
-                digitais. Minha trajetória na tecnologia começou em 2005 e, desde 2007, trabalho profissionalmente
-                transformando ideias e necessidades em soluções digitais.
-              </p>
-
-              <p>
-                Ao longo dessa trajetória, busco criar experiências que equilibrem tecnologia, usabilidade,
-                acessibilidade e regras de negócio, sem perder de vista o mais importante: as pessoas que estão do outro
-                lado da tela usando o produto.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="activeSection === 'valores'" id="valores" key="valores"
-        class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
-        <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
-              <div>
-                <h1 class="text-2xl font-semibold">
-                  Valores
-                </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
-                  Experiências que vivi e que carrego para uma vida mais equilibrada
-                </p>
-              </div>
-
-              <p>
-                Acredito que um bom trabalho começa com planejamento, disciplina e aprendizado contínuo. A tecnologia
-                está sempre mudando, e acompanhar essa evolução faz parte do nosso trabalho. Reaprender, experimentar e
-                estar
-                disposto a mudar também são formas de evoluir.
-              </p>
-              <p>
-                Prefiro a comunicação direta e honesta. Problemas devem ser compartilhados o quanto antes, antes que
-                se tornem maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento
-                também
-                fazem parte do trabalho em equipe.
-              </p>
-              <p>
-                A inspiração pode iniciar uma ideia, mas é a consistência que a transforma em resultado. Pequenos
-                avanços,
-                repetidos ao longo do tempo, fazem as coisas acontecerem. Os desafios fazem parte do processo, e
-                enfrentá-los
-                com paciência e persistência também faz parte do trabalho.
-              </p>
-              <p>
-                Os melhores sistemas que construí ao longo da minha carreira nasceram ao lado de pessoas que realmente
-                se importam com o que fazem.
-              </p>
-              <p>
-                Escolha bem as pessoas com quem você trabalha. E, quando não puder escolher, lembre-se: você ainda pode
-                fazer a sua parte, elevar o nível ao seu redor e contribuir para um ambiente mais colaborativo,
-                respeitoso e comprometido com a excelência.
-              </p>
-              <p>
-                Não romantize os erros. Reconheça-os, corrija o que for possível, mude o curso quando necessário,
-                aprenda com eles e siga em frente.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="activeSection === 'formacao'" id="formacao" key="formacao"
-        class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
-        <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
-              <div>
-                <h1 class="text-2xl font-semibold">
-                  Formação
-                </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
-                  Acredito na transformação por meio do conhecimento
-                </p>
-              </div>
-
-              <p>
-                Sou graduado em Ciência da Computação pelo Centro Universitário de Brasília (CEUB) e pós-graduado em
-                Full
-                Stack & IA pela Faculdade de Tecnologia Rocketseat. Minha formação, somada a mais de 18 anos de
-                experiência
-                prática no desenvolvimento web, me permite unir fundamentos de computação, desenvolvimento de
-                software e
-                o uso das tecnologias mais adequadas para criar cada solução digital.
-              </p>
-              <p>
-                Ao longo da minha trajetória, mantenho o hábito de continuar estudando, experimentando novas
-                tecnologias e
-                aprofundando conhecimentos que possam contribuir para a
-                qualidade do meu trabalho.
-              </p>
-              <p>
-                Humildade para reconhecer que não sei tudo, valorizar o conhecimento e a experiência de outras pessoas,
-                e sabedoria para continuar estudando, aprendendo e evoluindo.
-              </p>
-
-              <div class="mt-6 flex gap-2">
-                <Button as-child size="lg">
-                  <NuxtLink to="/pos-graduacao" class="flex gap-2">
-                    <FileBadge />
-                    Pós-Graduação
-                  </NuxtLink>
-                </Button>
-                <Button as-child size="lg">
-                  <NuxtLink to="/graduacao" class="flex gap-2">
-                    <FileBadge />
-                    Graduação
-                  </NuxtLink>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="activeSection === 'cursos'" id="cursos" key="cursos"
-        class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
-        <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
-              <div>
-                <h1 class="text-2xl font-semibold">
-                  Cursos
-                </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
-                  Aprendizados direcionados para desafios e necessidades específicas
-                </p>
-              </div>
-
-              <p>
-                Ao longo da minha carreira, busquei ampliar meus conhecimentos em diferentes áreas do desenvolvimento
-                de
-                software. Tenho cursos em UX/UI Design, acessibilidade (A11y), Frontend, Backend e DevOps. Sempre fui
-                muito
-                curioso e procurei entender diferentes partes do processo de desenvolvimento para ter mais autonomia,
-                explorar
-                novas possibilidades e não ficar limitado por uma única área da tecnologia.
-              </p>
-              <p>
-                Mais do que acumular certificados, busco conhecimentos que possam ser aplicados na prática e que me
-                ajudem
-                a compreender melhor todo o processo de criação dos produtos digitais que desenvolvo.
-              </p>
-
-              <div class="mt-6">
-                <Button as-child size="lg">
-                  <NuxtLink to="/certificados" class="flex gap-2">
-                    <FileBadge />
-                    Certificados
-                  </NuxtLink>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="activeSection === 'experiencia'" id="experiencia" key="experiencia"
-        class="min-h-screen scroll-mt-8 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
-        <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl flex flex-col gap-3">
-              <div>
-                <h1 class="text-2xl font-semibold">
-                  Experiência
-                </h1>
-                <p class="font-cursive text-[1.4rem] text-muted-foreground leading-5 mt-2">
-                  A vida como ela é — e o amor por aquilo que perseguimos com genuína dedicação
-                </p>
-              </div>
-
-              <p>
-                Comecei minha carreira no Backend, construindo APIs e aprendendo sobre padrões de desenvolvimento e
-                arquitetura de software. Entre 2010 e 2011, trabalhar com Java exigia conhecer não apenas a linguagem,
-                mas todo um ecossistema de configurações, persistência, empacotamento e servidores de aplicação. Foi
-                quando trabalhei com tecnologias como Java EE, Spring, Hibernate, Maven, Tomcat e JBoss.
-              </p>
-              <p>
-                Com o tempo, minha curiosidade me levou ao Frontend, área em que comecei a me destacar e que se conectou
-                naturalmente ao meu interesse por arte, design e pelo processo de transformar ideias em experiências. Em
-                uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e
-                também me aproximar de UX, ampliando minha percepção sobre a construção de produtos.
-              </p>
-              <p>
-                Mais tarde, voltei ao Backend, dessa vez com Node.js, e percebi o quanto essa experiência havia
-                transformado minha visão como desenvolvedor. Passei a construir APIs pensando também em quem iria
-                consumi-las e a enxergar o desenvolvimento de software de forma mais completa, entendendo como decisões
-                técnicas influenciam o produto e a experiência de quem o utiliza.
-              </p>
-              <p>
-                Hoje, continuo estudando, experimentando e aprimorando minhas práticas, sempre buscando evoluir e
-                encontrar maneiras melhores de transformar ideias em soluções.
-              </p>
             </div>
           </div>
         </div>
@@ -469,55 +232,6 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
         </div>
       </section>
 
-      <section v-else-if="activeSection === 'contato'" id="contato" key="contato"
-        class="min-h-screen scroll-mt-8 pb-24 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
-        <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl">
-              <div class="flex flex-col items-start gap-4">
-                <div class="flex items-center gap-2 justify-center">
-                  <h1 class="text-2xl font-semibold">
-                    Contato
-                  </h1>
-                </div>
-                <p class="text-muted-foreground">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nam facilis aut molestiae cupiditate
-                  nesciunt enim quos sed ad. Natus quaerat expedita earum id sed sapiente obcaecati. Sint totam possimus
-                  illo!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="activeSection === 'pagar-um-cafe'" id="pagar-um-cafe" key="pagar-um-cafe"
-        class="min-h-screen scroll-mt-8 pb-24 lg:h-dvh lg:min-h-0 lg:overflow-hidden">
-        <div class="flex flex-col items-center justify-center gap-4 text-left">
-          <div class="md:h-full">
-            <div class="px-6 py-12 md:py-24 md:mx-auto md:w-3xl">
-              <div class="flex flex-col items-start gap-4">
-                <div class="flex items-center gap-2 justify-center">
-                  <h1 class="text-2xl font-semibold">
-                    Pagar um café
-                  </h1>
-                </div>
-                <p class="text-muted-foreground">
-                  Tem um problema técnico ou uma dúvida de arquitetura e quer trocar uma ideia? Descreva o que você
-                  precisa
-                  e a gente marca um café (virtual) para conversar sobre o diagnóstico e possíveis formas de resolver.
-                </p>
-                <Button as-child size="lg">
-                  <NuxtLink to="/pagar-um-cafe">
-                    <SquareText />
-                    Descrever o problema
-                  </NuxtLink>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </Transition>
   </div>
 </template>
