@@ -39,7 +39,6 @@ export default defineEventHandler(async (event) => {
     { loc: `${origin}/formacao`, changefreq: 'monthly', priority: '0.7' },
     { loc: `${origin}/cursos`, changefreq: 'monthly', priority: '0.7' },
     { loc: `${origin}/experiencia`, changefreq: 'monthly', priority: '0.7' },
-    { loc: `${origin}/contato`, changefreq: 'yearly', priority: '0.5' },
     { loc: `${origin}/graduacao`, changefreq: 'yearly', priority: '0.5' },
     { loc: `${origin}/pos-graduacao`, changefreq: 'yearly', priority: '0.5' },
     { loc: `${origin}/certificados`, changefreq: 'yearly', priority: '0.5' },

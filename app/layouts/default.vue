@@ -7,7 +7,6 @@ import {
   FolderGit2Icon,
   GraduationCapIcon,
   HouseIcon,
-  MailIcon,
   MoonIcon,
   NewspaperIcon,
   SunIcon,
@@ -16,20 +15,17 @@ import {
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
-// Perfil, Valores, Formação, Cursos, Experiência, Contato e Pagar um café
-// são páginas reais (não seções por hash) — cada uma indexável com sua
-// própria URL/meta tags. Só Projetos e Blog continuam como seções da home,
-// por hash: são prévias com link para a página completa (/projetos, /posts).
+// Todas as páginas são rotas reais e indexáveis, cada uma com seu próprio
+// SEO — a home não tem mais seções por hash.
 const navItems = [
-  { id: 'inicio', label: 'Início', icon: HouseIcon, to: '/#inicio' },
+  { id: 'inicio', label: 'Início', icon: HouseIcon, to: '/' },
   { id: 'perfil', label: 'Perfil', icon: UserIcon, to: '/perfil' },
   { id: 'valores', label: 'Valores', icon: CompassIcon, to: '/valores' },
   { id: 'formacao', label: 'Formação', icon: GraduationCapIcon, to: '/formacao' },
   { id: 'cursos', label: 'Cursos', icon: BookOpenIcon, to: '/cursos' },
   { id: 'experiencia', label: 'Experiência', icon: BriefcaseIcon, to: '/experiencia' },
-  { id: 'projetos', label: 'Projetos', icon: FolderGit2Icon, to: '/#projetos' },
-  { id: 'blog', label: 'Blog', icon: NewspaperIcon, to: '/#blog' },
-  { id: 'contato', label: 'Contato', icon: MailIcon, to: '/contato' },
+  { id: 'projetos', label: 'Projetos', icon: FolderGit2Icon, to: '/projetos' },
+  { id: 'blog', label: 'Blog', icon: NewspaperIcon, to: '/posts' },
   { id: 'pagar-um-cafe', label: 'Pagar um café', icon: CoffeeIcon, to: '/pagar-um-cafe' }
 ]
 
@@ -48,17 +44,6 @@ const themeToggleLabel = computed(() => theme.value === 'dark' ? 'Mudar para tem
 const route = useRoute()
 const isHome = computed(() => route.path === '/')
 
-// Mesma proteção contra hydration mismatch usada em `index.vue`: o hash da
-// URL não chega ao servidor, então o SSR sempre renderiza "início" para a
-// home. Fora da hidratação inicial (ex: voltando pra "/" via navegação
-// client-side) não há risco de mismatch, então dá pra ler a hash real desde
-// o primeiro render — daí o `!nuxtApp.isHydrating` no valor inicial.
-const nuxtApp = useNuxtApp()
-const mounted = ref(import.meta.client && !nuxtApp.isHydrating)
-onMounted(() => {
-  mounted.value = true
-})
-
 // Páginas fora da home que não têm item próprio no menu (ex: /graduacao,
 // /pos-graduacao) destacam o item da página-mãe a que pertencem.
 const routeNavId: Record<string, string> = {
@@ -67,18 +52,11 @@ const routeNavId: Record<string, string> = {
   '/certificados': 'cursos'
 }
 
-const realPageNavIds = new Set(navItems.filter(item => !item.to.startsWith('/#')).map(item => item.id))
-
 const activeNavId = computed(() => {
-  if (route.path === '/') {
-    if (!mounted.value) return 'inicio'
-    return route.hash ? route.hash.slice(1) : 'inicio'
-  }
+  if (route.path === '/') return 'inicio'
   if (route.path.startsWith('/projetos')) return 'projetos'
   if (route.path.startsWith('/posts')) return 'blog'
-  const id = route.path.slice(1)
-  if (realPageNavIds.has(id)) return id
-  return routeNavId[route.path] ?? null
+  return routeNavId[route.path] ?? route.path.slice(1)
 })
 </script>
 

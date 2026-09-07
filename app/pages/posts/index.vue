@@ -48,16 +48,12 @@ function authorInitials(name: string) {
 </script>
 
 <template>
-  <div class="mx-auto max-w-3xl py-8">
-    <NuxtLink to="/#blog" class="mb-4 inline-block px-1 text-sm text-muted-foreground hover:underline">
-      ← Voltar para Blog destaque
-    </NuxtLink>
-
-    <div class="mb-6 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
+  <div class="flex flex-col gap-3 px-6 py-12 md:mx-auto md:w-3xl md:py-17">
+    <div class="mb-4 flex flex-col">
       <h1 class="text-2xl font-semibold">
-        Blog do Shin
+        Blog
       </h1>
-      <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-2">
+      <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
         Tecnologia, artigos técnicos, tutoriais e relatos de projetos.
       </p>
     </div>
