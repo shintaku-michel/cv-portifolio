@@ -12,7 +12,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/certificados` }
 </script>
 
 <template>
-  <div class="mx-auto max-w-2xl px-4 py-16">
+  <div class="px-6 py-12 md:mx-auto md:w-3xl md:py-17">
     <NuxtLink to="/cursos" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
       ← Voltar
     </NuxtLink>
