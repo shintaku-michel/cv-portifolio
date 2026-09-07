@@ -19,7 +19,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/formacao` }] })
       <h1 class="text-2xl font-semibold">
         Formação
       </h1>
-      <p class="mt-2 font-cursive text-[1.4rem] leading-5 text-muted-foreground">
+      <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
         Acredito na transformação por meio do conhecimento
       </p>
     </div>

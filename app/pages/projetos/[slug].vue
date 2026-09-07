@@ -66,7 +66,7 @@ useHead({
 </script>
 
 <template>
-  <div class="px-1 py-6 md:mx-auto md:w-3xl">
+  <div class="p-6 md:mx-auto md:w-3xl">
     <NuxtLink to="/projetos" class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
       <MoveLeft class="h-4 w-4" />
       Projetos

@@ -14,14 +14,14 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/graduacao` }] }
 </script>
 
 <template>
-  <div class="px-6 py-12 md:mx-auto md:w-3xl md:py-17">
+  <div class="px-6 py-12 md:mx-auto md:w-3xl md:py-5">
     <NuxtLink to="/formacao" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
       ← Voltar
     </NuxtLink>
 
     <div class="mb-8 flex flex-col gap-3">
       <div>
-        <h1 class="text-3xl font-semibold">
+        <h1 class="text-2xl font-semibold">
           Graduação
         </h1>
         <p class="font-cursive text-xl text-muted-foreground leading-5">

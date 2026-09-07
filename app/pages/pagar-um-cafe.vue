@@ -47,28 +47,30 @@ function sendEmail() {
 </script>
 
 <template>
-  <div class="px-6 py-12 md:mx-auto md:w-3xl md:py-17">
-    <div class="mb-8 flex flex-col gap-3">
+  <div class="flex flex-col gap-3 px-6 py-12 md:mx-auto md:w-3xl md:py-17">
+    <div class="mb-2">
       <h1 class="text-2xl font-semibold">
         Pagar um café
       </h1>
-      <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground">
+      <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
         Uma consultoria custa muito menos do que começar um projeto sem clareza sobre o que realmente precisa ser
         feito
       </p>
-      <p class="text-muted-foreground">
+    </div>
+
+    <div class="flex flex-col gap-3 mb-6">
+      <p>
         Descreva o problema ou a dúvida que você tem sobre o seu produto digital. Depois de analisar sua mensagem,
         marcamos um café (virtual) para conversar sobre o cenário, entender melhor o problema e explorar possíveis
         soluções.
       </p>
-      <p class="text-muted-foreground">
+      <p>
         Esse bate-papo inicial é 100% gratuito e sem compromisso. Se fizer sentido para você avançar, podemos elaborar
         um diagnóstico completo, estruturado e direcionado à implementação.
       </p>
     </div>
 
     <form class="flex flex-col gap-4" @submit.prevent>
-
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 flex-1">
           <Label for="name">Nome</Label>

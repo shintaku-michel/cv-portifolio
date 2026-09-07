@@ -16,7 +16,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/experiencia` }]
       <h1 class="text-2xl font-semibold">
         Experiência
       </h1>
-      <p class="mt-2 font-cursive text-[1.4rem] leading-5 text-muted-foreground">
+      <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
         A vida como ela é — e o amor por aquilo que perseguimos com genuína dedicação
       </p>
     </div>
