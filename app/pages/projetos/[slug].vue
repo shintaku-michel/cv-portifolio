@@ -81,26 +81,27 @@ useHead({
       </p>
     </div>
 
-    <div class="mt-4">
-      <span v-if="formatPeriod(project.startDate, project.endDate)"
-        class="text-xs text-muted-foreground flex items-center gap-2">
-        <Calendar class="inline h-4 w-4" />
-        {{ formatPeriod(project.startDate, project.endDate) }}
-      </span>
-    </div>
-
-
     <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
       class="mb-4 aspect-video w-full rounded-sm object-cover">
 
-    <div class="mt-4 mb-4 flex flex-wrap gap-3">
-      <Button v-if="project.demoUrl" as="a" :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
-        Ver demonstração
-      </Button>
-      <Button v-if="project.repositoryUrl" as="a" variant="outline" :href="project.repositoryUrl" target="_blank"
-        rel="noopener noreferrer">
-        Ver repositório
-      </Button>
+    <div class="flex items-center justify-between gap-4 border border-muted p-4 my-4 rounded-sm">
+      <div>
+        <span v-if="formatPeriod(project.startDate, project.endDate)"
+          class="text-xs text-muted-foreground flex items-center gap-2">
+          <Calendar class="inline h-4 w-4" />
+          Publicado em: {{ formatPeriod(project.startDate, project.endDate) }}
+        </span>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <Button v-if="project.demoUrl" as="a" :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
+          Ver demonstração
+        </Button>
+        <Button v-if="project.repositoryUrl" as="a" variant="outline" :href="project.repositoryUrl" target="_blank"
+          rel="noopener noreferrer">
+          Ver repositório
+        </Button>
+      </div>
     </div>
 
     <div class="prose prose-neutral mb-8 max-w-none whitespace-pre-line dark:prose-invert">
