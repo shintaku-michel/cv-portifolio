@@ -18,7 +18,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/perfil` }] })
         Perfil
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        Fiel aos meus valores e comprometido com quem escolhi me tornar
+        Leal aos meus valores e comprometido com quem escolhi me tornar
       </p>
     </div>
 
