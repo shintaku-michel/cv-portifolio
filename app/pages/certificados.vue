@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import type { Certificate, CertificateCategory } from '#shared/types/certificate'
+import CertificateCard from '@/components/certificates/CertificateCard.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { CalendarDays, ExternalLink, GraduationCap, MoveLeft, View } from '@lucide/vue'
+import { MoveLeft } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -29,7 +28,7 @@ const CATEGORY_LABELS: Record<CertificateCategory, string> = {
 const QUERY = `
   query PublicCertificates {
     certificates {
-      id title description category completedAt image onlineUrl
+      id title description category completedAt image onlineUrl displayOrder
     }
   }
 `
@@ -41,6 +40,18 @@ const { data, pending, error } = await useAsyncData('certificados', () =>
 function formatDate(value: string) {
   return new Date(`${value}T00:00:00`).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
+
+const certificatesView = computed(() => (data.value?.certificates ?? []).map(certificate => ({
+  ...certificate,
+  categoryLabel: CATEGORY_LABELS[certificate.category],
+  completedAtLabel: formatDate(certificate.completedAt)
+})))
+
+// Duas colunas independentes (par/ímpar) em vez de CSS columns: preserva a
+// ordem de leitura esquerda-para-direita (1 2 / 3 4 / 5 6) enquanto cada
+// coluna ainda se ajusta à própria altura, sem esperar a coluna vizinha.
+const leftColumn = computed(() => certificatesView.value.filter((_, index) => index % 2 === 0))
+const rightColumn = computed(() => certificatesView.value.filter((_, index) => index % 2 === 1))
 
 const openCertificateId = ref<string | null>(null)
 const openCertificate = computed(() =>
@@ -69,37 +80,34 @@ const openCertificate = computed(() =>
     <ErrorState v-else-if="error" message="Não foi possível carregar os certificados." />
     <EmptyState v-else-if="!data?.certificates.length" message="Nenhum certificado cadastrado ainda." />
 
-    <div v-else class="gap-6 sm:columns-2">
-      <Card v-for="certificate in data.certificates" :key="certificate.id" class="mb-6 break-inside-avoid">
-        <CardHeader>
-          <CardTitle>{{ certificate.title }}</CardTitle>
-          <span class="flex items-center gap-2 text-xs text-muted-foreground">
-            <CalendarDays class="h-3.5 w-3.5" />
-            Concluído em {{ formatDate(certificate.completedAt) }}
-          </span>
-          <span class="flex items-center gap-2 text-xs text-muted-foreground">
-            <GraduationCap class="h-3.5 w-3.5" />
-            {{ CATEGORY_LABELS[certificate.category] }}
-          </span>
-        </CardHeader>
-        <CardContent class="flex flex-col gap-3">
-          <CardDescription>{{ certificate.description }}</CardDescription>
-        </CardContent>
-        <CardFooter class="flex flex-wrap gap-2">
-          <Button size="sm" :disabled="!certificate.image" @click="openCertificateId = certificate.id">
-            <View />
-            Visualizar
-          </Button>
-          <Button v-if="certificate.onlineUrl" as-child size="sm" variant="outline">
-            <a :href="certificate.onlineUrl" target="_blank" rel="noopener noreferrer">
-              <ExternalLink />
-              Certificado online
-            </a>
-          </Button>
-          <span v-else class="px-4 text-muted-foreground">Sem certificado digital</span>
-        </CardFooter>
-      </Card>
-    </div>
+    <template v-else>
+      <!-- Mobile: uma coluna só, ordem sequencial normal. -->
+      <div class="flex flex-col gap-6 sm:hidden">
+        <CertificateCard
+          v-for="certificate in certificatesView" :key="certificate.id" :certificate="certificate"
+          :category-label="certificate.categoryLabel" :completed-at-label="certificate.completedAtLabel"
+          @view="openCertificateId = $event"
+        />
+      </div>
+
+      <!-- sm+: duas colunas, cada uma com seu próprio fluxo vertical. -->
+      <div class="hidden gap-6 sm:grid sm:grid-cols-2">
+        <div class="flex flex-col gap-6">
+          <CertificateCard
+            v-for="certificate in leftColumn" :key="certificate.id" :certificate="certificate"
+            :category-label="certificate.categoryLabel" :completed-at-label="certificate.completedAtLabel"
+            @view="openCertificateId = $event"
+          />
+        </div>
+        <div class="flex flex-col gap-6">
+          <CertificateCard
+            v-for="certificate in rightColumn" :key="certificate.id" :certificate="certificate"
+            :category-label="certificate.categoryLabel" :completed-at-label="certificate.completedAtLabel"
+            @view="openCertificateId = $event"
+          />
+        </div>
+      </div>
+    </template>
 
     <Dialog :open="!!openCertificate" @update:open="(open) => { if (!open) openCertificateId = null }">
       <DialogContent v-if="openCertificate" class="sm:max-w-3xl">
