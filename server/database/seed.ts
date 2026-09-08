@@ -2,7 +2,8 @@ import { eq, inArray } from 'drizzle-orm'
 import { AuthService } from '../services/auth.service'
 import { slugify } from '../../shared/utils/slug'
 import { db } from './client'
-import { categories, projects, projectTechnologies, tags, technologies, users } from './schema'
+import { categories, certificates, projects, projectTechnologies, tags, technologies, users } from './schema'
+import type { CertificateCategory } from '../services/certificate.service'
 
 // Dados de referência (tecnologias, categorias, tags), um projeto de exemplo
 // e dois usuários de teste (ADMIN e USER) para exercitar o login localmente.
@@ -149,6 +150,222 @@ const categoryNames = ['Vue', 'Nuxt', 'TypeScript', 'Frontend', 'Backend', 'Aces
 
 const tagNames = ['Tutorial', 'Estudo de caso', 'Arquitetura', 'Performance', 'Boas práticas']
 
+// Imagens servidas de `public/certificados/` (não `assets/`, que exigiria
+// import processado pelo Vite — aqui é só uma URL de texto, como coverImage
+// de projeto/post). displayOrder preserva a ordem cronológica original.
+const certificateCatalog: {
+  title: string
+  description: string
+  category: CertificateCategory
+  completedAt: string
+  image: string
+  onlineUrl: string | null
+  displayOrder: number
+}[] = [
+  {
+    title: 'Figma for Devs',
+    description: 'Um curso de Figma para quem é dev front-end, a fim de te ensinar a como utilizar o Figma de forma produtiva na hora de migrar um projeto de UI para código HTML/CSS.',
+    category: 'UX_UI_DESIGN',
+    completedAt: '2026-05-11',
+    image: '/certificados/certificado-figma.png',
+    onlineUrl: 'https://ftr.rocketseat.com.br/certificates/600d9c9f-fac3-44bc-8434-7aaf26ec366e',
+    displayOrder: 1
+  },
+  {
+    title: 'Desenvolvimento de Software com IA Aplicada e Alta Performance',
+    description: 'Curso voltado à construção e evolução de produtos digitais escaláveis, abordando gestão de projetos e riscos, observabilidade, privacidade de dados, estratégias de deploy e GraphQL, além do uso de Inteligência Artificial e dados na tomada de decisões',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2026-03-03',
+    image: '/certificados/dev-web.png',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/f6741d91-5fcc-4954-870a-255d3d002f24',
+    displayOrder: 2
+  },
+  {
+    title: 'Arquitetura de Software e Sistemas Escaláveis',
+    description: 'Curso voltado a práticas avançadas de engenharia de software, abordando arquitetura, Design Patterns, testes, bancos de dados, microsserviços e Kubernetes, além da aplicação de Inteligência Artificial, gestão de projetos e inovação no desenvolvimento de soluções modernas.',
+    category: 'DEVOPS',
+    completedAt: '2026-02-09',
+    image: '/certificados/devOps-02.png',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/ef1df7aa-c1bf-4d5b-8c37-f9125cc5b9be',
+    displayOrder: 3
+  },
+  {
+    title: 'Desenvolvimento Web Full Stack, Cloud, DevOps e IA',
+    description: 'Desenvolvimento de aplicações modernas com foco em infraestrutura, deploy, produtividade e Inteligência Artificial.',
+    category: 'DEVOPS',
+    completedAt: '2025-10-13',
+    image: '/certificados/dev-web-full-stack.png',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/bf3924fc-5956-43af-8661-d4799f0fe92a',
+    displayOrder: 4
+  },
+  {
+    title: 'Node.js',
+    description: 'Curso focado nos fundamentos do desenvolvimento Backend com Node.js. Explorando o funcionamento do protocolo HTTP, manipulação de requisições e respostas, headers, status codes, parâmetros e processamento de dados com Streams',
+    category: 'BACKEND',
+    completedAt: '2024-12-22',
+    image: '/certificados/nodejs.png',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/cd3f8afe-bf19-4992-b13a-2d22f35a03c5',
+    displayOrder: 5
+  },
+  {
+    title: 'Vue 3 full course in one day + helpful docs (Cheat Sheet)',
+    description: 'Curso completo de Vue 3, abordando desde os fundamentos do framework até a criação de aplicações web complexas, incluindo práticas recomendadas e padrões de desenvolvimento.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2023-06-18',
+    image: '/certificados/vue3.png',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-2b9d7190-4465-4e5a-81ae-4870a99fc468/',
+    displayOrder: 6
+  },
+  {
+    title: 'Criando um Projeto com Interface Gráfica Utilizando a Linguagem Python',
+    description: 'Curso introdutório de desenvolvimento com Python, abordando classes e métodos, encapsulamento, criação de bibliotecas e desenvolvimento de aplicações, incluindo a construção de interfaces com Kivy.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2023-06-14',
+    image: '/certificados/python.png',
+    onlineUrl: null,
+    displayOrder: 7
+  },
+  {
+    title: 'Linguagem de Programação Java - Avançado',
+    description: 'Os fundamentos da Programação Orientada a Objetos (POO) serão evidenciados, passando pelos objetos, as classes, suas construções, além dos complementos da linguagem Java, incluindo conceitos, como pacotes, métodos e herança.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2023-06-14',
+    image: '/certificados/java.png',
+    onlineUrl: null,
+    displayOrder: 8
+  },
+  {
+    title: 'Rocketseat Fundamentar',
+    description: 'Curso de formação em fundamentos do desenvolvimento de software, abordando HTML, CSS, JavaScript, Node.js e SQL, além de estruturas de dados, paradigmas de programação, Git, GitHub e fundamentos do protocolo HTTP.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2023-03-15',
+    image: '/certificados/fundamentar.png',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/5186fdbe-b825-4bd2-bfb5-6d0b705a5d02',
+    displayOrder: 9
+  },
+  {
+    title: 'Node.js Express Project - CMS and Shopping Cart with Paypal',
+    description: 'Curso completo de Node.js e Express, abordando desde a criação de APIs RESTful até a implementação de um sistema de gerenciamento de conteúdo (CMS) e um carrinho de compras com integração ao Paypal.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2023-03-15',
+    image: '/certificados/node-express.png',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-43573517-241d-4af2-bce4-47c542200010/',
+    displayOrder: 10
+  },
+  {
+    title: 'Rocketseat Especializar',
+    description: 'Curso focado no desenvolvimento web moderno, abordando JavaScript assíncrono, consumo de APIs, fundamentos de React.js e TypeScript, além de SQL avançado, colaboração com GitHub e criação de interfaces com animações em CSS.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2022-11-14',
+    image: '/certificados/especializar.png',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/0bc72566-f2ce-49e7-b1f7-10721b110f34',
+    displayOrder: 11
+  },
+  {
+    title: 'Curso Vue JS 2 - O Guia Completo (Vue Router & Vuex)',
+    description: 'Curso completo de Vue.js 2, abordando desde os fundamentos do framework até a criação de aplicações web complexas com Vue Router e Vuex, incluindo práticas recomendadas e padrões de desenvolvimento.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2022-09-18',
+    image: '/certificados/vuejs.png',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-00518eeb-840f-4e62-abe2-c784e4a92ec1/',
+    displayOrder: 12
+  },
+  {
+    title: 'Curso Completo do Desenvolvedor NodeJS e MongoDB',
+    description: 'Curso completo de Node.js e MongoDB, abordando desde os fundamentos do desenvolvimento backend até a criação de APIs RESTful e integração com bancos de dados NoSQL.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2019-02-12',
+    image: '/certificados/nodejs-mongo.png',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-WNHY1DVR/',
+    displayOrder: 13
+  },
+  {
+    title: 'IFTechDay - Interfaces Web Responsivas',
+    description: 'Minicurso sobre desenvolvimento de interfaces web responsivas, abordando técnicas e conceitos para criação de páginas adaptáveis a diferentes tamanhos de tela e dispositivos.',
+    category: 'GESTAO_DE_PROJETOS',
+    completedAt: '2013-09-06',
+    image: '/certificados/professor.png',
+    onlineUrl: null,
+    displayOrder: 14
+  },
+  {
+    title: 'IFTechDay - Coordenador Campus Brasília',
+    description: 'Atuação na coordenação do IFTechDay no Campus Brasília, contribuindo para a organização e realização do evento, voltado à disseminação de conhecimento e à troca de experiências em tecnologia.',
+    category: 'GESTAO_DE_PROJETOS',
+    completedAt: '2013-09-06',
+    image: '/certificados/coordenador.png',
+    onlineUrl: null,
+    displayOrder: 15
+  },
+  {
+    title: 'Java para desenvolvimento Web',
+    description: 'Curso de formação em Java para desenvolvimento Web, abordando a criação de aplicações, integração com bancos de dados e fundamentos do ecossistema Java para Web.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2011-03-26',
+    image: '/certificados/java-web.png',
+    onlineUrl: null,
+    displayOrder: 16
+  },
+  {
+    title: 'Gerência de Projetos PMBOK',
+    description: 'Curso de formação em gerenciamento de projetos, abordando as melhores práticas e diretrizes do PMBOK, incluindo planejamento, execução e controle de projetos.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2011-02-24',
+    image: '/certificados/gerencia-de-projetos.png',
+    onlineUrl: null,
+    displayOrder: 17
+  },
+  {
+    title: 'Java Orientado a Objetos',
+    description: 'Curso de formação em Java, abordando os fundamentos da Programação Orientada a Objetos (POO), incluindo classes, objetos, herança e polimorfismo.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2010-12-30',
+    image: '/certificados/java-oo.png',
+    onlineUrl: null,
+    displayOrder: 18
+  },
+  {
+    title: 'Java com Testes. XML e Design Patterns',
+    description: 'Curso de formação em Java, abordando desenvolvimento de aplicações, testes, manipulação de XML e aplicação de Design Patterns.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2010-12-04',
+    image: '/certificados/java-testes.png',
+    onlineUrl: null,
+    displayOrder: 19
+  },
+  {
+    title: 'Web Developer',
+    description: 'Curso de formação em desenvolvimento web pelo SENAI, abordando os fundamentos para criação de aplicações e páginas web, com foco em programação, estruturação de interfaces e principais tecnologias utilizadas no desenvolvimento para a web.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2008-05-26',
+    image: '/certificados/web-developer.png',
+    onlineUrl: null,
+    displayOrder: 20
+  },
+  {
+    title: 'Designer Gráfico Aplicativos e Projetos',
+    description: 'Curso de formação em design gráfico, abordando os fundamentos para criação de interfaces e experiências visuais em aplicações e projetos digitais.',
+    category: 'DESENVOLVIMENTO_WEB',
+    completedAt: '2005-06-07',
+    image: '/certificados/designer-grafico.png',
+    onlineUrl: null,
+    displayOrder: 21
+  }
+]
+
+async function seedCertificates() {
+  for (const certificate of certificateCatalog) {
+    const existing = await db.query.certificates.findFirst({
+      where: (c, { eq }) => eq(c.title, certificate.title)
+    })
+    if (existing) {
+      await db.update(certificates).set(certificate).where(eq(certificates.id, existing.id))
+    } else {
+      await db.insert(certificates).values(certificate)
+    }
+  }
+}
+
 async function seedUsers() {
   const seedAccounts = [
     { name: 'Admin', email: 'admin@portfolio-cms.dev', password: 'admin12345', role: 'ADMIN' as const },
@@ -254,6 +471,8 @@ async function seed() {
       .onConflictDoNothing()
   }
 
+  await seedCertificates()
+
   // Contas de teste com senha fixa e conhecida — só em dev. Em produção
   // (NODE_ENV=production) ficam de fora por padrão; force com
   // SEED_DEMO_ACCOUNTS=true se precisar delas lá mesmo assim.
@@ -262,7 +481,7 @@ async function seed() {
   }
   await promoteOwnerToAdmin()
 
-  console.log('Seed concluído: technologies, categories, tags, projeto de exemplo e usuários.')
+  console.log('Seed concluído: technologies, categories, tags, projeto de exemplo, certificados e usuários.')
   await db.$client.end()
 }
 

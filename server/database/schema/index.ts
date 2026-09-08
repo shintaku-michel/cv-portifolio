@@ -1,4 +1,5 @@
 export * from './categories'
+export * from './certificates'
 export * from './comments'
 export * from './likes'
 export * from './post-tags'

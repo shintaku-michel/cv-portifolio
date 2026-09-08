@@ -10,6 +10,7 @@ const links = [
   { to: '/admin', label: 'Dashboard' },
   { to: '/admin/projetos', label: 'Projetos' },
   { to: '/admin/posts', label: 'Posts' },
+  { to: '/admin/certificados', label: 'Certificados' },
   { to: '/admin/comentarios', label: 'Comentários' },
   { to: '/admin/usuarios', label: 'Usuários' }
 ]

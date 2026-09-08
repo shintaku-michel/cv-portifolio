@@ -1,0 +1,53 @@
+enum CertificateCategory {
+  DESENVOLVIMENTO_WEB
+  UX_UI_DESIGN
+  DEVOPS
+  BACKEND
+  GESTAO_DE_PROJETOS
+}
+
+type Certificate {
+  id: ID!
+  title: String!
+  description: String!
+  category: CertificateCategory!
+  completedAt: String!
+  image: String
+  onlineUrl: String
+  displayOrder: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input CreateCertificateInput {
+  title: String!
+  description: String!
+  category: CertificateCategory!
+  completedAt: String!
+  image: String
+  onlineUrl: String
+  displayOrder: Int
+}
+
+input UpdateCertificateInput {
+  title: String
+  description: String
+  category: CertificateCategory
+  completedAt: String
+  image: String
+  onlineUrl: String
+  displayOrder: Int
+}
+
+extend type Query {
+  """Lista pública de certificados, ordenada por displayOrder."""
+  certificates: [Certificate!]!
+  """Busca por ID, para o formulário de edição do admin. Exige ADMIN."""
+  certificateById(id: ID!): Certificate
+}
+
+extend type Mutation {
+  createCertificate(input: CreateCertificateInput!): Certificate!
+  updateCertificate(id: ID!, input: UpdateCertificateInput!): Certificate!
+  deleteCertificate(id: ID!): Boolean!
+}

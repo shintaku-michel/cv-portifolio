@@ -50,6 +50,13 @@
       "when": 1788579590379,
       "tag": "0006_thankful_machine_man",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1788892333824,
+      "tag": "0007_many_martin_li",
+      "breakpoints": true
     }
   ]
 }
