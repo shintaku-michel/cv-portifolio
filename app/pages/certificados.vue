@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import certificadoFigma from '@/assets/img/certificado-figma.png'
 import certificadoFullStack from '@/assets/img/dev-web-full-stack.png'
+import certificadoDesWeb from '@/assets/img/dev-web.png'
 import certificadoDevOps from '@/assets/img/devOps-02.png'
+import certificadoEspecializar from '@/assets/img/especializar.png'
+import certificadoFundamentar from '@/assets/img/fundamentar.png'
+import certificadoNodeMongo from '@/assets/img/nodejs-mongo.png'
 import certificadoNodejs from '@/assets/img/nodejs.png'
+import certificadoVuejs from '@/assets/img/vuejs.png'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
@@ -59,6 +65,46 @@ const certificates: Certificate[] = [
     image: certificadoNodejs,
     category: 'Backend',
     onlineUrl: 'https://app.rocketseat.com.br/certificates/cd3f8afe-bf19-4992-b13a-2d22f35a03c5'
+  },
+  {
+    title: 'Desenvolvimento de Software com IA Aplicada e Alta Performance',
+    description: 'Curso voltado à construção e evolução de produtos digitais escaláveis, abordando gestão de projetos e riscos, observabilidade, privacidade de dados, estratégias de deploy e GraphQL, além do uso de Inteligência Artificial e dados na tomada de decisões',
+    completedAt: '03/03/2026',
+    image: certificadoDesWeb,
+    category: 'Desenvolvimento Web',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/f6741d91-5fcc-4954-870a-255d3d002f24'
+  },
+  {
+    title: 'Rocketseat Especializar',
+    description: 'Curso focado no desenvolvimento web moderno, abordando JavaScript assíncrono, consumo de APIs, fundamentos de React.js e TypeScript, além de SQL avançado, colaboração com GitHub e criação de interfaces com animações em CSS.',
+    completedAt: '14/11/2022',
+    image: certificadoEspecializar,
+    category: 'Desenvolvimento Web',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/0bc72566-f2ce-49e7-b1f7-10721b110f34'
+  },
+  {
+    title: 'Rocketseat Fundamentar',
+    description: 'Curso de formação em fundamentos do desenvolvimento de software, abordando HTML, CSS, JavaScript, Node.js e SQL, além de estruturas de dados, paradigmas de programação, Git, GitHub e fundamentos do protocolo HTTP.',
+    completedAt: '15/03/2023',
+    image: certificadoFundamentar,
+    category: 'Desenvolvimento Web',
+    onlineUrl: 'https://app.rocketseat.com.br/certificates/5186fdbe-b825-4bd2-bfb5-6d0b705a5d02'
+  },
+  {
+    title: 'Curso Vue JS 2 - O Guia Completo (Vue Router & Vuex)',
+    description: 'Curso completo de Vue.js 2, abordando desde os fundamentos do framework até a criação de aplicações web complexas com Vue Router e Vuex, incluindo práticas recomendadas e padrões de desenvolvimento.',
+    completedAt: '18/09/2022',
+    image: certificadoVuejs,
+    category: 'Desenvolvimento Web',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-00518eeb-840f-4e62-abe2-c784e4a92ec1/'
+  },
+  {
+    title: 'Curso Completo do Desenvolvedor NodeJS e MongoDB',
+    description: 'Curso completo de Node.js e MongoDB, abordando desde os fundamentos do desenvolvimento backend até a criação de APIs RESTful e integração com bancos de dados NoSQL.',
+    completedAt: '12/02/2019',
+    image: certificadoNodeMongo,
+    category: 'Desenvolvimento Web',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-WNHY1DVR/'
   }
 ]
 

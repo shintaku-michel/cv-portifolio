@@ -40,8 +40,9 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/formacao` }] })
       qualidade do meu trabalho.
     </p>
     <p>
-      Humildade para reconhecer que não sei tudo, valorizar o conhecimento e a experiência de outras pessoas,
-      e sabedoria para continuar estudando, aprendendo e evoluindo.
+      É importante permanecer humilde e reconhecer que não sabemos tudo, valorizar o conhecimento e a experiência de
+      outras pessoas,
+      e ter sabedoria para continuar estudando, aprendendo e evoluindo.
     </p>
 
     <div class="mt-6 flex gap-2">

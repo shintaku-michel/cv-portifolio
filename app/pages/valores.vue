@@ -29,16 +29,15 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/valores` }] })
     </p>
     <p>
       Prefiro a comunicação direta e honesta. Problemas devem ser compartilhados o quanto antes, antes que
-      se tornem maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento
-      também
-      fazem parte do trabalho em equipe.
+      se tornem maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento fazem parte
+      do trabalho em equipe.
     </p>
     <p>
       A inspiração pode iniciar uma ideia, mas é a consistência que a transforma em resultado. Pequenos
       avanços,
       repetidos ao longo do tempo, fazem as coisas acontecerem. Os desafios fazem parte do processo, e
       enfrentá-los
-      com paciência e persistência também faz parte do trabalho.
+      com paciência e persistência faz parte do trabalho.
     </p>
     <p>
       Os melhores sistemas que construí ao longo da minha carreira nasceram ao lado de pessoas que realmente
