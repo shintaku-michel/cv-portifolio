@@ -46,15 +46,15 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
     <template v-else>
       <EmptyState v-if="!data?.projects.length" message="Nenhum projeto encontrado." />
 
-      <div v-else class="grid gap-6 sm:grid-cols-2">
+      <div v-else class="gap-6 sm:columns-2">
         <NuxtLink v-for="project in data.projects" :key="project.id" :to="`/projetos/${project.slug}`"
-          class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent">
+          class="mb-6 flex flex-col gap-3 break-inside-avoid rounded-sm border p-5 transition-colors hover:bg-accent">
           <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
             class="aspect-video w-full rounded-sm object-cover">
           <h2 class="text-lg font-medium">
             {{ project.title }}
           </h2>
-          <p class="min-h-20 text-sm text-muted-foreground">
+          <p class="text-sm text-muted-foreground">
             {{ project.shortDescription }}
           </p>
 
