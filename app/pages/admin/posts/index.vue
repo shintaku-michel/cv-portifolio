@@ -62,7 +62,7 @@ async function confirmDelete() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl py-8">
+  <div class="mx-auto max-w-5xl py-8 px-4">
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-semibold">
         Posts
@@ -76,83 +76,140 @@ async function confirmDelete() {
     <ErrorState v-else-if="error" message="Não foi possível carregar os posts." />
     <EmptyState v-else-if="!data?.posts.length" message="Nenhum post cadastrado ainda." />
 
-    <Table v-else class="table-fixed">
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[35%]">
-            Título/Autor
-          </TableHead>
-          <TableHead class="w-[15%]">
-            Categoria
-          </TableHead>
-          <TableHead class="w-[25%]">
-            Tags
-          </TableHead>
-          <TableHead class="w-[10%]">
-            Status
-          </TableHead>
-          <TableHead class="w-[15%] text-right">
-            Ações
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="post in data?.posts ?? []" :key="post.id">
-          <TableCell class="font-medium whitespace-normal wrap-break-word">
-            <p>{{ post.title }}</p>
-            <p class="text-sm text-muted-foreground">{{ post.author.name }}</p>
-          </TableCell>
-
-          <TableCell class="whitespace-normal wrap-break-word">
-            {{ post.category?.name ?? '—' }}
-          </TableCell>
-
-          <TableCell class="whitespace-normal">
-            <div v-if="post.tags.length" class="flex flex-wrap gap-1">
-              <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
-                {{ tag.name }}
-              </Badge>
+    <template v-else>
+      <!-- Mobile: um cartão por post em vez de tabela larga. -->
+      <div class="flex flex-col gap-3 sm:hidden">
+        <div v-for="post in data?.posts ?? []" :key="post.id" class="rounded-lg border p-4">
+          <div class="mb-3 flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <p class="font-medium wrap-break-word">
+                {{ post.title }}
+              </p>
+              <p class="text-sm text-muted-foreground">
+                {{ post.author.name }}
+              </p>
             </div>
-            <span v-else>—</span>
-          </TableCell>
-
-          <TableCell>
+            <DropdownMenu :modal="false">
+              <DropdownMenuTrigger as-child>
+                <Button size="icon" variant="outline" :disabled="actionPending === post.id" aria-label="Ações do post"
+                  class="shrink-0">
+                  <EllipsisIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem @select="navigateTo(`/admin/posts/${post.id}/editar`)">
+                  <PencilIcon /> Editar
+                </DropdownMenuItem>
+                <DropdownMenuItem @select="navigateTo(`/posts/${post.slug}`)">
+                  <EyeIcon /> Visualizar
+                </DropdownMenuItem>
+                <DropdownMenuItem @select="togglePublish(post)">
+                  <component :is="post.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                  {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = post">
+                  <Trash2Icon /> Excluir
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div class="mb-3 flex flex-wrap items-center gap-1">
             <Badge :variant="post.status === 'PUBLISHED' ? 'default' : 'secondary'">
               {{ post.status }}
             </Badge>
-          </TableCell>
+            <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
+              {{ tag.name }}
+            </Badge>
+          </div>
+          <dl class="text-sm">
+            <dt class="text-xs text-muted-foreground">
+              Categoria
+            </dt>
+            <dd>{{ post.category?.name ?? '—' }}</dd>
+          </dl>
+        </div>
+      </div>
 
-          <TableCell class="text-right">
-            <ButtonGroup class="justify-end w-full">
-              <DropdownMenu :modal="false">
-                <DropdownMenuTrigger as-child>
-                  <Button size="icon" variant="outline" :disabled="actionPending === post.id"
-                    aria-label="Ações do post">
-                    <EllipsisIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem @select="navigateTo(`/admin/posts/${post.id}/editar`)">
-                    <PencilIcon /> Editar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem @select="navigateTo(`/posts/${post.slug}`)">
-                    <EyeIcon /> Visualizar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem @select="togglePublish(post)">
-                    <component :is="post.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
-                    {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = post">
-                    <Trash2Icon /> Excluir
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </ButtonGroup>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+      <!-- sm+: tabela normal. -->
+      <Table class="hidden table-fixed sm:table">
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-[35%]">
+              Título/Autor
+            </TableHead>
+            <TableHead class="w-[15%]">
+              Categoria
+            </TableHead>
+            <TableHead class="w-[25%]">
+              Tags
+            </TableHead>
+            <TableHead class="w-[10%]">
+              Status
+            </TableHead>
+            <TableHead class="w-[15%] text-right">
+              Ações
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="post in data?.posts ?? []" :key="post.id">
+            <TableCell class="font-medium whitespace-normal wrap-break-word">
+              <p>{{ post.title }}</p>
+              <p class="text-sm text-muted-foreground">{{ post.author.name }}</p>
+            </TableCell>
+
+            <TableCell class="whitespace-normal wrap-break-word">
+              {{ post.category?.name ?? '—' }}
+            </TableCell>
+
+            <TableCell class="whitespace-normal">
+              <div v-if="post.tags.length" class="flex flex-wrap gap-1">
+                <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
+                  {{ tag.name }}
+                </Badge>
+              </div>
+              <span v-else>—</span>
+            </TableCell>
+
+            <TableCell>
+              <Badge :variant="post.status === 'PUBLISHED' ? 'default' : 'secondary'">
+                {{ post.status }}
+              </Badge>
+            </TableCell>
+
+            <TableCell class="text-right">
+              <ButtonGroup class="justify-end w-full">
+                <DropdownMenu :modal="false">
+                  <DropdownMenuTrigger as-child>
+                    <Button size="icon" variant="outline" :disabled="actionPending === post.id"
+                      aria-label="Ações do post">
+                      <EllipsisIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem @select="navigateTo(`/admin/posts/${post.id}/editar`)">
+                      <PencilIcon /> Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem @select="navigateTo(`/posts/${post.slug}`)">
+                      <EyeIcon /> Visualizar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem @select="togglePublish(post)">
+                      <component :is="post.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                      {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = post">
+                      <Trash2Icon /> Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ButtonGroup>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </template>
 
     <Dialog :open="!!confirmDeleteTarget" @update:open="(open) => { if (!open) confirmDeleteTarget = null }">
       <DialogContent v-if="confirmDeleteTarget">

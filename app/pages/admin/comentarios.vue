@@ -95,62 +95,108 @@ async function confirmDelete() {
     <ErrorState v-else-if="error" message="Não foi possível carregar os comentários." />
     <EmptyState v-else-if="!data?.adminComments.length" message="Nenhum comentário nesse status." />
 
-    <Table v-else class="table-fixed">
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[55%]">
-            Post/Comentário
-          </TableHead>
-          <TableHead class="w-[25%]">
-            Autor
-          </TableHead>
-          <TableHead class="w-[20%] text-right">
-            Ações
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="comment in data.adminComments" :key="comment.id">
-          <TableCell class="whitespace-normal wrap-break-word">
-            <p>{{ comment.post.title }}</p>
-            <p class="text-sm text-muted-foreground">{{ comment.content }}</p>
-          </TableCell>
-          <TableCell class="whitespace-normal wrap-break-word">
-            <div class="flex flex-col">
-              <span>{{ comment.user.name }}</span>
-              <span class="text-xs text-muted-foreground">{{ comment.user.email }}</span>
+    <template v-else>
+      <!-- Mobile: um cartão por comentário em vez de tabela larga. -->
+      <div class="flex flex-col gap-3 sm:hidden">
+        <div v-for="comment in data.adminComments" :key="comment.id" class="rounded-lg border p-4">
+          <div class="mb-3 flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <p class="wrap-break-word">
+                {{ comment.post.title }}
+              </p>
+              <p class="text-sm text-muted-foreground wrap-break-word">
+                {{ comment.content }}
+              </p>
             </div>
-          </TableCell>
-          <TableCell class="text-right">
-            <ButtonGroup class="justify-end w-full">
-              <DropdownMenu :modal="false">
-                <DropdownMenuTrigger as-child>
-                  <Button size="icon" variant="outline" :disabled="actionPending === comment.id"
-                    aria-label="Ações do comentário">
-                    <EllipsisIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem @select="navigateTo(`/posts/${comment.post.slug}`)">
-                    <EyeIcon /> Visualizar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem v-if="comment.status !== 'VISIBLE'" @select="approve(comment)">
-                    <CheckIcon /> Aprovar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem v-if="comment.status !== 'HIDDEN'" @select="hide(comment)">
-                    <EyeOffIcon /> Ocultar
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = comment">
-                    <Trash2Icon /> Excluir
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </ButtonGroup>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+            <DropdownMenu :modal="false">
+              <DropdownMenuTrigger as-child>
+                <Button size="icon" variant="outline" :disabled="actionPending === comment.id"
+                  aria-label="Ações do comentário" class="shrink-0">
+                  <EllipsisIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem @select="navigateTo(`/posts/${comment.post.slug}`)">
+                  <EyeIcon /> Visualizar
+                </DropdownMenuItem>
+                <DropdownMenuItem v-if="comment.status !== 'VISIBLE'" @select="approve(comment)">
+                  <CheckIcon /> Aprovar
+                </DropdownMenuItem>
+                <DropdownMenuItem v-if="comment.status !== 'HIDDEN'" @select="hide(comment)">
+                  <EyeOffIcon /> Ocultar
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = comment">
+                  <Trash2Icon /> Excluir
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div class="flex flex-col text-sm">
+            <span>{{ comment.user.name }}</span>
+            <span class="text-xs text-muted-foreground">{{ comment.user.email }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- sm+: tabela normal. -->
+      <Table class="hidden table-fixed sm:table">
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-[55%]">
+              Post/Comentário
+            </TableHead>
+            <TableHead class="w-[25%]">
+              Autor
+            </TableHead>
+            <TableHead class="w-[20%] text-right">
+              Ações
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="comment in data.adminComments" :key="comment.id">
+            <TableCell class="whitespace-normal wrap-break-word">
+              <p>{{ comment.post.title }}</p>
+              <p class="text-sm text-muted-foreground">{{ comment.content }}</p>
+            </TableCell>
+            <TableCell class="whitespace-normal wrap-break-word">
+              <div class="flex flex-col">
+                <span>{{ comment.user.name }}</span>
+                <span class="text-xs text-muted-foreground">{{ comment.user.email }}</span>
+              </div>
+            </TableCell>
+            <TableCell class="text-right">
+              <ButtonGroup class="justify-end w-full">
+                <DropdownMenu :modal="false">
+                  <DropdownMenuTrigger as-child>
+                    <Button size="icon" variant="outline" :disabled="actionPending === comment.id"
+                      aria-label="Ações do comentário">
+                      <EllipsisIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem @select="navigateTo(`/posts/${comment.post.slug}`)">
+                      <EyeIcon /> Visualizar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem v-if="comment.status !== 'VISIBLE'" @select="approve(comment)">
+                      <CheckIcon /> Aprovar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem v-if="comment.status !== 'HIDDEN'" @select="hide(comment)">
+                      <EyeOffIcon /> Ocultar
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = comment">
+                      <Trash2Icon /> Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ButtonGroup>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </template>
 
     <Dialog :open="!!confirmDeleteTarget" @update:open="(open) => { if (!open) confirmDeleteTarget = null }">
       <DialogContent v-if="confirmDeleteTarget">

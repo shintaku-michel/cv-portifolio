@@ -52,7 +52,7 @@ async function confirmDelete() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl py-8">
+  <div class="mx-auto max-w-5xl py-8 px-4">
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-semibold">
         Certificados
@@ -66,58 +66,109 @@ async function confirmDelete() {
     <ErrorState v-else-if="error" message="Não foi possível carregar os certificados." />
     <EmptyState v-else-if="!data?.certificates.length" message="Nenhum certificado cadastrado ainda." />
 
-    <Table v-else class="table-fixed">
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[35%]">
-            Título
-          </TableHead>
-          <TableHead class="w-[25%]">
-            Categoria
-          </TableHead>
-          <TableHead class="w-[15%]">
-            Concluído em
-          </TableHead>
-          <TableHead class="w-[10%]">
-            Ordem
-          </TableHead>
-          <TableHead class="w-[15%] text-right">
-            Ações
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="certificate in data?.certificates ?? []" :key="certificate.id">
-          <TableCell class="font-medium whitespace-normal wrap-break-word">
-            {{ certificate.title }}
-          </TableCell>
-          <TableCell>{{ CATEGORY_LABELS[certificate.category] }}</TableCell>
-          <TableCell>{{ certificate.completedAt }}</TableCell>
-          <TableCell>{{ certificate.displayOrder }}</TableCell>
-          <TableCell class="text-right">
-            <ButtonGroup class="justify-end w-full">
-              <DropdownMenu :modal="false">
-                <DropdownMenuTrigger as-child>
-                  <Button size="icon" variant="outline" :disabled="actionPending === certificate.id"
-                    aria-label="Ações do certificado">
-                    <EllipsisIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem @select="navigateTo(`/admin/certificados/${certificate.id}/editar`)">
-                    <PencilIcon /> Editar
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = certificate">
-                    <Trash2Icon /> Excluir
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </ButtonGroup>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <template v-else>
+      <!-- Mobile: um cartão por certificado em vez de tabela larga. -->
+      <div class="flex flex-col gap-3 sm:hidden">
+        <div v-for="certificate in data?.certificates ?? []" :key="certificate.id" class="rounded-lg border p-4">
+          <div class="mb-3 flex items-start justify-between gap-2">
+            <p class="font-medium wrap-break-word">
+              {{ certificate.title }}
+            </p>
+            <DropdownMenu :modal="false">
+              <DropdownMenuTrigger as-child>
+                <Button size="icon" variant="outline" :disabled="actionPending === certificate.id"
+                  aria-label="Ações do certificado" class="shrink-0">
+                  <EllipsisIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem @select="navigateTo(`/admin/certificados/${certificate.id}/editar`)">
+                  <PencilIcon /> Editar
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = certificate">
+                  <Trash2Icon /> Excluir
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <div>
+              <dt class="text-xs text-muted-foreground">
+                Categoria
+              </dt>
+              <dd>{{ CATEGORY_LABELS[certificate.category] }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs text-muted-foreground">
+                Concluído em
+              </dt>
+              <dd>{{ certificate.completedAt }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs text-muted-foreground">
+                Ordem
+              </dt>
+              <dd>{{ certificate.displayOrder }}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- sm+: tabela normal. -->
+      <Table class="hidden table-fixed sm:table">
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-[35%]">
+              Título
+            </TableHead>
+            <TableHead class="w-[25%]">
+              Categoria
+            </TableHead>
+            <TableHead class="w-[15%]">
+              Concluído em
+            </TableHead>
+            <TableHead class="w-[10%]">
+              Ordem
+            </TableHead>
+            <TableHead class="w-[15%] text-right">
+              Ações
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="certificate in data?.certificates ?? []" :key="certificate.id">
+            <TableCell class="font-medium whitespace-normal wrap-break-word">
+              {{ certificate.title }}
+            </TableCell>
+            <TableCell>{{ CATEGORY_LABELS[certificate.category] }}</TableCell>
+            <TableCell>{{ certificate.completedAt }}</TableCell>
+            <TableCell>{{ certificate.displayOrder }}</TableCell>
+            <TableCell class="text-right">
+              <ButtonGroup class="justify-end w-full">
+                <DropdownMenu :modal="false">
+                  <DropdownMenuTrigger as-child>
+                    <Button size="icon" variant="outline" :disabled="actionPending === certificate.id"
+                      aria-label="Ações do certificado">
+                      <EllipsisIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem @select="navigateTo(`/admin/certificados/${certificate.id}/editar`)">
+                      <PencilIcon /> Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = certificate">
+                      <Trash2Icon /> Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ButtonGroup>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </template>
 
     <Dialog :open="!!confirmDeleteTarget" @update:open="(open) => { if (!open) confirmDeleteTarget = null }">
       <DialogContent v-if="confirmDeleteTarget">

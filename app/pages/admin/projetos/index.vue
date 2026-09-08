@@ -60,7 +60,7 @@ async function confirmDelete() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl py-8">
+  <div class="mx-auto max-w-5xl py-8 px-4">
     <div class="mb-6 flex items-center justify-between">
       <h1 class="text-2xl font-semibold">
         Projetos
@@ -74,75 +74,135 @@ async function confirmDelete() {
     <ErrorState v-else-if="error" message="Não foi possível carregar os projetos." />
     <EmptyState v-else-if="!data?.projects.length" message="Nenhum projeto cadastrado ainda." />
 
-    <Table v-else class="table-fixed">
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[25%]">
-            Título
-          </TableHead>
-          <TableHead class="w-[12%]">
-            Status
-          </TableHead>
-          <TableHead class="w-[10%]">
-            Destaque
-          </TableHead>
-          <TableHead class="w-[33%]">
-            Tecnologias
-          </TableHead>
-          <TableHead class="w-[8%]">
-            Ordem
-          </TableHead>
-          <TableHead class="w-[12%] text-right">
-            Ações
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="project in data?.projects ?? []" :key="project.id">
-          <TableCell class="font-medium whitespace-normal wrap-break-word">
-            {{ project.title }}
-          </TableCell>
-          <TableCell>
+    <template v-else>
+      <!-- Mobile: um cartão por projeto em vez de tabela larga. -->
+      <div class="flex flex-col gap-3 sm:hidden">
+        <div v-for="project in data?.projects ?? []" :key="project.id" class="rounded-lg border p-4">
+          <div class="mb-3 flex items-start justify-between gap-2">
+            <p class="font-medium wrap-break-word">
+              {{ project.title }}
+            </p>
+            <DropdownMenu :modal="false">
+              <DropdownMenuTrigger as-child>
+                <Button size="icon" variant="outline" :disabled="actionPending === project.id"
+                  aria-label="Ações do projeto" class="shrink-0">
+                  <EllipsisIcon />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem @select="navigateTo(`/admin/projetos/${project.id}/editar`)">
+                  <PencilIcon /> Editar
+                </DropdownMenuItem>
+                <DropdownMenuItem @select="navigateTo(`/projetos/${project.slug}`)">
+                  <EyeIcon /> Visualizar
+                </DropdownMenuItem>
+                <DropdownMenuItem @select="togglePublish(project)">
+                  <component :is="project.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                  {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = project">
+                  <Trash2Icon /> Excluir
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div class="mb-3 flex items-center gap-2">
             <Badge :variant="project.status === 'PUBLISHED' ? 'default' : 'secondary'">
               {{ project.status }}
             </Badge>
-          </TableCell>
-          <TableCell>{{ project.featured ? 'Sim' : 'Não' }}</TableCell>
-          <TableCell class="whitespace-normal wrap-break-word">
-            {{ project.technologies.map(t => t.name).join(', ') }}
-          </TableCell>
-          <TableCell>{{ project.displayOrder }}</TableCell>
-          <TableCell class="text-right">
-            <ButtonGroup class="justify-end w-full">
-              <DropdownMenu :modal="false">
-                <DropdownMenuTrigger as-child>
-                  <Button size="icon" variant="outline" :disabled="actionPending === project.id"
-                    aria-label="Ações do projeto">
-                    <EllipsisIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem @select="navigateTo(`/admin/projetos/${project.id}/editar`)">
-                    <PencilIcon /> Editar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem @select="navigateTo(`/projetos/${project.slug}`)">
-                    <EyeIcon /> Visualizar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem @select="togglePublish(project)">
-                    <component :is="project.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
-                    {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = project">
-                    <Trash2Icon /> Excluir
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </ButtonGroup>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+            <Badge v-if="project.featured" variant="outline">
+              Destaque
+            </Badge>
+          </div>
+          <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <div class="col-span-2">
+              <dt class="text-xs text-muted-foreground">
+                Tecnologias
+              </dt>
+              <dd>{{ project.technologies.map(t => t.name).join(', ') || '—' }}</dd>
+            </div>
+            <div>
+              <dt class="text-xs text-muted-foreground">
+                Ordem
+              </dt>
+              <dd>{{ project.displayOrder }}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- sm+: tabela normal. -->
+      <Table class="hidden table-fixed sm:table">
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-[25%]">
+              Título
+            </TableHead>
+            <TableHead class="w-[12%]">
+              Status
+            </TableHead>
+            <TableHead class="w-[10%]">
+              Destaque
+            </TableHead>
+            <TableHead class="w-[33%]">
+              Tecnologias
+            </TableHead>
+            <TableHead class="w-[8%]">
+              Ordem
+            </TableHead>
+            <TableHead class="w-[12%] text-right">
+              Ações
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="project in data?.projects ?? []" :key="project.id">
+            <TableCell class="font-medium whitespace-normal wrap-break-word">
+              {{ project.title }}
+            </TableCell>
+            <TableCell>
+              <Badge :variant="project.status === 'PUBLISHED' ? 'default' : 'secondary'">
+                {{ project.status }}
+              </Badge>
+            </TableCell>
+            <TableCell>{{ project.featured ? 'Sim' : 'Não' }}</TableCell>
+            <TableCell class="whitespace-normal wrap-break-word">
+              {{ project.technologies.map(t => t.name).join(', ') }}
+            </TableCell>
+            <TableCell>{{ project.displayOrder }}</TableCell>
+            <TableCell class="text-right">
+              <ButtonGroup class="justify-end w-full">
+                <DropdownMenu :modal="false">
+                  <DropdownMenuTrigger as-child>
+                    <Button size="icon" variant="outline" :disabled="actionPending === project.id"
+                      aria-label="Ações do projeto">
+                      <EllipsisIcon />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem @select="navigateTo(`/admin/projetos/${project.id}/editar`)">
+                      <PencilIcon /> Editar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem @select="navigateTo(`/projetos/${project.slug}`)">
+                      <EyeIcon /> Visualizar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem @select="togglePublish(project)">
+                      <component :is="project.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                      {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = project">
+                      <Trash2Icon /> Excluir
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </ButtonGroup>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </template>
 
     <Dialog :open="!!confirmDeleteTarget" @update:open="(open) => { if (!open) confirmDeleteTarget = null }">
       <DialogContent v-if="confirmDeleteTarget">

@@ -40,7 +40,7 @@ const stats = computed(() => {
 </script>
 
 <template>
-  <div class="mx-auto max-w-5xl py-8">
+  <div class="mx-auto max-w-5xl py-8 px-4">
     <h1 class="mb-6 text-2xl font-semibold">
       Dashboard
     </h1>

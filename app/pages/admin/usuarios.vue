@@ -58,51 +58,83 @@ async function confirmToggleRole() {
     <LoadingState v-if="pending" />
     <ErrorState v-else-if="error" message="Não foi possível carregar os usuários." />
 
-    <Table v-else class="table-fixed">
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[25%]">
-            Nome
-          </TableHead>
-          <TableHead class="w-[35%]">
-            Email
-          </TableHead>
-          <TableHead class="w-[20%]">
-            Tipo de perfil
-          </TableHead>
-          <TableHead class="w-[20%] text-right">
-            Ações
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="u in data?.users ?? []" :key="u.id">
-          <TableCell class="font-medium whitespace-normal wrap-break-word">
-            {{ u.name }}
-          </TableCell>
-          <TableCell class="whitespace-normal wrap-break-word">
-            {{ u.email }}
-          </TableCell>
-          <TableCell>
-            <Badge :variant="u.role === 'ADMIN' ? 'default' : 'secondary'">
+    <template v-else>
+      <!-- Mobile: um cartão por usuário em vez de tabela larga. -->
+      <div class="flex flex-col gap-3 sm:hidden">
+        <div v-for="u in data?.users ?? []" :key="u.id" class="rounded-lg border p-4">
+          <div class="mb-3 flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <p class="font-medium wrap-break-word">
+                {{ u.name }}
+              </p>
+              <p class="text-sm text-muted-foreground wrap-break-word">
+                {{ u.email }}
+              </p>
+            </div>
+            <Badge :variant="u.role === 'ADMIN' ? 'default' : 'secondary'" class="shrink-0">
               {{ u.role }}
             </Badge>
-          </TableCell>
-          <TableCell class="text-right">
-            <Button
-              size="sm"
-              variant="outline"
-              :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
-              :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
-              @click="confirmTarget = u"
-            >
-              <component :is="u.role === 'ADMIN' ? ShieldOffIcon : ShieldCheckIcon" />
-              Alterar
-            </Button>
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
+            :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
+            @click="confirmTarget = u"
+          >
+            <component :is="u.role === 'ADMIN' ? ShieldOffIcon : ShieldCheckIcon" />
+            Alterar
+          </Button>
+        </div>
+      </div>
+
+      <!-- sm+: tabela normal. -->
+      <Table class="hidden table-fixed sm:table">
+        <TableHeader>
+          <TableRow>
+            <TableHead class="w-[25%]">
+              Nome
+            </TableHead>
+            <TableHead class="w-[35%]">
+              Email
+            </TableHead>
+            <TableHead class="w-[20%]">
+              Tipo de perfil
+            </TableHead>
+            <TableHead class="w-[20%] text-right">
+              Ações
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="u in data?.users ?? []" :key="u.id">
+            <TableCell class="font-medium whitespace-normal wrap-break-word">
+              {{ u.name }}
+            </TableCell>
+            <TableCell class="whitespace-normal wrap-break-word">
+              {{ u.email }}
+            </TableCell>
+            <TableCell>
+              <Badge :variant="u.role === 'ADMIN' ? 'default' : 'secondary'">
+                {{ u.role }}
+              </Badge>
+            </TableCell>
+            <TableCell class="text-right">
+              <Button
+                size="sm"
+                variant="outline"
+                :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
+                :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
+                @click="confirmTarget = u"
+              >
+                <component :is="u.role === 'ADMIN' ? ShieldOffIcon : ShieldCheckIcon" />
+                Alterar
+              </Button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </template>
 
     <Dialog :open="!!confirmTarget" @update:open="(open) => { if (!open) confirmTarget = null }">
       <DialogContent v-if="confirmTarget">
