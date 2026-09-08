@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import graduacaoCertificate from '@/assets/img/graduacao.png'
+import graduacaoCertificate from '@/assets/img/certificados/graduacao.png'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { View } from '@lucide/vue'

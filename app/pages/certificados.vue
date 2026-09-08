@@ -1,15 +1,25 @@
 <script setup lang="ts">
-import certificadoFigma from '@/assets/img/certificado-figma.png'
-import certificadoFullStack from '@/assets/img/dev-web-full-stack.png'
-import certificadoDesWeb from '@/assets/img/dev-web.png'
-import certificadoDevOps from '@/assets/img/devOps-02.png'
-import certificadoEspecializar from '@/assets/img/especializar.png'
-import certificadoFundamentar from '@/assets/img/fundamentar.png'
-import certificadoExpress from '@/assets/img/node-express.png'
-import certificadoNodeMongo from '@/assets/img/nodejs-mongo.png'
-import certificadoNodejs from '@/assets/img/nodejs.png'
-import certificadoVue3 from '@/assets/img/vue3.png'
-import certificadoVuejs from '@/assets/img/vuejs.png'
+import certificadoFigma from '@/assets/img/certificados/certificado-figma.png'
+import certificadoCoordenador from '@/assets/img/certificados/coordenador.png'
+import certificadoDesignerGrafico from '@/assets/img/certificados/designer-grafico.png'
+import certificadoFullStack from '@/assets/img/certificados/dev-web-full-stack.png'
+import certificadoDesWeb from '@/assets/img/certificados/dev-web.png'
+import certificadoDevOps from '@/assets/img/certificados/devOps-02.png'
+import certificadoEspecializar from '@/assets/img/certificados/especializar.png'
+import certificadoFundamentar from '@/assets/img/certificados/fundamentar.png'
+import certificadoGerenciaDeProjetos from '@/assets/img/certificados/gerencia-de-projetos.png'
+import certificadoJavaOO from '@/assets/img/certificados/java-oo.png'
+import certificadoJavaTeste from '@/assets/img/certificados/java-testes.png'
+import certificadoJavaWeb from '@/assets/img/certificados/java-web.png'
+import certificadoJava from '@/assets/img/certificados/java.png'
+import certificadoExpress from '@/assets/img/certificados/node-express.png'
+import certificadoNodeMongo from '@/assets/img/certificados/nodejs-mongo.png'
+import certificadoNodejs from '@/assets/img/certificados/nodejs.png'
+import certificadoInterfacesWebResponsivas from '@/assets/img/certificados/professor.png'
+import certificadoPython from '@/assets/img/certificados/python.png'
+import certificadoVue3 from '@/assets/img/certificados/vue3.png'
+import certificadoVuejs from '@/assets/img/certificados/vuejs.png'
+import certificadoWebDeveloper from '@/assets/img/certificados/web-developer.png'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -123,6 +133,86 @@ const certificates: Certificate[] = [
     image: certificadoVue3,
     category: 'Desenvolvimento Web',
     onlineUrl: 'https://www.udemy.com/certificate/UC-2b9d7190-4465-4e5a-81ae-4870a99fc468/'
+  },
+  {
+    title: 'Criando um Projeto com Interface Gráfica Utilizando a Linguagem Python',
+    description: 'Curso introdutório de desenvolvimento com Python, abordando classes e métodos, encapsulamento, criação de bibliotecas e desenvolvimento de aplicações, incluindo a construção de interfaces com Kivy.',
+    completedAt: '14/06/2023',
+    image: certificadoPython,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'Linguagem de Programação Java - Avançado',
+    description: 'Os fundamentos da Programação Orientada a Objetos (POO) serão evidenciados, passando pelos objetos, as classes, suas construções, além dos complementos da linguagem Java, incluindo conceitos, como pacotes, métodos e herança.',
+    completedAt: '14/06/2023',
+    image: certificadoJava,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'Web Developer',
+    description: 'Curso de formação em desenvolvimento web pelo SENAI, abordando os fundamentos para criação de aplicações e páginas web, com foco em programação, estruturação de interfaces e principais tecnologias utilizadas no desenvolvimento para a web.',
+    completedAt: '26/05/2008',
+    image: certificadoWebDeveloper,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'Designer Gráfico Aplicativos e Projetos',
+    description: 'Curso de formação em design gráfico, abordando os fundamentos para criação de interfaces e experiências visuais em aplicações e projetos digitais.',
+    completedAt: '07/06/2005',
+    image: certificadoDesignerGrafico,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'Gerência de Projetos PMBOK',
+    description: 'Curso de formação em gerenciamento de projetos, abordando as melhores práticas e diretrizes do PMBOK, incluindo planejamento, execução e controle de projetos.',
+    completedAt: '24/02/2011',
+    image: certificadoGerenciaDeProjetos,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'Java Orientado a Objetos',
+    description: 'Curso de formação em Java, abordando os fundamentos da Programação Orientada a Objetos (POO), incluindo classes, objetos, herança e polimorfismo.',
+    completedAt: '30/12/2010',
+    image: certificadoJavaOO,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'Java com Testes. XML e Design Patterns',
+    description: 'Curso de formação em Java, abordando desenvolvimento de aplicações, testes, manipulação de XML e aplicação de Design Patterns.',
+    completedAt: '04/12/2010',
+    image: certificadoJavaTeste,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'Java para desenvolvimento Web',
+    description: 'Curso de formação em Java para desenvolvimento Web, abordando a criação de aplicações, integração com bancos de dados e fundamentos do ecossistema Java para Web.',
+    completedAt: '26/03/2011',
+    image: certificadoJavaWeb,
+    category: 'Desenvolvimento Web',
+    onlineUrl: ''
+  },
+  {
+    title: 'IFTechDay - Interfaces Web Responsivas ',
+    description: 'Minicurso sobre desenvolvimento de interfaces web responsivas, abordando técnicas e conceitos para criação de páginas adaptáveis a diferentes tamanhos de tela e dispositivos.',
+    completedAt: '06/09/2013',
+    image: certificadoInterfacesWebResponsivas,
+    category: 'Gestão de Projetos',
+    onlineUrl: ''
+  },
+  {
+    title: 'IFTechDay - Coordenador Campus Brasília',
+    description: 'Atuação na coordenação do IFTechDay no Campus Brasília, contribuindo para a organização e realização do evento, voltado à disseminação de conhecimento e à troca de experiências em tecnologia.',
+    completedAt: '06/09/2013',
+    image: certificadoCoordenador,
+    category: 'Gestão de Projetos',
+    onlineUrl: ''
   }
 ]
 
@@ -141,7 +231,7 @@ const openCertificate = computed(() =>
     <div class="mb-8 flex flex-col gap-3">
       <div>
         <h1 class="text-2xl font-semibold">
-          Certificados
+          Certificados <span class="text-sm">( {{ certificates.length }} )</span>
         </h1>
         <p class="font-cursive text-xl text-muted-foreground leading-5 mt-1">
           Certificados e cursos complementares que fiz ao longo da carreira.
