@@ -5,8 +5,10 @@ import certificadoDesWeb from '@/assets/img/dev-web.png'
 import certificadoDevOps from '@/assets/img/devOps-02.png'
 import certificadoEspecializar from '@/assets/img/especializar.png'
 import certificadoFundamentar from '@/assets/img/fundamentar.png'
+import certificadoExpress from '@/assets/img/node-express.png'
 import certificadoNodeMongo from '@/assets/img/nodejs-mongo.png'
 import certificadoNodejs from '@/assets/img/nodejs.png'
+import certificadoVue3 from '@/assets/img/vue3.png'
 import certificadoVuejs from '@/assets/img/vuejs.png'
 
 import { Button } from '@/components/ui/button'
@@ -105,6 +107,22 @@ const certificates: Certificate[] = [
     image: certificadoNodeMongo,
     category: 'Desenvolvimento Web',
     onlineUrl: 'https://www.udemy.com/certificate/UC-WNHY1DVR/'
+  },
+  {
+    title: 'Node.js Express Project - CMS and Shopping Cart with Paypal',
+    description: 'Curso completo de Node.js e Express, abordando desde a criação de APIs RESTful até a implementação de um sistema de gerenciamento de conteúdo (CMS) e um carrinho de compras com integração ao Paypal.',
+    completedAt: '15/03/2023',
+    image: certificadoExpress,
+    category: 'Desenvolvimento Web',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-43573517-241d-4af2-bce4-47c542200010/'
+  },
+  {
+    title: 'Vue 3 full course in one day + helpful docs (Cheat Sheet)',
+    description: 'Curso completo de Vue 3, abordando desde os fundamentos do framework até a criação de aplicações web complexas, incluindo práticas recomendadas e padrões de desenvolvimento.',
+    completedAt: '18/06/2023',
+    image: certificadoVue3,
+    category: 'Desenvolvimento Web',
+    onlineUrl: 'https://www.udemy.com/certificate/UC-2b9d7190-4465-4e5a-81ae-4870a99fc468/'
   }
 ]
 
