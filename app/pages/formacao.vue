@@ -30,8 +30,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/formacao` }] })
       Stack & IA pela Faculdade de Tecnologia Rocketseat. Minha formação, somada a mais de 18 anos de
       experiência
       prática no desenvolvimento web, me permite unir fundamentos de computação, desenvolvimento de
-      software e
-      o uso das tecnologias mais adequadas para criar cada solução digital.
+      software e a capacidade de uso das tecnologias mais adequadas para criar cada solução digital.
     </p>
     <p>
       Ao longo da minha trajetória, mantenho o hábito de continuar estudando, experimentando novas
@@ -40,9 +39,8 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/formacao` }] })
       qualidade do meu trabalho.
     </p>
     <p>
-      É importante permanecer humilde e reconhecer que não sabemos tudo, valorizar o conhecimento e a experiência de
-      outras pessoas,
-      e ter sabedoria para continuar estudando, aprendendo e evoluindo.
+      É muito importante permanecer humilde e reconhecer que não sabemos tudo, valorizar o conhecimento e a experiência
+      de outras pessoas para continuar sempre aprendendo.
     </p>
 
     <div class="mt-6 flex gap-2">

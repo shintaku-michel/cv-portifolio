@@ -22,35 +22,33 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/valores` }] })
     </div>
 
     <p>
-      Acredito que um bom trabalho começa com planejamento, disciplina e aprendizado contínuo. A tecnologia
-      está sempre mudando, e acompanhar essa evolução faz parte do nosso trabalho. Reaprender, experimentar e
-      estar
-      disposto a mudar também são formas de evoluir.
+      Acredito que um bom trabalho começa com planejamento, disciplina e aprendizado contínuo. A tecnologia está sempre
+      mudando, e acompanhar essa evolução faz parte do nosso trabalho. Reaprender, experimentar e estar disposto a mudar
+      também são formas de evoluir.
     </p>
     <p>
-      Prefiro a comunicação direta e honesta. Problemas devem ser compartilhados o quanto antes, antes que
-      se tornem maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento fazem parte
-      do trabalho em equipe.
+      Prefiro uma comunicação direta e honesta. Problemas devem ser compartilhados o quanto antes, antes que se tornem
+      maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento fazem parte de um bom
+      trabalho em equipe.
     </p>
     <p>
-      A inspiração pode iniciar uma ideia, mas é a consistência que a transforma em resultado. Pequenos
-      avanços,
-      repetidos ao longo do tempo, fazem as coisas acontecerem. Os desafios fazem parte do processo, e
-      enfrentá-los
-      com paciência e persistência faz parte do trabalho.
+      A inspiração pode dar início a uma ideia, mas é a consistência que a transforma em resultado. São os pequenos
+      avanços, repetidos ao longo do tempo, que constroem algo significativo. Os desafios fazem parte do caminho, e
+      enfrentá-los com paciência, dedicação e persistência também faz parte do processo.
     </p>
     <p>
-      Os melhores sistemas que construí ao longo da minha carreira nasceram ao lado de pessoas que realmente
-      se importam com o que fazem.
+      Os melhores sistemas que construí ao longo da minha carreira nasceram ao lado de pessoas que realmente se importam
+      com o que fazem. Competência é importante, mas comprometimento, respeito e vontade de construir algo bem feito
+      fazem muita diferença.
     </p>
     <p>
-      Escolha bem as pessoas com quem você trabalha. E, quando não puder escolher, lembre-se: você ainda pode
-      fazer a sua parte, elevar o nível ao seu redor e contribuir para um ambiente mais colaborativo,
-      respeitoso e comprometido com a excelência.
+      Escolha bem as pessoas com quem você trabalha. E, quando não puder escolher, lembre-se de que ainda pode fazer a
+      sua parte: elevar o nível ao seu redor e contribuir para um ambiente mais colaborativo, respeitoso e comprometido
+      com a qualidade.
     </p>
     <p>
-      Não romantize os erros. Reconheça-os, corrija o que for possível, mude o curso quando necessário,
-      aprenda com eles e siga em frente.
+      Não romantize os erros. Reconheça-os, corrija o que for possível, mude o curso quando necessário e aprenda com
+      eles. Errar faz parte do processo; permanecer no mesmo erro, não. Aprenda, ajuste o caminho e siga em frente.
     </p>
   </div>
 </template>

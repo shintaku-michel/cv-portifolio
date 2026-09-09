@@ -25,7 +25,7 @@ const navItems = [
   { id: 'cursos', label: 'Cursos', icon: BookOpenIcon, to: '/cursos' },
   { id: 'experiencia', label: 'Experiência', icon: BriefcaseIcon, to: '/experiencia' },
   { id: 'projetos', label: 'Projetos', icon: FolderGit2Icon, to: '/projetos' },
-  { id: 'blog', label: 'Blog', icon: NewspaperIcon, to: '/posts' },
+  { id: 'blog', label: 'Blog', icon: NewspaperIcon, to: '/blog' },
   { id: 'pagar-um-cafe', label: 'Pagar um café', icon: CoffeeIcon, to: '/pagar-um-cafe' }
 ]
 

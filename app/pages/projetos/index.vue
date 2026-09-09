@@ -37,8 +37,8 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
         Projetos
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        Alguns dos projetos, sistemas e funcionalidades que desenvolvi ao longo da minha trajetória que tenho orgulho de
-        compartilhar. Alguns, com menos detalhes, por questões de confidencialidade.
+        Alguns dos projetos, sistemas e funcionalidades que desenvolvi ao longo da minha trajetória. Alguns, com menos
+        detalhes, por questões de confidencialidade.
       </p>
     </div>
 

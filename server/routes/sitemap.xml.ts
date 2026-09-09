@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
   const urls: UrlEntry[] = [
     { loc: `${origin}/`, changefreq: 'weekly', priority: '1.0' },
     { loc: `${origin}/projetos`, changefreq: 'weekly', priority: '0.8' },
+    { loc: `${origin}/blog`, changefreq: 'weekly', priority: '0.8' },
     { loc: `${origin}/posts`, changefreq: 'weekly', priority: '0.8' },
     { loc: `${origin}/perfil`, changefreq: 'monthly', priority: '0.7' },
     { loc: `${origin}/valores`, changefreq: 'monthly', priority: '0.7' },

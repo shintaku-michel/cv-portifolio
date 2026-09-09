@@ -22,26 +22,31 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/experiencia` }]
     </div>
 
     <p>
-      Comecei minha carreira no Backend, construindo APIs e aprendendo sobre padrões de desenvolvimento e
-      arquitetura de software. Entre 2010 e 2011, trabalhar com Java exigia conhecer não apenas a linguagem,
-      mas todo um ecossistema de configurações, persistência, empacotamento e servidores de aplicação. Foi
-      quando trabalhei com tecnologias como Java EE, Spring, Hibernate, Maven, Tomcat e JBoss.
+      Comecei minha carreira no Backend, construindo APIs e aprendendo sobre padrões de desenvolvimento e arquitetura de
+      software. Entre 2010 e 2011, trabalhar com Java exigia conhecer não apenas a linguagem, mas todo um ecossistema de
+      configurações, persistência, empacotamento e servidores de aplicação. Foi nesse período que trabalhei com
+      tecnologias como Java EE, Spring, Hibernate, Maven, Tomcat e JBoss.
     </p>
     <p>
-      Com o tempo, minha curiosidade me levou ao Frontend, área em que comecei a me destacar e que se conectou
-      naturalmente ao meu interesse por arte, design e pelo processo de transformar ideias em experiências. Em
-      uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e
-      também me aproximar de UX, ampliando minha percepção sobre a construção de produtos.
+      Sabe aquele ditado de que o mundo dá voltas? Pois é, aconteceu comigo. Com o tempo, minha curiosidade me levou ao
+      Frontend, área em que comecei a me destacar e que se conectou naturalmente ao meu interesse por arte, design e por
+      transformar ideias em experiências.
     </p>
     <p>
-      Mais tarde, voltei ao Backend, dessa vez com Node.js, e percebi o quanto essa experiência havia
-      transformado minha visão como desenvolvedor. Passei a construir APIs pensando também em quem iria
-      consumi-las e a enxergar o desenvolvimento de software de forma mais completa, entendendo como decisões
-      técnicas influenciam o produto e a experiência de quem o utiliza.
+      Em uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e me aproximar
+      de UX. Essa vivência ampliou minha percepção sobre a criação de produtos e me fez olhar não apenas para como uma
+      solução funciona, mas também para a forma como as pessoas interagem com ela.
     </p>
     <p>
-      Hoje, continuo estudando, experimentando e aprimorando minhas práticas, sempre buscando evoluir e
-      encontrar maneiras melhores de transformar ideias em soluções.
+      E o mundo deu mais uma volta. Mais tarde, retornei ao Backend, dessa vez com Node.js, e percebi o quanto aquele
+      caminho pelo Frontend e por UX havia transformado minha visão como desenvolvedor. Passei a construir APIs pensando
+      também em quem iria consumi-las e a enxergar o desenvolvimento de software de forma mais completa, entendendo
+      melhor como decisões técnicas influenciam o produto e a experiência de quem o utiliza.
+    </p>
+    <p>
+      Hoje, continuo estudando, experimentando e aprimorando minhas práticas. Depois de tantos anos trabalhando com
+      diferentes tecnologias e perspectivas, sigo com a mesma curiosidade: aprender, evoluir e encontrar maneiras
+      melhores de transformar ideias em soluções.
     </p>
   </div>
 </template>

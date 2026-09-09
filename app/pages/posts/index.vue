@@ -5,14 +5,14 @@ import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { HeartIcon, MessageCircleIcon } from '@lucide/vue'
+import { HeartIcon, MessageCircleIcon, MoveLeft } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
 useSeoMeta({
-  title: 'Blog',
-  description: 'Artigos técnicos, tutoriais e relatos de projetos.',
-  ogTitle: 'Blog',
+  title: 'Posts',
+  description: 'Todos os artigos técnicos, tutoriais e relatos de projetos do blog.',
+  ogTitle: 'Posts — Blog',
   ogUrl: `${requestUrl.origin}/posts`
 })
 useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/posts` }] })
@@ -48,13 +48,18 @@ function authorInitials(name: string) {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 px-6 py-12 md:mx-auto md:w-3xl md:py-17">
-    <div class="mb-4 flex flex-col">
+  <div class="p-6 md:mx-auto md:w-3xl">
+    <NuxtLink to="/blog" class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
+      <MoveLeft class="h-4 w-4" />
+      Blog
+    </NuxtLink>
+
+    <div class="mb-2 flex flex-col items-start gap-2">
       <h1 class="text-2xl font-semibold">
-        Blog
+        Posts
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        Tecnologia, artigos técnicos, tutoriais e relatos de projetos.
+        Tecnologia, artigos técnicos, tutoriais e relatos de projetos
       </p>
     </div>
 
@@ -62,7 +67,7 @@ function authorInitials(name: string) {
     <ErrorState v-else-if="error" message="Não foi possível carregar os posts." />
     <EmptyState v-else-if="!data?.posts.length" message="Nenhum post publicado ainda." />
 
-    <div v-else class="flex flex-col gap-6">
+    <div v-else class="flex flex-col gap-6 mt-6">
       <NuxtLink v-for="post in data.posts" :key="post.id" :to="`/posts/${post.slug}`"
         class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent sm:flex-row">
         <img v-if="post.coverImage" :src="post.coverImage" :alt="post.title"
