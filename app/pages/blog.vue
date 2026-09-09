@@ -25,20 +25,36 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/blog` }] })
     </div>
 
     <p>
-      A ideia do blog surgiu, principalmente, como um espaço para testar uma funcionalidade de acessibilidade que
-      estou desenvolvendo — um desafio complexo, tanto de mapear quanto de construir.
+      A ideia deste blog surgiu, principalmente, como um espaço para experimentar uma funcionalidade de acessibilidade
+      que estou desenvolvendo — um desafio complexo, tanto de compreender e mapear quanto de transformar em uma
+      experiência digital realmente útil.
     </p>
     <p>
-      Acessibilidade não é uma questão binária. Pessoas com a mesma deficiência podem ter diferentes graus,
-      necessidades e formas de interagir com a tecnologia. Ainda assim, grande parte do mundo digital é projetada a
-      partir de experiências padronizadas, sem considerar toda essa diversidade.
+      Uma coisa que percebi recentemente é que acessibilidade não é uma questão binária. Pessoas com a mesma deficiência
+      podem apresentar diferentes graus,
+      necessidades, preferências e formas de interagir com a tecnologia.
     </p>
     <p>
-      É justamente esse problema que quero explorar: pensar em experiências digitais capazes de se adaptar melhor às
-      diferentes necessidades de cada pessoa.
+      É justamente esse problema que quero explorar: como criar experiências digitais capazes de se adaptar melhor às
+      necessidades de cada pessoa, em vez de esperar que todas as pessoas se adaptem à mesma interface.
+    </p>
+    <p>
+      Este experimento não é um produto. Está em fase de ideação, pesquisa e testes de usabilidade. Por isso, não
+      espere encontrar aqui um portal de notícias ou novidades a cada visita — esse não é o propósito, e já existem
+      muitos lugares excelentes para isso.
+    </p>
+    <p>
+      O conteúdo é, antes de tudo, um meio para testar o Leitor Imersivo em situações reais de leitura, observar seu
+      comportamento e colher feedbacks que possam orientar sua evolução.
+    </p>
+    <p>
+      Os comentários também fazem parte desse experimento. A ideia é que sejam usados principalmente para compartilhar
+      percepções, dificuldades e sugestões sobre o Leitor Imersivo — e não necessariamente para discutir os assuntos dos
+      textos publicados. Mas isso também não precisa ser uma regra. Sinta-se à vontade para participar da conversa e
+      deixar sua contribuição da forma que fizer mais sentido para você.
     </p>
 
-    <div class="mt-6">
+    <div class="mt-4">
       <Button as-child size="lg">
         <NuxtLink to="/posts" class="flex gap-2">
           <NewspaperIcon />
