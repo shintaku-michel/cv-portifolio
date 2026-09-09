@@ -15,10 +15,6 @@ useSeoMeta({
 })
 useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/pagar-um-cafe` }] })
 
-// Sem backend próprio ainda — o formulário monta um e-mail (mailto:) com os
-// dados preenchidos em vez de fingir que os dados foram salvos em algum lugar.
-const OWNER_EMAIL = 'michel.shintaku@gmail.com'
-
 const EVALUATION_TYPES = {
   'diagnostico-rapido': 'Apenas diagnóstico rápido (resposta por e-mail)',
   'cafe-virtual': 'Diagnóstico e café virtual (100% grátis)'
@@ -31,18 +27,35 @@ const email = ref('')
 const evaluationType = ref<EvaluationType>()
 const description = ref('')
 
-const mailtoHref = computed(() => {
-  const subject = `Pagar um café — ${name.value || 'Novo contato'}`
-  const evaluationLabel = evaluationType.value ? EVALUATION_TYPES[evaluationType.value] : ''
-  const body = `Nome: ${name.value}\nEmail: ${email.value}\nTipo de avaliação: ${evaluationLabel}\n\nDescrição:\n${description.value}`
-  return `mailto:${OWNER_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-})
-
 const isValid = computed(() =>
   name.value.trim() !== '' && email.value.trim() !== '' && !!evaluationType.value && description.value.trim() !== '')
 
-function sendEmail() {
-  window.location.href = mailtoHref.value
+const submitting = ref(false)
+const submitted = ref(false)
+const errorMessage = ref<string | null>(null)
+
+async function onSubmit() {
+  if (!isValid.value || submitting.value) return
+
+  submitting.value = true
+  errorMessage.value = null
+  try {
+    await $fetch('/api/pagar-um-cafe', {
+      method: 'POST',
+      body: {
+        name: name.value,
+        email: email.value,
+        evaluationType: evaluationType.value,
+        description: description.value
+      }
+    })
+    submitted.value = true
+  } catch (error) {
+    errorMessage.value = (error as { data?: { message?: string } })?.data?.message
+      ?? 'Não foi possível enviar sua mensagem. Tente novamente em instantes.'
+  } finally {
+    submitting.value = false
+  }
 }
 </script>
 
@@ -65,20 +78,30 @@ function sendEmail() {
         soluções.
       </p>
       <p>
-        Esse bate-papo inicial é 100% gratuito e sem compromisso. Se fizer sentido para você avançar, podemos elaborar
-        um diagnóstico completo, estruturado e direcionado à implementação.
+        Esse bate-papo inicial é 100% gratuito e sem compromisso. Se, depois dessa conversa, fizer sentido avançar,
+        podemos elaborar um diagnóstico completo e estruturado, com recomendações práticas e direcionadas à
+        implementação das melhores soluções para o seu projeto.
       </p>
     </div>
 
-    <form class="flex flex-col gap-4" @submit.prevent>
+    <div v-if="submitted" role="status" class="flex flex-col gap-2 rounded-sm border border-primary/30 bg-primary/5 p-5">
+      <p class="font-medium">
+        Mensagem enviada!
+      </p>
+      <p class="text-sm text-muted-foreground">
+        Obrigado pelo contato, {{ name }}. Vou ler com atenção e retorno em breve pelo e-mail informado.
+      </p>
+    </div>
+
+    <form v-else class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 flex-1">
           <Label for="name">Nome</Label>
-          <Input id="name" v-model="name" type="text" autocomplete="name" required />
+          <Input id="name" v-model="name" type="text" autocomplete="name" required :disabled="submitting" />
         </div>
         <div class="flex flex-col gap-2 flex-1">
           <Label for="email">Email</Label>
-          <Input id="email" v-model="email" type="email" autocomplete="email" required />
+          <Input id="email" v-model="email" type="email" autocomplete="email" required :disabled="submitting" />
         </div>
       </div>
 
@@ -86,7 +109,7 @@ function sendEmail() {
         <legend class="text-sm font-medium">
           Tipo de avaliação do problema
         </legend>
-        <RadioGroup v-model="evaluationType" required class="flex flex-col gap-4">
+        <RadioGroup v-model="evaluationType" required :disabled="submitting" class="flex flex-col gap-4">
           <div v-for="(label, value) in EVALUATION_TYPES" :key="value" class="flex items-center gap-2">
             <RadioGroupItem :id="`evaluation-${value}`" :value="value" />
             <Label :for="`evaluation-${value}`" class="font-normal">{{ label }}</Label>
@@ -96,15 +119,19 @@ function sendEmail() {
 
       <div class="flex flex-col gap-2">
         <Label for="description">O que você precisa?</Label>
-        <Textarea id="description" v-model="description" rows="6" required
+        <Textarea id="description" v-model="description" rows="6" required :disabled="submitting"
           placeholder="Descreva o contexto, o problema e o que você já tentou fazer." />
       </div>
 
-      <Button type="button" :disabled="!isValid" class="self-start" @click="sendEmail">
-        Enviar por e-mail
+      <p v-if="errorMessage" role="alert" class="text-sm text-destructive">
+        {{ errorMessage }}
+      </p>
+
+      <Button type="submit" :disabled="!isValid || submitting" class="self-start">
+        {{ submitting ? 'Enviando…' : 'Enviar mensagem' }}
       </Button>
       <p class="text-xs text-muted-foreground">
-        Isso abre seu cliente de e-mail padrão com a mensagem já preenchida.
+        Sua mensagem é enviada direto para o meu e-mail — sem necessidade de abrir seu cliente de e-mail.
       </p>
     </form>
   </div>
