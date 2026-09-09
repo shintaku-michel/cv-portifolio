@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import RichTextEditor from '@/components/admin/RichTextEditor.vue'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
@@ -81,8 +82,8 @@ function onSubmit() {
     </div>
 
     <div class="flex flex-col gap-2">
-      <Label for="content">Conteúdo (Markdown)</Label>
-      <Textarea id="content" v-model="content" rows="14" required class="font-mono text-sm" />
+      <Label for="content">Conteúdo</Label>
+      <RichTextEditor id="content" v-model="content" placeholder="Escreva o conteúdo do post…" />
     </div>
 
     <div class="flex flex-col gap-2">

@@ -80,8 +80,6 @@ useHead({
   }]
 })
 
-const renderedContent = computed(() => renderMarkdown(post.value.content))
-
 function formatDate(value: string | null) {
   if (!value) return null
   return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
@@ -139,7 +137,7 @@ function formatDate(value: string | null) {
             class="mb-8 aspect-video w-full rounded-sm object-cover">
 
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div class="prose prose-neutral max-w-none dark:prose-invert" v-html="renderedContent" />
+          <div class="prose prose-neutral max-w-none dark:prose-invert" v-html="post.content" />
         </div>
 
         <div

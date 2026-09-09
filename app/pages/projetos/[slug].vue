@@ -3,7 +3,7 @@ import type { Project } from '#shared/types/project'
 import { formatPeriod } from '#shared/utils/format-period'
 import TechBadge from '@/components/common/TechBadge.vue'
 import { Button } from '@/components/ui/button'
-import { Calendar, MoveLeft } from '@lucide/vue'
+import { Calendar, ExternalLink, MoveLeft } from '@lucide/vue'
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -95,18 +95,19 @@ useHead({
 
       <div class="flex flex-wrap gap-3">
         <Button v-if="project.demoUrl" as="a" :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
-          Ver demonstração
+          <ExternalLink />
+          Acessar aplicação
         </Button>
         <Button v-if="project.repositoryUrl" as="a" variant="outline" :href="project.repositoryUrl" target="_blank"
           rel="noopener noreferrer">
-          Ver repositório
+          <ExternalLink />
+          Acessar repositório
         </Button>
       </div>
     </div>
 
-    <div class="prose prose-neutral mb-8 max-w-none whitespace-pre-line dark:prose-invert">
-      {{ project.description }}
-    </div>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <div class="prose prose-neutral mb-8 max-w-none dark:prose-invert" v-html="project.description" />
 
     <div class="mb-4">
       <h2 class="text-md font-semibold mb-4">Stack Tecnológica</h2>

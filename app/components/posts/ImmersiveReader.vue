@@ -3,7 +3,7 @@ import { PanelRightCloseIcon, PanelRightOpenIcon, PauseIcon, PlayIcon, XIcon } f
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
-import { extractReadableBlocks, renderMarkdown, splitSentences } from '@/utils/markdown'
+import { extractReadableBlocks, splitSentences } from '@/utils/readable-text'
 
 const props = defineProps<{
   title: string
@@ -85,7 +85,7 @@ function persistSettings() {
 
 watch([textSize, focusEnabled, voiceGender, speed], persistSettings)
 
-const blocks = computed(() => extractReadableBlocks(renderMarkdown(props.content)))
+const blocks = computed(() => extractReadableBlocks(props.content))
 const blockSentences = computed(() => blocks.value.map(splitSentences))
 
 interface Chunk {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Project, ProjectInput, Technology, TechnologyCategory } from '#shared/types/project'
 import { slugify } from '#shared/utils/slug'
+import RichTextEditor from '@/components/admin/RichTextEditor.vue'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -134,7 +135,7 @@ function onSubmit() {
 
     <div class="flex flex-col gap-2">
       <Label for="description">Descrição completa</Label>
-      <Textarea id="description" v-model="description" rows="6" required />
+      <RichTextEditor id="description" v-model="description" placeholder="Descreva o projeto em detalhes…" />
     </div>
 
     <div class="flex flex-col gap-2">

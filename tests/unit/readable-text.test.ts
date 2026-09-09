@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
-import { extractReadableBlocks, renderMarkdown, splitSentences } from '../../app/utils/markdown'
+import { extractReadableBlocks, splitSentences } from '../../app/utils/readable-text'
 
 describe('extractReadableBlocks', () => {
   it('extrai um item por parágrafo/título/lista, sem formatação', () => {
-    const html = renderMarkdown('# Título\n\nPrimeiro parágrafo.\n\n- Item um\n- Item dois')
+    const html = '<h1>Título</h1><p>Primeiro parágrafo.</p><ul><li>Item um</li><li>Item dois</li></ul>'
     expect(extractReadableBlocks(html)).toEqual(['Título', 'Primeiro parágrafo.', 'Item um', 'Item dois'])
   })
 
   it('ignora blocos vazios', () => {
-    const html = renderMarkdown('Texto real.\n\n\n\nOutro texto.')
+    const html = '<p>Texto real.</p><p></p><p>Outro texto.</p>'
     expect(extractReadableBlocks(html)).toEqual(['Texto real.', 'Outro texto.'])
   })
 })
