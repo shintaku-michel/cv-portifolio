@@ -49,6 +49,7 @@ const technologyCatalog: { name: string, category: TechnologyCategoryValue }[] =
   { name: 'REST', category: 'API' },
   { name: 'GraphQL', category: 'API' },
   { name: 'Apollo Client', category: 'API' },
+  { name: 'Swagger UI', category: 'API' },
   { name: 'WebSocket', category: 'API' },
   { name: 'SSE', category: 'API' },
   { name: 'SOAP', category: 'API' },
