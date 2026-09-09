@@ -4,7 +4,7 @@ import michelDark from '@/assets/img/michel-dark.png'
 import michelLight from '@/assets/img/michel-light.png'
 import TechMarquee from '@/components/common/TechMarquee.vue'
 import { Button } from '@/components/ui/button'
-import { Code2Icon, FolderGit2Icon, MailIcon } from '@lucide/vue'
+import { Code2Icon, FolderGit2Icon, MailIcon, MicAudioLines } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -50,6 +50,12 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
               <NuxtLink to="/projetos">
                 <FolderGit2Icon />
                 Veja meu trabalho
+              </NuxtLink>
+            </Button>
+            <Button as-child size="lg" variant="outline">
+              <NuxtLink to="/posts">
+                <MicAudioLines />
+                Blog
               </NuxtLink>
             </Button>
             <Button as-child size="lg" variant="outline">
