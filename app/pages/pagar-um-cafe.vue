@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
+import { Send } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -128,11 +129,9 @@ async function onSubmit() {
       </p>
 
       <Button type="submit" :disabled="!isValid || submitting" class="self-start">
+        <Send />
         {{ submitting ? 'Enviando…' : 'Enviar mensagem' }}
       </Button>
-      <p class="text-xs text-muted-foreground">
-        Sua mensagem é enviada direto para o meu e-mail — sem necessidade de abrir seu cliente de e-mail.
-      </p>
     </form>
   </div>
 </template>
