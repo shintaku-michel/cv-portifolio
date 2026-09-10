@@ -41,7 +41,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
           </p>
 
           <p class="mt-4 font-light text-foreground/70">
-            Crio produtos digitais que unem tecnologia e estratégia, com foco no usuário,
+            Desenvolvo produtos digitais que unem tecnologia e estratégia, com foco no usuário,
             <br class="hidden sm:inline">transformando necessidades reais em soluções inovadoras.
           </p>
 
