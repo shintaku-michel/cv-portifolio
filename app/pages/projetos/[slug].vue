@@ -116,7 +116,7 @@ useHead({
         <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
       </div>
       <div v-else>
-        <p>Informação confidencial</p>
+        <p class="text-muted-foreground">Informação confidencial</p>
       </div>
     </div>
 
