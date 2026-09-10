@@ -111,8 +111,11 @@ useHead({
 
     <div class="mb-4">
       <h2 class="text-md font-semibold mb-4">Stack Tecnológica</h2>
-      <div class="flex flex-wrap gap-1.5">
+      <div v-if="project.technologies?.length" class="flex flex-wrap gap-1.5">
         <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
+      </div>
+      <div v-else>
+        <p>Informação confidencial</p>
       </div>
     </div>
 
