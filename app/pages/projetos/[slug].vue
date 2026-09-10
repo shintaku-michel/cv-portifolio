@@ -94,7 +94,8 @@ useHead({
       </div>
 
       <div class="flex flex-wrap gap-3">
-        <Button v-if="project.demoUrl" as="a" :href="project.demoUrl" target="_blank" rel="noopener noreferrer">
+        <Button v-if="project.demoUrl" as="a" variant="outline" :href="project.demoUrl" target="_blank"
+          rel="noopener noreferrer">
           <ExternalLink />
           Acessar aplicação
         </Button>
