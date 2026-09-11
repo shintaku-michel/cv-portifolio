@@ -78,8 +78,8 @@ function onSubmit() {
     </div>
 
     <div class="flex flex-col gap-2">
-      <Label for="image">Imagem do certificado (URL)</Label>
-      <Input id="image" v-model="image" type="url" placeholder="https://..." />
+      <Label for="image">Imagem do certificado (URL ou caminho local, ex.: /certificados/arquivo.png)</Label>
+      <Input id="image" v-model="image" type="text" placeholder="https://... ou /certificados/arquivo.png" />
     </div>
 
     <div class="flex flex-col gap-2">

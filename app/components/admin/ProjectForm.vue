@@ -139,8 +139,8 @@ function onSubmit() {
     </div>
 
     <div class="flex flex-col gap-2">
-      <Label for="coverImage">Imagem de capa (URL)</Label>
-      <Input id="coverImage" v-model="coverImage" type="url" placeholder="https://..." />
+      <Label for="coverImage">Imagem de capa (URL ou caminho local, ex.: /projetos/arquivo.png)</Label>
+      <Input id="coverImage" v-model="coverImage" type="text" placeholder="https://... ou /projetos/arquivo.png" />
     </div>
 
     <div class="flex flex-col gap-2">
