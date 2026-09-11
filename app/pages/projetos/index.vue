@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import type { Project } from '#shared/types/project'
-import { formatPeriod } from '#shared/utils/format-period'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
+import ProjectCard from '@/components/projects/ProjectCard.vue'
 
 const requestUrl = useRequestURL()
 
@@ -28,6 +26,12 @@ const QUERY = `
 const { data, pending, error } = await useAsyncData('projetos', () =>
   useGraphQL<{ projects: Project[] }>(QUERY)
 )
+
+// Duas colunas independentes (par/ímpar) em vez de CSS columns: preserva a
+// ordem de leitura esquerda-para-direita (1 2 / 3 4 / 5 6) enquanto cada
+// coluna ainda se ajusta à própria altura, sem esperar a coluna vizinha.
+const leftColumn = computed(() => (data.value?.projects ?? []).filter((_, index) => index % 2 === 0))
+const rightColumn = computed(() => (data.value?.projects ?? []).filter((_, index) => index % 2 === 1))
 </script>
 
 <template>
@@ -47,36 +51,22 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
     <template v-else>
       <EmptyState v-if="!data?.projects.length" message="Nenhum projeto encontrado." />
 
-      <div v-else class="gap-6 sm:columns-2">
-        <NuxtLink v-for="project in data.projects" :key="project.id" :to="`/projetos/${project.slug}`"
-          class="mb-6 flex flex-col gap-3 break-inside-avoid rounded-sm border p-5 transition-colors hover:bg-accent">
-          <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
-            class="aspect-video w-full rounded-sm object-cover">
-          <h2 class="text-lg font-medium">
-            {{ project.title }}
-          </h2>
-          <p class="text-sm text-muted-foreground">
-            {{ project.shortDescription }}
-          </p>
+      <template v-else>
+        <!-- Mobile: uma coluna só, ordem sequencial normal. -->
+        <div class="flex flex-col gap-6 sm:hidden">
+          <ProjectCard v-for="project in data.projects" :key="project.id" :project="project" />
+        </div>
 
-          <Separator />
-
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-              <Badge v-if="project.featured" variant="secondary">
-                Destaque
-              </Badge>
-              <Badge :variant="project.isOnline ? 'default' : 'secondary'">
-                {{ project.isOnline ? 'Online' : 'Offline' }}
-              </Badge>
-            </div>
-            <span v-if="formatPeriod(project.startDate, project.endDate)"
-              class="text-xs whitespace-nowrap text-muted-foreground">
-              {{ formatPeriod(project.startDate, project.endDate) }}
-            </span>
+        <!-- sm+: duas colunas, cada uma com seu próprio fluxo vertical. -->
+        <div class="hidden gap-6 sm:grid sm:grid-cols-2">
+          <div class="flex flex-col gap-6">
+            <ProjectCard v-for="project in leftColumn" :key="project.id" :project="project" />
           </div>
-        </NuxtLink>
-      </div>
+          <div class="flex flex-col gap-6">
+            <ProjectCard v-for="project in rightColumn" :key="project.id" :project="project" />
+          </div>
+        </div>
+      </template>
     </template>
   </div>
 </template>
