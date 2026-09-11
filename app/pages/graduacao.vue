@@ -38,15 +38,15 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/graduacao` }] }
         lógica, algoritmos, estruturas de dados, programação, bancos de dados e engenharia de software.
       </p>
       <p>
-        Concluí o curso em 2012, após oito semestres de muitos desafios e aprendizados. Na época, eu já trabalhava com
-        desenvolvimento de software e conciliava a rotina profissional com os estudos, buscando crescer na carreira,
-        ampliar meus conhecimentos e conquistar melhores oportunidades profissionais e financeiras.
+        Concluí a graduação em 2012, após oito semestres de muitos desafios e aprendizados. Naquele período, eu já
+        trabalhava com desenvolvimento de software e conciliava a rotina profissional com os estudos. Buscava aprofundar
+        meus conhecimentos, crescer na carreira e conquistar melhores oportunidades profissionais e financeiras.
       </p>
       <p>
-        Durante essa trajetória, tive ótimos professores, que contribuíram não apenas para a minha formação técnica, mas
-        também para que eu descobrisse afinidades e interesses que ajudaram a definir os caminhos que segui
-        profissionalmente. A graduação também me proporcionou amizades que permanecem até hoje, algumas das quais se
-        transformaram, ao longo dos anos, em parcerias profissionais.
+        Ao longo dessa trajetória, tive excelentes professores, que contribuíram para minha formação técnica e me
+        ajudaram a descobrir interesses que influenciaram os caminhos que segui profissionalmente. A graduação também me
+        proporcionou amizades que permanecem até hoje, algumas delas transformadas em parcerias
+        profissionais.
       </p>
       <p>
         Olhando para essa fase hoje, percebo o quanto é importante confiar no processo, reconhecer o valor de cada

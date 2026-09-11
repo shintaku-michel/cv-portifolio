@@ -85,7 +85,8 @@ async function onSubmit() {
       </p>
     </div>
 
-    <div v-if="submitted" role="status" class="flex flex-col gap-2 rounded-sm border border-primary/30 bg-primary/5 p-5">
+    <div v-if="submitted" role="status"
+      class="flex flex-col gap-2 rounded-sm border border-primary/30 bg-primary/5 p-5">
       <p class="font-medium">
         Mensagem enviada!
       </p>
@@ -95,6 +96,7 @@ async function onSubmit() {
     </div>
 
     <form v-else class="flex flex-col gap-4" @submit.prevent="onSubmit">
+      <h2 class="text-muted-foreground">Informações do visitante</h2>
       <div class="flex gap-4">
         <div class="flex flex-col gap-2 flex-1">
           <Label for="name">Nome</Label>

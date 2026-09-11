@@ -20,23 +20,19 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/cursos` }] })
         Cursos
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        Aprendizados direcionados para desafios e necessidades específicas
+        Aprendizados direcionados a desafios e necessidades específicas
       </p>
     </div>
 
     <p>
-      Ao longo da minha carreira, busquei ampliar meus conhecimentos em diferentes áreas do desenvolvimento
-      de
-      software. Tenho cursos em UX/UI Design, acessibilidade (A11y), Frontend, Backend e DevOps. Sempre fui
-      muito
-      curioso e procurei entender diferentes partes do processo de desenvolvimento para ter mais autonomia,
-      explorar
-      novas possibilidades e não ficar limitado por uma única área da tecnologia.
+      Ao longo da minha carreira, busquei ampliar meus conhecimentos em diferentes áreas do desenvolvimento de software.
+      Realizei cursos de UX/UI Design, acessibilidade (A11y), Frontend, Backend e DevOps. A curiosidade sempre me levou
+      a compreender as diversas etapas do desenvolvimento, conquistar mais autonomia, explorar novas possibilidades e
+      não me limitar a uma única área da tecnologia.
     </p>
     <p>
-      Mais do que acumular certificados, busco conhecimentos que possam ser aplicados na prática e que me
-      ajudem
-      a compreender melhor todo o processo de criação dos produtos digitais que desenvolvo.
+      Mais do que acumular certificados, procuro adquirir conhecimentos que possam ser aplicados no dia a dia e que
+      ampliem minha compreensão sobre todo o processo de criação de produtos digitais.
     </p>
 
     <div class="mt-6">

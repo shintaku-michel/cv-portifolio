@@ -25,22 +25,18 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/formacao` }] })
     </div>
 
     <p>
-      Sou graduado em Ciência da Computação pelo Centro Universitário de Brasília (CEUB) e pós-graduado em
-      Full
-      Stack & IA pela Faculdade de Tecnologia Rocketseat. Minha formação, somada a mais de 18 anos de
-      experiência
-      prática no desenvolvimento web, me permite unir fundamentos de computação, desenvolvimento de
-      software e a capacidade de uso das tecnologias mais adequadas para criar cada solução digital.
+      Sou graduado em Ciência da Computação pelo Centro Universitário de Brasília (CEUB) e pós-graduado em Full Stack &
+      IA pela Faculdade de Tecnologia Rocketseat. Essa formação, somada a mais de 18 anos de experiência em
+      desenvolvimento web, me permite unir fundamentos da computação, prática em desenvolvimento de software e
+      conhecimento técnico para escolher as tecnologias mais adequadas para escolha de cada solução digital.
     </p>
     <p>
-      Ao longo da minha trajetória, mantenho o hábito de continuar estudando, experimentando novas
-      tecnologias e
-      aprofundando conhecimentos que possam contribuir para a
-      qualidade do meu trabalho.
+      Ao longo da minha trajetória, mantenho o compromisso de continuar estudando, explorando novas tecnologias e
+      aprofundando conhecimentos que contribuam para a qualidade do meu trabalho.
     </p>
     <p>
-      É muito importante permanecer humilde e reconhecer que não sabemos tudo, valorizar o conhecimento e a experiência
-      de outras pessoas para continuar sempre aprendendo.
+      Também considero essencial ter humildade para reconhecer que não sabemos tudo, aprender com o conhecimento e a
+      experiência de outras pessoas e permanecer aberto a novas formas de pensar e construir.
     </p>
 
     <div class="mt-6 flex gap-2">

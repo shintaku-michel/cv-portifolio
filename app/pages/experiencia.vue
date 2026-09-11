@@ -17,36 +17,37 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/experiencia` }]
         Experiência
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        A vida como ela é — e o amor por aquilo que perseguimos com genuína dedicação
+        A vida como ela é e o amor por aquilo que buscamos com genuína dedicação
       </p>
     </div>
 
     <p>
-      Comecei minha carreira no Backend, construindo APIs e aprendendo sobre padrões de desenvolvimento e arquitetura de
-      software. Entre 2010 e 2011, trabalhar com Java exigia conhecer não apenas a linguagem, mas todo um ecossistema de
-      configurações, persistência, empacotamento e servidores de aplicação. Foi nesse período que trabalhei com
-      tecnologias como Java EE, Spring, Hibernate, Maven, Tomcat e JBoss.
+      Comecei minha carreira no backend, desenvolvendo APIs e aprendendo sobre padrões de desenvolvimento e arquitetura
+      de software. Entre 2010 e 2011, trabalhar com Java exigia conhecer não apenas a linguagem, mas também um amplo
+      ecossistema de configurações, persistência de dados, gerenciamento de dependências, empacotamento e servidores de
+      aplicação. Nesse período, trabalhei com tecnologias como Java EE, Spring, Hibernate, Maven, Tomcat e JBoss.
     </p>
     <p>
       Sabe aquele ditado de que o mundo dá voltas? Pois é, aconteceu comigo. Com o tempo, minha curiosidade me levou ao
-      Frontend, área em que comecei a me destacar e que se conectou naturalmente ao meu interesse por arte, design e por
-      transformar ideias em experiências.
+      frontend. Foi uma área em que comecei a me destacar e que se conectou naturalmente ao meu interesse por arte,
+      design e pela transformação de ideias em experiências digitais.
     </p>
     <p>
-      Em uma das fábricas de software por onde passei, tive a oportunidade de liderar um time de Frontend e me aproximar
-      de UX. Essa vivência ampliou minha percepção sobre a criação de produtos e me fez olhar não apenas para como uma
-      solução funciona, mas também para a forma como as pessoas interagem com ela.
+      Em uma das fábricas de software por onde passei, tive a oportunidade de liderar uma equipe de frontend e me
+      aproximar de UX. Essa experiência ampliou minha compreensão sobre a criação de produtos. Passei a observar não
+      apenas como uma solução funciona, mas também como as pessoas interagem com ela.
     </p>
     <p>
-      E o mundo deu mais uma volta. Mais tarde, retornei ao Backend, dessa vez com Node.js, e percebi o quanto aquele
-      caminho pelo Frontend e por UX havia transformado minha visão como desenvolvedor. Passei a construir APIs pensando
-      também em quem iria consumi-las e a enxergar o desenvolvimento de software de forma mais completa, entendendo
-      melhor como decisões técnicas influenciam o produto e a experiência de quem o utiliza.
+      E o mundo deu mais uma volta. Mais tarde, retornei ao backend, dessa vez trabalhando com Node.js. Percebi, então,
+      o quanto minha experiência com frontend e UX havia ampliado minha visão como desenvolvedor. Passei a criar APIs
+      pensando também nas pessoas que iriam utilizá-las e a compreender melhor como cada decisão técnica influencia o
+      produto e a experiência de uso.
     </p>
     <p>
-      Hoje, continuo estudando, experimentando e aprimorando minhas práticas. Depois de tantos anos trabalhando com
-      diferentes tecnologias e perspectivas, sigo com a mesma curiosidade: aprender, evoluir e encontrar maneiras
-      melhores de transformar ideias em soluções.
+      Hoje, continuo estudando, experimentando e ampliando meus conhecimentos. Depois de tantos anos trabalhando com
+      diferentes tecnologias e perspectivas, mantenho a curiosidade que sempre orientou minha carreira: aprender,
+      evoluir e encontrar maneiras melhores de transformar ideias em soluções que ajudem a resolver problemas do dia a
+      dia das pessoas.
     </p>
   </div>
 </template>

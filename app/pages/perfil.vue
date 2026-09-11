@@ -18,7 +18,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/perfil` }] })
         Perfil
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        Leal aos meus valores e comprometido com quem escolhi me tornar
+        Leal aos meus valores e comprometido com as minhas escolhas
       </p>
     </div>
 
@@ -47,9 +47,8 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/perfil` }] })
     </p>
 
     <p>
-      Ao longo dessa trajetória, busco criar experiências que equilibrem tecnologia, usabilidade,
-      acessibilidade e regras de negócio, sem perder de vista o mais importante: as pessoas que estão do outro
-      lado da tela usando o produto.
+      Ao longo da minha trajetória, sempre busquei criar experiências que unam tecnologia, usabilidade, acessibilidade e
+      regras de negócio, mantendo o foco no que realmente importa: as pessoas que usam o produto.
     </p>
   </div>
 </template>

@@ -26,25 +26,26 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/blog` }] })
 
     <p>
       A ideia deste blog surgiu, principalmente, como um espaço para experimentar uma funcionalidade de acessibilidade
-      que estou desenvolvendo — um desafio complexo, tanto de compreender e mapear quanto de transformar em uma
+      que estou desenvolvendo, um desafio complexo, tanto de compreender e mapear quanto de transformar em uma
       experiência digital realmente útil.
     </p>
     <p>
       Uma coisa que percebi recentemente é que acessibilidade não é uma questão binária. Pessoas com a mesma deficiência
-      podem apresentar diferentes graus,
-      necessidades, preferências e formas de interagir com a tecnologia.
+      podem apresentar diferentes graus, necessidades, preferências e formas de interagir com a tecnologia. Pode parecer
+      óbvio, mas, para mim, não foi.
     </p>
     <p>
-      É justamente esse problema que quero explorar: como criar experiências digitais capazes de se adaptar melhor às
-      necessidades de cada pessoa, em vez de esperar que todas as pessoas se adaptem à mesma interface.
+      Por isso, quero explorar justamente este problema: como criar experiências digitais que se adaptem melhor às
+      necessidades de cada pessoa, em vez de esperar que todas se adaptem à mesma interface.
     </p>
     <p>
-      Este experimento não é um produto. Está em fase de ideação, pesquisa e testes de usabilidade. Por isso, não
-      espere encontrar aqui um portal de notícias ou novidades a cada visita — esse não é o propósito, e já existem
-      muitos lugares excelentes para isso.
+      Este experimento ainda não é um produto. Ele está em fase de ideação, pesquisa e testes de usabilidade. Por isso,
+      não espere encontrar aqui um portal de notícias ou novidades a cada visita, pois essa não é a proposta.
     </p>
     <p>
-      O conteúdo é, antes de tudo, um meio para testar o Leitor Imersivo em situações reais de leitura, observar seu
+      O conteúdo é, antes de tudo, um meio para testar o Leitor Imersivo em
+      situações
+      reais de leitura, observar seu
       comportamento e colher feedbacks que possam orientar sua evolução.
     </p>
     <p>
