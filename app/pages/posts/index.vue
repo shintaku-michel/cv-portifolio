@@ -99,7 +99,7 @@ function authorInitials(name: string) {
           <h2 class="text-lg font-medium">
             {{ post.title }}
           </h2>
-          <p class="text-sm text-muted-foreground">
+          <p class="text-sm text-muted-foreground whitespace-pre-line">
             {{ post.excerpt }}
           </p>
 
