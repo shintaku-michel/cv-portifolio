@@ -73,7 +73,7 @@ function authorInitials(name: string) {
         <img v-if="post.coverImage" :src="post.coverImage" :alt="post.title"
           class="aspect-video w-full rounded-sm object-cover sm:w-48 sm:shrink-0">
         <div class="flex flex-col gap-2">
-          <div class="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
             <div class="flex items-center gap-2">
               <Avatar size="md">
                 <AvatarImage v-if="post.author.avatarUrl" :src="post.author.avatarUrl" :alt="post.author.name" />
@@ -103,15 +103,17 @@ function authorInitials(name: string) {
             {{ post.excerpt }}
           </p>
 
-          <div class="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mt-4 border-t pt-4">
-            <Badge v-if="post.category" variant="outline">
-              {{ post.category.name }}
-            </Badge>
-            <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
-              {{ tag.name }}
-            </Badge>
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground mt-4 border-t pt-4">
+            <div class="flex flex-wrap items-center gap-2">
+              <Badge v-if="post.category" variant="outline">
+                {{ post.category.name }}
+              </Badge>
+              <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
+                {{ tag.name }}
+              </Badge>
+            </div>
 
-            <span class="flex items-center gap-3 sm:ml-auto">
+            <span class="flex items-center gap-3">
               <span class="flex items-center gap-1">
                 <HeartIcon class="size-3.5" />
                 {{ post.likesCount }}
