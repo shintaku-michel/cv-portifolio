@@ -73,7 +73,7 @@ function authorInitials(name: string) {
         <img v-if="post.coverImage" :src="post.coverImage" :alt="post.title"
           class="aspect-video w-full rounded-sm object-cover sm:w-48 sm:shrink-0">
         <div class="flex flex-col gap-2">
-          <div class="flex justify-between items-center gap-2 mb-4">
+          <div class="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-2">
               <Avatar size="md">
                 <AvatarImage v-if="post.author.avatarUrl" :src="post.author.avatarUrl" :alt="post.author.name" />
@@ -111,7 +111,7 @@ function authorInitials(name: string) {
               {{ tag.name }}
             </Badge>
 
-            <span class="ml-auto flex items-center gap-3">
+            <span class="flex items-center gap-3 sm:ml-auto">
               <span class="flex items-center gap-1">
                 <HeartIcon class="size-3.5" />
                 {{ post.likesCount }}
