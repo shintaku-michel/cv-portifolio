@@ -14,7 +14,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/cursos` }] })
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 px-6 py-12 md:mx-auto md:w-3xl md:py-17">
+  <div class="flex flex-col gap-3 md:px-6 py-12 md:mx-auto md:w-3xl md:py-17">
     <div>
       <h1 class="text-2xl font-semibold">
         Cursos

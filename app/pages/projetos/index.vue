@@ -35,7 +35,7 @@ const rightColumn = computed(() => (data.value?.projects ?? []).filter((_, index
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 px-6 py-12 md:mx-auto md:w-3xl md:py-17">
+  <div class="flex flex-col gap-3 md:px-6 py-12 md:mx-auto md:w-3xl md:py-17">
     <div class="mb-4 flex flex-col">
       <h1 class="text-2xl font-semibold">
         Projetos <span v-if="data?.projects.length" class="text-sm">( {{ data.projects.length }} )</span>

@@ -48,7 +48,7 @@ function authorInitials(name: string) {
 </script>
 
 <template>
-  <div class="p-6 md:mx-auto md:w-3xl">
+  <div class="md:p-6 md:mx-auto md:w-3xl">
     <NuxtLink to="/blog" class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
       <MoveLeft class="h-4 w-4" />
       Blog
@@ -103,7 +103,8 @@ function authorInitials(name: string) {
             {{ post.excerpt }}
           </p>
 
-          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground mt-4 border-t pt-4">
+          <div
+            class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground mt-4 border-t pt-4">
             <div class="flex flex-wrap items-center gap-2">
               <Badge v-if="post.category" variant="outline">
                 {{ post.category.name }}

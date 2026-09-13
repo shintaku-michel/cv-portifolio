@@ -61,7 +61,7 @@ async function onSubmit() {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 px-6 py-12 md:mx-auto md:w-3xl md:py-17">
+  <div class="flex flex-col gap-3 md:px-6 py-12 md:mx-auto md:w-3xl md:py-17">
     <div class="mb-2">
       <h1 class="text-2xl font-semibold">
         Pagar um café
@@ -97,7 +97,7 @@ async function onSubmit() {
 
     <form v-else class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <h2 class="text-muted-foreground">Informações do visitante</h2>
-      <div class="flex gap-4">
+      <div class="flex flex-col md:flex-row flex-wrap gap-4">
         <div class="flex flex-col gap-2 flex-1">
           <Label for="name">Nome</Label>
           <Input id="name" v-model="name" type="text" autocomplete="name" required :disabled="submitting" />

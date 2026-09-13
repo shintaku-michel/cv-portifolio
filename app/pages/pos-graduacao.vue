@@ -10,7 +10,7 @@ const certificateOpen = ref(false)
 </script>
 
 <template>
-  <div class="px-6 py-12 md:mx-auto md:w-3xl md:py-5">
+  <div class="md:px-6 py-6 md:mx-auto md:w-3xl md:py-5">
     <NuxtLink to="/formacao" class="mb-6 inline-block text-sm text-muted-foreground hover:underline">
       ← Voltar
     </NuxtLink>

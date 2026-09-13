@@ -66,7 +66,7 @@ useHead({
 </script>
 
 <template>
-  <div class="p-6 md:mx-auto md:w-3xl">
+  <div class="md:p-6 md:mx-auto md:w-3xl">
     <NuxtLink to="/projetos" class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
       <MoveLeft class="h-4 w-4" />
       Projetos
@@ -84,7 +84,7 @@ useHead({
     <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
       class="mb-4 aspect-video w-full rounded-sm object-cover">
 
-    <div class="flex items-center justify-between gap-4 border border-muted p-4 my-4 rounded-sm">
+    <div class="flex flex-wrap items-center justify-between gap-4 border border-muted p-4 my-4 rounded-sm">
       <div>
         <span v-if="formatPeriod(project.startDate, project.endDate)"
           class="text-xs text-muted-foreground flex items-center gap-2">
