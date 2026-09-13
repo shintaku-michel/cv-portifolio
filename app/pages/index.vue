@@ -49,19 +49,19 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
             <Button as-child size="lg">
               <NuxtLink to="/projetos">
                 <FolderGit2Icon />
-                Veja meu trabalho
+                Conheça meu trabalho
               </NuxtLink>
             </Button>
             <Button as-child size="lg" variant="outline">
               <NuxtLink to="/posts">
                 <MicAudioLines />
-                Blog
+                Fake Blog
               </NuxtLink>
             </Button>
             <Button as-child size="lg" variant="outline">
               <NuxtLink to="/pagar-um-cafe">
                 <MailIcon />
-                Fale comigo
+                Contato
               </NuxtLink>
             </Button>
           </div>
