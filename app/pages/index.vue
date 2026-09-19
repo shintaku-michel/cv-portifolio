@@ -53,7 +53,7 @@ const avatarSrc = computed(() => (theme.value === 'dark' ? michelDark : michelLi
               </NuxtLink>
             </Button>
             <Button as-child size="lg" variant="outline">
-              <NuxtLink to="/posts">
+              <NuxtLink to="/blog">
                 <MicAudioLines />
                 Fake Blog
               </NuxtLink>
