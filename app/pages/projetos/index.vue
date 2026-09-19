@@ -51,7 +51,7 @@ const componentesColumns = computed(() => toColumns(componentes.value))
   <div class="flex flex-col gap-3 md:px-6 py-12 md:mx-auto md:w-3xl md:py-17">
     <div class="mb-4 flex flex-col">
       <h1 class="text-2xl font-semibold">
-        Projetos <span v-if="data?.projects.length" class="text-sm">( {{ data.projects.length }} )</span>
+        Projetos e Componentes
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
         Alguns dos projetos, sistemas e funcionalidades que desenvolvi ou ajudei a desenvolver. Alguns, com menos
