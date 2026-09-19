@@ -21,6 +21,7 @@ export type CreateProjectInput = {
   gallery?: string[]
   demoUrl?: string | null
   repositoryUrl?: string | null
+  playgroundComponent?: string | null
   startDate?: string | null
   endDate?: string | null
   featured?: boolean
@@ -105,6 +106,7 @@ export const ProjectService = {
           gallery: input.gallery ?? [],
           demoUrl: input.demoUrl,
           repositoryUrl: input.repositoryUrl,
+          playgroundComponent: input.playgroundComponent,
           startDate: input.startDate,
           endDate: input.endDate,
           featured: input.featured ?? false,

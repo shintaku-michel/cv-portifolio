@@ -64,6 +64,13 @@
       "when": 1789784708235,
       "tag": "0008_elite_penance",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789852103629,
+      "tag": "0009_blushing_ultragirl",
+      "breakpoints": true
     }
   ]
 }

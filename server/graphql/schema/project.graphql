@@ -17,6 +17,7 @@ type Project {
   displayOrder: Int!
   demoUrl: String
   repositoryUrl: String
+  playgroundComponent: String
   startDate: String
   endDate: String
   technologies: [Technology!]!
@@ -33,6 +34,7 @@ input CreateProjectInput {
   gallery: [String!]
   demoUrl: String
   repositoryUrl: String
+  playgroundComponent: String
   startDate: String
   endDate: String
   featured: Boolean
@@ -50,6 +52,7 @@ input UpdateProjectInput {
   gallery: [String!]
   demoUrl: String
   repositoryUrl: String
+  playgroundComponent: String
   startDate: String
   endDate: String
   featured: Boolean

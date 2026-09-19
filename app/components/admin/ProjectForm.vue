@@ -7,8 +7,10 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { PLAYGROUND_COMPONENT_KEYS } from '@/utils/playground-components'
 import { CheckIcon, LoaderCircleIcon } from '@lucide/vue'
 
 const props = defineProps<{
@@ -60,6 +62,8 @@ const coverImage = ref(props.initialProject?.coverImage ?? '')
 const galleryText = ref(props.initialProject?.gallery?.join('\n') ?? '')
 const demoUrl = ref(props.initialProject?.demoUrl ?? '')
 const repositoryUrl = ref(props.initialProject?.repositoryUrl ?? '')
+const NO_PLAYGROUND_COMPONENT = 'none'
+const playgroundComponent = ref(props.initialProject?.playgroundComponent ?? NO_PLAYGROUND_COMPONENT)
 const startDate = ref(props.initialProject?.startDate ?? '')
 const endDate = ref(props.initialProject?.endDate ?? '')
 const featured = ref(props.initialProject?.featured ?? false)
@@ -106,6 +110,7 @@ function onSubmit() {
     gallery: galleryText.value.split('\n').map(line => line.trim()).filter(Boolean),
     demoUrl: demoUrl.value || null,
     repositoryUrl: repositoryUrl.value || null,
+    playgroundComponent: playgroundComponent.value === NO_PLAYGROUND_COMPONENT ? null : playgroundComponent.value,
     startDate: startDate.value || null,
     endDate: endDate.value || null,
     featured: featured.value,
@@ -185,6 +190,23 @@ function onSubmit() {
         <Label for="repositoryUrl">URL do repositório</Label>
         <Input id="repositoryUrl" v-model="repositoryUrl" type="url" placeholder="https://..." />
       </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <Label>Componente de demonstração</Label>
+      <Select v-model="playgroundComponent">
+        <SelectTrigger class="w-full sm:w-64">
+          <SelectValue placeholder="Nenhum" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem :value="NO_PLAYGROUND_COMPONENT">
+            Nenhum
+          </SelectItem>
+          <SelectItem v-for="key in PLAYGROUND_COMPONENT_KEYS" :key="key" :value="key">
+            {{ key }}
+          </SelectItem>
+        </SelectContent>
+      </Select>
     </div>
 
     <div class="grid gap-4 sm:grid-cols-2">

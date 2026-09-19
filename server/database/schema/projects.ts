@@ -16,6 +16,7 @@ export const projects = pgTable('projects', {
   displayOrder: integer('display_order').notNull().default(0),
   demoUrl: text('demo_url'),
   repositoryUrl: text('repository_url'),
+  playgroundComponent: text('playground_component'),
   startDate: date('start_date'),
   endDate: date('end_date'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

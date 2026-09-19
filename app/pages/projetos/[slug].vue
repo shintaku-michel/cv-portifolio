@@ -3,6 +3,7 @@ import type { Project } from '#shared/types/project'
 import { formatPeriod } from '#shared/utils/format-period'
 import TechBadge from '@/components/common/TechBadge.vue'
 import { Button } from '@/components/ui/button'
+import { PLAYGROUND_COMPONENTS } from '@/utils/playground-components'
 import { Calendar, ExternalLink, MoveLeft } from '@lucide/vue'
 
 const route = useRoute()
@@ -12,7 +13,7 @@ const QUERY = `
   query ProjectDetail($slug: String!) {
     project(slug: $slug) {
       id title slug shortDescription description coverImage gallery status featured
-      demoUrl repositoryUrl startDate endDate
+      demoUrl repositoryUrl playgroundComponent startDate endDate
       technologies { id name slug }
     }
   }
@@ -105,6 +106,10 @@ useHead({
           Acessar repositório
         </Button>
       </div>
+    </div>
+
+    <div v-if="project.playgroundComponent && PLAYGROUND_COMPONENTS[project.playgroundComponent]" class="mb-8">
+      <component :is="PLAYGROUND_COMPONENTS[project.playgroundComponent]" />
     </div>
 
     <!-- eslint-disable-next-line vue/no-v-html -->

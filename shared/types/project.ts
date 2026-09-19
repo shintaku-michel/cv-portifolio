@@ -39,6 +39,7 @@ export interface Project {
   displayOrder: number
   demoUrl: string | null
   repositoryUrl: string | null
+  playgroundComponent: string | null
   startDate: string | null
   endDate: string | null
   technologies: Technology[]
@@ -55,6 +56,7 @@ export interface ProjectInput {
   gallery?: string[]
   demoUrl?: string | null
   repositoryUrl?: string | null
+  playgroundComponent?: string | null
   startDate?: string | null
   endDate?: string | null
   featured?: boolean

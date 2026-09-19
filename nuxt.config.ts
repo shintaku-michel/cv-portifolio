@@ -34,9 +34,10 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/tailwind.css'],
   components: [
-    // Componentes shadcn-vue (components/ui) usam import explícito via
-    // alias `@/components/ui/*`, não auto-import global do Nuxt.
-    { path: '~/components', pathPrefix: false, ignore: ['**/ui/**'] }
+    // Componentes shadcn-vue (components/ui) e os componentes de playground
+    // (components/playground) usam import explícito via barrel `index.ts`,
+    // não auto-import global do Nuxt.
+    { path: '~/components', pathPrefix: false, ignore: ['**/ui/**', '**/playground/**'] }
   ],
   vite: {
     plugins: [tailwindcss()]
