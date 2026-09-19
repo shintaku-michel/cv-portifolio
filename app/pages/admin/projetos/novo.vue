@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import ProjectForm from '@/components/admin/ProjectForm.vue'
+import { Button } from '@/components/ui/button'
+import { ArrowLeftIcon } from '@lucide/vue'
 import type { ProjectInput, Technology } from '#shared/types/project'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -40,6 +42,14 @@ async function onSubmit(input: ProjectInput) {
     <p v-if="errorMessage" role="alert" class="mb-4 text-sm text-destructive">
       {{ errorMessage }}
     </p>
-    <ProjectForm :technologies="data?.technologies ?? []" :submitting="submitting" @submit="onSubmit" />
+    <ProjectForm :technologies="data?.technologies ?? []" :submitting="submitting" @submit="onSubmit">
+      <template #actions>
+        <NuxtLink to="/admin/projetos">
+          <Button variant="outline" type="button">
+            <ArrowLeftIcon /> Voltar
+          </Button>
+        </NuxtLink>
+      </template>
+    </ProjectForm>
   </div>
 </template>

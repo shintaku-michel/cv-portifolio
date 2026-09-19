@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import PostForm from '@/components/admin/PostForm.vue'
+import { ArrowLeftIcon, GlobeIcon, GlobeXIcon } from '@lucide/vue'
 import type { Category, Post, PostInput, Tag } from '#shared/types/post'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -67,16 +68,9 @@ async function togglePublish() {
 
 <template>
   <div class="mx-auto max-w-3xl px-4 py-12">
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-semibold">
-        Editar post
-      </h1>
-      <div class="flex gap-2">
-        <Button variant="outline" @click="togglePublish">
-          {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-        </Button>
-      </div>
-    </div>
+    <h1 class="mb-6 text-2xl font-semibold">
+      Editar post
+    </h1>
     <p v-if="errorMessage" role="alert" class="mb-4 text-sm text-destructive">
       {{ errorMessage }}
     </p>
@@ -86,6 +80,18 @@ async function togglePublish() {
       :tags="data?.tags ?? []"
       :submitting="submitting"
       @submit="onSubmit"
-    />
+    >
+      <template #actions>
+        <NuxtLink to="/admin/posts">
+          <Button variant="outline" type="button">
+            <ArrowLeftIcon /> Voltar
+          </Button>
+        </NuxtLink>
+        <Button variant="outline" type="button" @click="togglePublish">
+          <component :is="post.status === 'PUBLISHED' ? GlobeXIcon : GlobeIcon" />
+          {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+        </Button>
+      </template>
+    </PostForm>
   </div>
 </template>

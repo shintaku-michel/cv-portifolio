@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { CertificateInput } from '#shared/types/certificate'
 import CertificateForm from '@/components/admin/CertificateForm.vue'
+import { Button } from '@/components/ui/button'
+import { ArrowLeftIcon } from '@lucide/vue'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Novo certificado' })
@@ -36,6 +38,14 @@ async function onSubmit(input: CertificateInput) {
     <p v-if="errorMessage" role="alert" class="mb-4 text-sm text-destructive">
       {{ errorMessage }}
     </p>
-    <CertificateForm :submitting="submitting" @submit="onSubmit" />
+    <CertificateForm :submitting="submitting" @submit="onSubmit">
+      <template #actions>
+        <NuxtLink to="/admin/certificados">
+          <Button variant="outline" type="button">
+            <ArrowLeftIcon /> Voltar
+          </Button>
+        </NuxtLink>
+      </template>
+    </CertificateForm>
   </div>
 </template>

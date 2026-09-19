@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { CheckIcon, LoaderCircleIcon } from '@lucide/vue'
 
 const props = defineProps<{
   initialProject?: Project
@@ -200,7 +201,7 @@ function onSubmit() {
     <div class="grid gap-4 sm:grid-cols-2">
       <div class="flex items-center gap-2">
         <Switch id="featured" :model-value="featured" @update:model-value="(v: boolean) => (featured = v)" />
-        <Label for="featured">{{ featured ? 'Destaque' : 'Sem destaque' }}</Label>
+        <Label for="featured">{{ featured ? 'Projeto' : 'Componente' }}</Label>
       </div>
       <div class="flex items-center gap-2">
         <Switch id="isOnline" :model-value="isOnline" @update:model-value="(v: boolean) => (isOnline = v)" />
@@ -213,8 +214,13 @@ function onSubmit() {
       <Input id="displayOrder" v-model.number="displayOrder" type="number" />
     </div>
 
-    <Button type="submit" :disabled="submitting" class="self-start">
-      {{ submitting ? 'Salvando…' : 'Salvar' }}
-    </Button>
+    <div class="flex gap-2">
+      <slot name="actions" />
+      <Button type="submit" :disabled="submitting" class="ms-auto">
+        <LoaderCircleIcon v-if="submitting" class="animate-spin" />
+        <CheckIcon v-else />
+        {{ submitting ? 'Salvando…' : 'Salvar' }}
+      </Button>
+    </div>
   </form>
 </template>

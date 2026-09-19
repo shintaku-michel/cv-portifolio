@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import PostForm from '@/components/admin/PostForm.vue'
+import { Button } from '@/components/ui/button'
+import { ArrowLeftIcon } from '@lucide/vue'
 import type { Category, PostInput, Tag } from '#shared/types/post'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -48,6 +50,14 @@ async function onSubmit(input: PostInput) {
       :tags="data?.tags ?? []"
       :submitting="submitting"
       @submit="onSubmit"
-    />
+    >
+      <template #actions>
+        <NuxtLink to="/admin/posts">
+          <Button variant="outline" type="button">
+            <ArrowLeftIcon /> Voltar
+          </Button>
+        </NuxtLink>
+      </template>
+    </PostForm>
   </div>
 </template>

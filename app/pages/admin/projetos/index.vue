@@ -9,7 +9,7 @@ import { ButtonGroup } from '@/components/ui/button-group'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { EllipsisIcon, EyeIcon, EyeOffIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
+import { EllipsisIcon, EyeIcon, EyeOffIcon, GripHorizontalIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Projetos' })
@@ -17,15 +17,72 @@ useHead({ title: 'Admin · Projetos' })
 const QUERY = `
   query AdminProjects {
     projects {
-      id title slug status featured displayOrder createdAt
+      id title slug status featured displayOrder startDate createdAt
       technologies { id name }
     }
   }
 `
 
+function formatDate(value: string | null) {
+  if (!value) return '—'
+  return new Date(`${value}T00:00:00`).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
 const { data, pending, error, refresh } = await useAsyncData('admin-projetos', () =>
   useGraphQL<{ projects: Project[] }>(QUERY)
 )
+
+// Cópia local reordenável: refletir o drag imediatamente na UI sem esperar
+// a mutação, e ressincronizar sempre que `data` mudar (refresh, etc).
+const projectList = ref<Project[]>([])
+watch(() => data.value?.projects, (list) => { projectList.value = list ? [...list] : [] }, { immediate: true })
+
+const draggingId = ref<string | null>(null)
+const reordering = ref(false)
+
+function onDragStart(project: Project, event: DragEvent) {
+  draggingId.value = project.id
+  event.dataTransfer?.setData('text/plain', project.id)
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
+}
+
+function onDragEnd() {
+  draggingId.value = null
+}
+
+async function onDrop(target: Project) {
+  const sourceId = draggingId.value
+  draggingId.value = null
+  if (!sourceId || sourceId === target.id) return
+
+  const list = [...projectList.value]
+  const sourceIndex = list.findIndex(p => p.id === sourceId)
+  const targetIndex = list.findIndex(p => p.id === target.id)
+  if (sourceIndex === -1 || targetIndex === -1) return
+
+  const [moved] = list.splice(sourceIndex, 1)
+  list.splice(targetIndex, 0, moved!)
+  projectList.value = list
+
+  const changes = list
+    .map((project, index) => ({ id: project.id, displayOrder: index }))
+    .filter(({ id, displayOrder }) => list.find(p => p.id === id)!.displayOrder !== displayOrder)
+
+  if (!changes.length) return
+
+  reordering.value = true
+  try {
+    await Promise.all(changes.map(({ id, displayOrder }) =>
+      useGraphQL(
+        `mutation ($id: ID!, $input: UpdateProjectInput!) { updateProject(id: $id, input: $input) { id displayOrder } }`,
+        { id, input: { displayOrder } }
+      )
+    ))
+    await refresh()
+  } finally {
+    reordering.value = false
+  }
+}
 
 const actionPending = ref<string | null>(null)
 
@@ -77,35 +134,43 @@ async function confirmDelete() {
     <template v-else>
       <!-- Mobile: um cartão por projeto em vez de tabela larga. -->
       <div class="flex flex-col gap-3 sm:hidden">
-        <div v-for="project in data?.projects ?? []" :key="project.id" class="rounded-lg border p-4">
+        <div v-for="project in projectList" :key="project.id" class="rounded-lg border p-4"
+          :class="{ 'opacity-50': draggingId === project.id }" @dragover.prevent @drop="onDrop(project)">
           <div class="mb-3 flex items-start justify-between gap-2">
             <p class="font-medium wrap-break-word">
               {{ project.title }}
             </p>
-            <DropdownMenu :modal="false">
-              <DropdownMenuTrigger as-child>
-                <Button size="icon" variant="outline" :disabled="actionPending === project.id"
-                  aria-label="Ações do projeto" class="shrink-0">
-                  <EllipsisIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem @select="navigateTo(`/admin/projetos/${project.id}/editar`)">
-                  <PencilIcon /> Editar
-                </DropdownMenuItem>
-                <DropdownMenuItem @select="navigateTo(`/projetos/${project.slug}`)">
-                  <EyeIcon /> Visualizar
-                </DropdownMenuItem>
-                <DropdownMenuItem @select="togglePublish(project)">
-                  <component :is="project.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
-                  {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = project">
-                  <Trash2Icon /> Excluir
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div class="flex shrink-0 items-center gap-1">
+              <DropdownMenu :modal="false">
+                <DropdownMenuTrigger as-child>
+                  <Button size="icon" variant="outline" :disabled="actionPending === project.id"
+                    aria-label="Ações do projeto">
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem @select="navigateTo(`/admin/projetos/${project.id}/editar`)">
+                    <PencilIcon /> Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="navigateTo(`/projetos/${project.slug}`)">
+                    <EyeIcon /> Visualizar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="togglePublish(project)">
+                    <component :is="project.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                    {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = project">
+                    <Trash2Icon /> Excluir
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+                aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
+                @dragstart="onDragStart(project, $event)" @dragend="onDragEnd">
+                <GripHorizontalIcon />
+              </Button>
+            </div>
           </div>
           <div class="mb-3 flex items-center gap-2">
             <Badge :variant="project.status === 'PUBLISHED' ? 'default' : 'secondary'">
@@ -136,7 +201,7 @@ async function confirmDelete() {
       <Table class="hidden table-fixed sm:table">
         <TableHeader>
           <TableRow>
-            <TableHead class="w-[25%]">
+            <TableHead class="w-[43%]">
               Título
             </TableHead>
             <TableHead class="w-[12%]">
@@ -145,8 +210,8 @@ async function confirmDelete() {
             <TableHead class="w-[10%]">
               Destaque
             </TableHead>
-            <TableHead class="w-[33%]">
-              Tecnologias
+            <TableHead class="w-[15%]">
+              Data inicial
             </TableHead>
             <TableHead class="w-[8%]">
               Ordem
@@ -157,7 +222,8 @@ async function confirmDelete() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="project in data?.projects ?? []" :key="project.id">
+          <TableRow v-for="project in projectList" :key="project.id"
+            :class="{ 'opacity-50': draggingId === project.id }" @dragover.prevent @drop="onDrop(project)">
             <TableCell class="font-medium whitespace-normal wrap-break-word">
               {{ project.title }}
             </TableCell>
@@ -167,9 +233,7 @@ async function confirmDelete() {
               </Badge>
             </TableCell>
             <TableCell>{{ project.featured ? 'Sim' : 'Não' }}</TableCell>
-            <TableCell class="whitespace-normal wrap-break-word">
-              {{ project.technologies.map(t => t.name).join(', ') }}
-            </TableCell>
+            <TableCell>{{ formatDate(project.startDate) }}</TableCell>
             <TableCell>{{ project.displayOrder }}</TableCell>
             <TableCell class="text-right">
               <ButtonGroup class="justify-end w-full">
@@ -197,6 +261,11 @@ async function confirmDelete() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+                  aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
+                  @dragstart="onDragStart(project, $event)" @dragend="onDragEnd">
+                  <GripHorizontalIcon />
+                </Button>
               </ButtonGroup>
             </TableCell>
           </TableRow>

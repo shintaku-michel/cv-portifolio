@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import ProjectForm from '@/components/admin/ProjectForm.vue'
+import { ArrowLeftIcon, GlobeIcon, GlobeXIcon } from '@lucide/vue'
 import type { Project, ProjectInput, Technology } from '#shared/types/project'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
@@ -47,7 +48,7 @@ async function onSubmit(input: ProjectInput) {
   `
   try {
     await useGraphQL(MUTATION, { id, input })
-    await refresh()
+    await navigateTo('/admin/projetos')
   } catch (err) {
     errorMessage.value = err instanceof Error ? err.message : 'Erro ao salvar projeto'
   } finally {
@@ -66,16 +67,9 @@ async function togglePublish() {
 
 <template>
   <div class="mx-auto max-w-3xl px-4 py-12">
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-semibold">
-        Editar projeto
-      </h1>
-      <div class="flex gap-2">
-        <Button variant="outline" @click="togglePublish">
-          {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-        </Button>
-      </div>
-    </div>
+    <h1 class="mb-6 text-2xl font-semibold">
+      Editar projeto
+    </h1>
     <p v-if="errorMessage" role="alert" class="mb-4 text-sm text-destructive">
       {{ errorMessage }}
     </p>
@@ -84,6 +78,18 @@ async function togglePublish() {
       :technologies="data?.technologies ?? []"
       :submitting="submitting"
       @submit="onSubmit"
-    />
+    >
+      <template #actions>
+        <NuxtLink to="/admin/projetos">
+          <Button variant="outline" type="button">
+            <ArrowLeftIcon /> Voltar
+          </Button>
+        </NuxtLink>
+        <Button variant="outline" type="button" @click="togglePublish">
+          <component :is="project.status === 'PUBLISHED' ? GlobeXIcon : GlobeIcon" />
+          {{ project.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+        </Button>
+      </template>
+    </ProjectForm>
   </div>
 </template>
