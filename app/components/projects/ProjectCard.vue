@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Project } from '#shared/types/project'
-import { formatPeriod } from '#shared/utils/format-period'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
+import type { Project } from '#shared/types/project';
+import { formatPeriod } from '#shared/utils/format-period';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 defineProps<{
   project: Project
@@ -25,9 +25,6 @@ defineProps<{
 
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-2">
-        <Badge v-if="project.featured" variant="secondary">
-          Destaque
-        </Badge>
         <Badge :variant="project.isOnline ? 'default' : 'secondary'">
           {{ project.isOnline ? 'Online' : 'Offline' }}
         </Badge>
