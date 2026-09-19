@@ -8,7 +8,7 @@ import { ButtonGroup } from '@/components/ui/button-group'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { EllipsisIcon, PencilIcon, Trash2Icon } from '@lucide/vue'
+import { EllipsisIcon, GripHorizontalIcon, PencilIcon, Trash2Icon } from '@lucide/vue'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Certificados' })
@@ -19,6 +19,10 @@ const CATEGORY_LABELS: Record<CertificateCategory, string> = {
   DEVOPS: 'DevOps',
   BACKEND: 'Backend',
   GESTAO_DE_PROJETOS: 'Gestão de Projetos'
+}
+
+function formatDate(value: string) {
+  return value.replaceAll('-', '/')
 }
 
 const QUERY = `
@@ -32,6 +36,58 @@ const QUERY = `
 const { data, pending, error, refresh } = await useAsyncData('admin-certificados', () =>
   useGraphQL<{ certificates: Certificate[] }>(QUERY)
 )
+
+// Cópia local reordenável: refletir o drag imediatamente na UI sem esperar
+// a mutação, e ressincronizar sempre que `data` mudar (refresh, etc).
+const certificateList = ref<Certificate[]>([])
+watch(() => data.value?.certificates, (list) => { certificateList.value = list ? [...list] : [] }, { immediate: true })
+
+const draggingId = ref<string | null>(null)
+const reordering = ref(false)
+
+function onDragStart(certificate: Certificate, event: DragEvent) {
+  draggingId.value = certificate.id
+  event.dataTransfer?.setData('text/plain', certificate.id)
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
+}
+
+function onDragEnd() {
+  draggingId.value = null
+}
+
+async function onDrop(target: Certificate) {
+  const sourceId = draggingId.value
+  draggingId.value = null
+  if (!sourceId || sourceId === target.id) return
+
+  const list = [...certificateList.value]
+  const sourceIndex = list.findIndex(c => c.id === sourceId)
+  const targetIndex = list.findIndex(c => c.id === target.id)
+  if (sourceIndex === -1 || targetIndex === -1) return
+
+  const [moved] = list.splice(sourceIndex, 1)
+  list.splice(targetIndex, 0, moved!)
+  certificateList.value = list
+
+  const changes = list
+    .map((certificate, index) => ({ id: certificate.id, displayOrder: index }))
+    .filter(({ id, displayOrder }) => list.find(c => c.id === id)!.displayOrder !== displayOrder)
+
+  if (!changes.length) return
+
+  reordering.value = true
+  try {
+    await Promise.all(changes.map(({ id, displayOrder }) =>
+      useGraphQL(
+        `mutation ($id: ID!, $input: UpdateCertificateInput!) { updateCertificate(id: $id, input: $input) { id displayOrder } }`,
+        { id, input: { displayOrder } }
+      )
+    ))
+    await refresh()
+  } finally {
+    reordering.value = false
+  }
+}
 
 const actionPending = ref<string | null>(null)
 const confirmDeleteTarget = ref<Certificate | null>(null)
@@ -69,28 +125,36 @@ async function confirmDelete() {
     <template v-else>
       <!-- Mobile: um cartão por certificado em vez de tabela larga. -->
       <div class="flex flex-col gap-3 sm:hidden">
-        <div v-for="certificate in data?.certificates ?? []" :key="certificate.id" class="rounded-lg border p-4">
+        <div v-for="certificate in certificateList" :key="certificate.id" class="rounded-lg border p-4"
+          :class="{ 'opacity-50': draggingId === certificate.id }" @dragover.prevent @drop="onDrop(certificate)">
           <div class="mb-3 flex items-start justify-between gap-2">
             <p class="font-medium wrap-break-word">
               {{ certificate.title }}
             </p>
-            <DropdownMenu :modal="false">
-              <DropdownMenuTrigger as-child>
-                <Button size="icon" variant="outline" :disabled="actionPending === certificate.id"
-                  aria-label="Ações do certificado" class="shrink-0">
-                  <EllipsisIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem @select="navigateTo(`/admin/certificados/${certificate.id}/editar`)">
-                  <PencilIcon /> Editar
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = certificate">
-                  <Trash2Icon /> Excluir
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div class="flex shrink-0 items-center gap-1">
+              <DropdownMenu :modal="false">
+                <DropdownMenuTrigger as-child>
+                  <Button size="icon" variant="outline" :disabled="actionPending === certificate.id"
+                    aria-label="Ações do certificado">
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem @select="navigateTo(`/admin/certificados/${certificate.id}/editar`)">
+                    <PencilIcon /> Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = certificate">
+                    <Trash2Icon /> Excluir
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+                aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
+                @dragstart="onDragStart(certificate, $event)" @dragend="onDragEnd">
+                <GripHorizontalIcon />
+              </Button>
+            </div>
           </div>
           <dl class="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
             <div>
@@ -103,7 +167,7 @@ async function confirmDelete() {
               <dt class="text-xs text-muted-foreground">
                 Concluído em
               </dt>
-              <dd>{{ certificate.completedAt }}</dd>
+              <dd>{{ formatDate(certificate.completedAt) }}</dd>
             </div>
             <div>
               <dt class="text-xs text-muted-foreground">
@@ -137,12 +201,13 @@ async function confirmDelete() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="certificate in data?.certificates ?? []" :key="certificate.id">
+          <TableRow v-for="certificate in certificateList" :key="certificate.id"
+            :class="{ 'opacity-50': draggingId === certificate.id }" @dragover.prevent @drop="onDrop(certificate)">
             <TableCell class="font-medium whitespace-normal wrap-break-word">
               {{ certificate.title }}
             </TableCell>
             <TableCell>{{ CATEGORY_LABELS[certificate.category] }}</TableCell>
-            <TableCell>{{ certificate.completedAt }}</TableCell>
+            <TableCell>{{ formatDate(certificate.completedAt) }}</TableCell>
             <TableCell>{{ certificate.displayOrder }}</TableCell>
             <TableCell class="text-right">
               <ButtonGroup class="justify-end w-full">
@@ -163,6 +228,11 @@ async function confirmDelete() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+                  aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
+                  @dragstart="onDragStart(certificate, $event)" @dragend="onDragEnd">
+                  <GripHorizontalIcon />
+                </Button>
               </ButtonGroup>
             </TableCell>
           </TableRow>

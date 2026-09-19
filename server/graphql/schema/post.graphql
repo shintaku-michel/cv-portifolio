@@ -20,6 +20,7 @@ type Post {
   author: User!
   category: Category
   tags: [Tag!]!
+  displayOrder: Int!
   publishedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -32,6 +33,7 @@ input CreatePostInput {
   content: String!
   coverImage: String
   categoryId: ID
+  displayOrder: Int
   tagIds: [ID!]
 }
 
@@ -42,6 +44,7 @@ input UpdatePostInput {
   content: String
   coverImage: String
   categoryId: ID
+  displayOrder: Int
   tagIds: [ID!]
 }
 

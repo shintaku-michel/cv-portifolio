@@ -21,6 +21,7 @@ export type CreatePostInput = {
   content: string
   coverImage?: string | null
   categoryId?: string | null
+  displayOrder?: number
   tagIds?: string[]
 }
 
@@ -46,7 +47,7 @@ export const PostService = {
   async getAll() {
     const rows = await db.query.posts.findMany({
       with: withRelations,
-      orderBy: (p, { desc }) => [desc(p.createdAt)]
+      orderBy: (p, { asc, desc }) => [asc(p.displayOrder), desc(p.createdAt)]
     })
     return rows.map(toPost)
   },
@@ -107,6 +108,7 @@ export const PostService = {
           content: input.content,
           coverImage: input.coverImage,
           categoryId: input.categoryId,
+          displayOrder: input.displayOrder ?? 0,
           authorId
         })
         .returning()

@@ -9,7 +9,7 @@ import { ButtonGroup } from '@/components/ui/button-group'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { EllipsisIcon, EyeIcon, EyeOffIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
+import { EllipsisIcon, EyeIcon, EyeOffIcon, GripHorizontalIcon, PencilIcon, Trash2Icon, UploadIcon } from '@lucide/vue'
 
 definePageMeta({ middleware: 'admin', layout: 'admin' })
 useHead({ title: 'Admin · Posts' })
@@ -17,7 +17,7 @@ useHead({ title: 'Admin · Posts' })
 const QUERY = `
   query AdminPosts {
     posts {
-      id title slug status createdAt
+      id title slug status displayOrder publishedAt createdAt
       author { name }
       category { id name }
       tags { id name }
@@ -25,9 +25,66 @@ const QUERY = `
   }
 `
 
+function formatDate(value: string | null) {
+  if (!value) return '—'
+  return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
 const { data, pending, error, refresh } = await useAsyncData('admin-posts', () =>
   useGraphQL<{ posts: Post[] }>(QUERY)
 )
+
+// Cópia local reordenável: refletir o drag imediatamente na UI sem esperar
+// a mutação, e ressincronizar sempre que `data` mudar (refresh, etc).
+const postList = ref<Post[]>([])
+watch(() => data.value?.posts, (list) => { postList.value = list ? [...list] : [] }, { immediate: true })
+
+const draggingId = ref<string | null>(null)
+const reordering = ref(false)
+
+function onDragStart(post: Post, event: DragEvent) {
+  draggingId.value = post.id
+  event.dataTransfer?.setData('text/plain', post.id)
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
+}
+
+function onDragEnd() {
+  draggingId.value = null
+}
+
+async function onDrop(target: Post) {
+  const sourceId = draggingId.value
+  draggingId.value = null
+  if (!sourceId || sourceId === target.id) return
+
+  const list = [...postList.value]
+  const sourceIndex = list.findIndex(p => p.id === sourceId)
+  const targetIndex = list.findIndex(p => p.id === target.id)
+  if (sourceIndex === -1 || targetIndex === -1) return
+
+  const [moved] = list.splice(sourceIndex, 1)
+  list.splice(targetIndex, 0, moved!)
+  postList.value = list
+
+  const changes = list
+    .map((post, index) => ({ id: post.id, displayOrder: index }))
+    .filter(({ id, displayOrder }) => list.find(p => p.id === id)!.displayOrder !== displayOrder)
+
+  if (!changes.length) return
+
+  reordering.value = true
+  try {
+    await Promise.all(changes.map(({ id, displayOrder }) =>
+      useGraphQL(
+        `mutation ($id: ID!, $input: UpdatePostInput!) { updatePost(id: $id, input: $input) { id displayOrder } }`,
+        { id, input: { displayOrder } }
+      )
+    ))
+    await refresh()
+  } finally {
+    reordering.value = false
+  }
+}
 
 const actionPending = ref<string | null>(null)
 
@@ -79,7 +136,8 @@ async function confirmDelete() {
     <template v-else>
       <!-- Mobile: um cartão por post em vez de tabela larga. -->
       <div class="flex flex-col gap-3 sm:hidden">
-        <div v-for="post in data?.posts ?? []" :key="post.id" class="rounded-lg border p-4">
+        <div v-for="post in postList" :key="post.id" class="rounded-lg border p-4"
+          :class="{ 'opacity-50': draggingId === post.id }" @dragover.prevent @drop="onDrop(post)">
           <div class="mb-3 flex items-start justify-between gap-2">
             <div class="min-w-0">
               <p class="font-medium wrap-break-word">
@@ -89,30 +147,37 @@ async function confirmDelete() {
                 {{ post.author.name }}
               </p>
             </div>
-            <DropdownMenu :modal="false">
-              <DropdownMenuTrigger as-child>
-                <Button size="icon" variant="outline" :disabled="actionPending === post.id" aria-label="Ações do post"
-                  class="shrink-0">
-                  <EllipsisIcon />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem @select="navigateTo(`/admin/posts/${post.id}/editar`)">
-                  <PencilIcon /> Editar
-                </DropdownMenuItem>
-                <DropdownMenuItem @select="navigateTo(`/posts/${post.slug}`)">
-                  <EyeIcon /> Visualizar
-                </DropdownMenuItem>
-                <DropdownMenuItem @select="togglePublish(post)">
-                  <component :is="post.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
-                  {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = post">
-                  <Trash2Icon /> Excluir
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div class="flex shrink-0 items-center gap-1">
+              <DropdownMenu :modal="false">
+                <DropdownMenuTrigger as-child>
+                  <Button size="icon" variant="outline" :disabled="actionPending === post.id"
+                    aria-label="Ações do post">
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem @select="navigateTo(`/admin/posts/${post.id}/editar`)">
+                    <PencilIcon /> Editar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="navigateTo(`/posts/${post.slug}`)">
+                    <EyeIcon /> Visualizar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="togglePublish(post)">
+                    <component :is="post.status === 'PUBLISHED' ? EyeOffIcon : UploadIcon" />
+                    {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" @select="confirmDeleteTarget = post">
+                    <Trash2Icon /> Excluir
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+                aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
+                @dragstart="onDragStart(post, $event)" @dragend="onDragEnd">
+                <GripHorizontalIcon />
+              </Button>
+            </div>
           </div>
           <div class="mb-3 flex flex-wrap items-center gap-1">
             <Badge :variant="post.status === 'PUBLISHED' ? 'default' : 'secondary'">
@@ -142,7 +207,7 @@ async function confirmDelete() {
               Categoria
             </TableHead>
             <TableHead class="w-[25%]">
-              Tags
+              Data de publicação
             </TableHead>
             <TableHead class="w-[10%]">
               Status
@@ -153,7 +218,8 @@ async function confirmDelete() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="post in data?.posts ?? []" :key="post.id">
+          <TableRow v-for="post in postList" :key="post.id"
+            :class="{ 'opacity-50': draggingId === post.id }" @dragover.prevent @drop="onDrop(post)">
             <TableCell class="font-medium whitespace-normal wrap-break-word">
               <p>{{ post.title }}</p>
               <p class="text-sm text-muted-foreground">{{ post.author.name }}</p>
@@ -163,14 +229,7 @@ async function confirmDelete() {
               {{ post.category?.name ?? '—' }}
             </TableCell>
 
-            <TableCell class="whitespace-normal">
-              <div v-if="post.tags.length" class="flex flex-wrap gap-1">
-                <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
-                  {{ tag.name }}
-                </Badge>
-              </div>
-              <span v-else>—</span>
-            </TableCell>
+            <TableCell>{{ formatDate(post.publishedAt) }}</TableCell>
 
             <TableCell>
               <Badge :variant="post.status === 'PUBLISHED' ? 'default' : 'secondary'">
@@ -204,6 +263,11 @@ async function confirmDelete() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+                  aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
+                  @dragstart="onDragStart(post, $event)" @dragend="onDragEnd">
+                  <GripHorizontalIcon />
+                </Button>
               </ButtonGroup>
             </TableCell>
           </TableRow>

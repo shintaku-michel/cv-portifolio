@@ -1,4 +1,4 @@
-import { index, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { index, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
 import { categories } from './categories'
 import { users } from './users'
 
@@ -14,6 +14,7 @@ export const posts = pgTable('posts', {
   status: postStatusEnum('status').notNull().default('DRAFT'),
   authorId: uuid('author_id').notNull().references(() => users.id, { onDelete: 'restrict' }),
   categoryId: uuid('category_id').references(() => categories.id, { onDelete: 'set null' }),
+  displayOrder: integer('display_order').notNull().default(0),
   publishedAt: timestamp('published_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()

@@ -25,6 +25,7 @@ export interface Post {
   author: SessionUser
   category: Category | null
   tags: Tag[]
+  displayOrder: number
   likesCount: number
   likedByMe: boolean
   commentsCount: number
@@ -40,5 +41,6 @@ export interface PostInput {
   content: string
   coverImage?: string | null
   categoryId?: string | null
+  displayOrder?: number
   tagIds?: string[]
 }
