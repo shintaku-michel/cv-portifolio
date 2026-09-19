@@ -12,11 +12,11 @@ defineProps<{
 <template>
   <NuxtLink :to="`/projetos/${project.slug}`"
     class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent">
-    <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
-      class="aspect-video w-full rounded-sm object-cover">
-    <h2 class="text-lg font-medium">
+    <h2 v-if="project.featured" class="text-lg font-medium">
       {{ project.title }}
     </h2>
+    <img v-if="project.coverImage" :src="project.coverImage" :alt="project.title"
+      class="rounded-sm">
     <p class="text-sm text-muted-foreground">
       {{ project.shortDescription }}
     </p>

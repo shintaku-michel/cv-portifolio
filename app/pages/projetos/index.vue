@@ -54,8 +54,8 @@ const componentesColumns = computed(() => toColumns(componentes.value))
         Projetos e Componentes
       </h1>
       <p class="font-cursive text-[1.4rem] leading-5 text-muted-foreground mt-1">
-        Alguns dos projetos, sistemas e funcionalidades que desenvolvi ou ajudei a desenvolver. Alguns, com menos
-        detalhes, por questões de confidencialidade do produto.
+        Alguns dos projetos e funcionalidades que desenvolvi. Alguns, com menos
+        detalhes, por questões de confidencialidade do produto. E alguns códigos para reutilizarem, caso queiram.
       </p>
     </div>
 

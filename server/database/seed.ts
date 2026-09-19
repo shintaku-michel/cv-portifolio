@@ -29,6 +29,7 @@ const technologyCatalog: { name: string, category: TechnologyCategoryValue }[] =
   { name: 'Next.js', category: 'FRONTEND' },
   { name: 'Angular', category: 'FRONTEND' },
   { name: 'Tailwind CSS', category: 'FRONTEND' },
+  { name: 'Shadcn UI', category: 'FRONTEND' },
   { name: 'Bootstrap', category: 'FRONTEND' },
   { name: 'Sass', category: 'FRONTEND' },
   { name: 'Pinia', category: 'FRONTEND' },
@@ -140,7 +141,8 @@ const technologyCatalog: { name: string, category: TechnologyCategoryValue }[] =
 const technologyRenames: { fromSlug: string, toName: string }[] = [
   { fromSlug: 'vue', toName: 'Vue.js' },
   { fromSlug: 'mercadopago', toName: 'Mercado Pago' },
-  { fromSlug: 'cloud-build', toName: 'Google Cloud Build' }
+  { fromSlug: 'cloud-build', toName: 'Google Cloud Build' },
+  { fromSlug: 'shadcn-ui', toName: 'Shadcn UI' }
 ]
 
 // "httpOnly" não é uma tecnologia — é um atributo de cookie. Cadastro
