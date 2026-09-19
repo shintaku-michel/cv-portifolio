@@ -22,7 +22,7 @@ const CATEGORY_LABELS: Record<CertificateCategory, string> = {
 }
 
 function formatDate(value: string) {
-  return value.replaceAll('-', '/')
+  return new Date(`${value}T00:00:00`).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
 const QUERY = `
