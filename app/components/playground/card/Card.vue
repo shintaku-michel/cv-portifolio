@@ -118,19 +118,9 @@ function toggleLike() {
 </template>
 
 <style scoped>
-/* Sem equivalente direto em utilitário Tailwind (precisa de uma deriva
-   horizontal aleatória por partícula via variável CSS), por isso um
-   keyframe pontual aqui em vez de forçar isso em classes utilitárias.
-   `bottom` (não `transform: translateY`) porque percentual de `bottom` é
-   relativo à altura do container (a imagem) — é o que permite subir "até a
-   metade da imagem" de verdade, já que percentual de transform seria
-   relativo ao próprio tamanho (minúsculo) do ícone. */
 .floating-heart {
   animation-name: float-up;
   animation-timing-function: ease-out;
-  /* `both` (não só `forwards`): sem isso, durante o animation-delay o
-     coração fica com o estilo estático da classe (visível, sem a opacidade
-     0 do keyframe 0%) — aparecia parado no fundo antes de começar a subir. */
   animation-fill-mode: both;
 }
 
