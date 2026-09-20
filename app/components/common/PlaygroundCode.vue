@@ -17,6 +17,15 @@ const source = computed(() => PLAYGROUND_SOURCES[props.componentKey])
 const dependencies = computed(() => getPlaygroundDependencies(props.componentKey))
 const hasIcons = computed(() => usesLucideIcons(props.componentKey))
 
+// Destaque de sintaxe (Shiki) roda só no servidor — ver
+// server/utils/playground-highlight.ts. O HTML já vem colorido pelo SSR;
+// se a chamada falhar por algum motivo, cai pro <pre> simples (ver template).
+const { data: highlighted } = await useAsyncData(
+  () => `playground-source-${props.componentKey}`,
+  () => $fetch<{ html: string }>(`/api/playground-source/${props.componentKey}`),
+  { watch: [() => props.componentKey] }
+)
+
 const copied = ref(false)
 
 async function copyCode() {
@@ -55,12 +64,16 @@ async function copyCode() {
           <Badge variant="secondary" class="mx-0.5">
             Shadcn
           </Badge>
-          — instale-as antes de colar este código.
+          — instale antes de copiar o código.
         </template>
       </p>
     </div>
 
-    <pre class="max-h-120 overflow-auto rounded-lg border bg-muted/30 p-4 text-xs"><code>{{ source }}</code></pre>
+    <!-- eslint-disable vue/no-v-html -->
+    <div v-if="highlighted?.html"
+      class="overflow-hidden rounded-lg border text-xs [&_pre]:max-h-120 [&_pre]:overflow-auto [&_pre]:p-4" v-html="highlighted.html" />
+    <!-- eslint-enable vue/no-v-html -->
+    <pre v-else class="max-h-120 overflow-auto rounded-lg border bg-muted/30 p-4 text-xs"><code>{{ source }}</code></pre>
 
     <div class="flex justify-end">
       <Button variant="outline" size="sm" @click="copyCode">
