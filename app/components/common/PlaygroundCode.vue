@@ -20,7 +20,12 @@ const hasIcons = computed(() => usesLucideIcons(props.componentKey))
 // Destaque de sintaxe (Shiki) roda só no servidor — ver
 // server/utils/playground-highlight.ts. O HTML já vem colorido pelo SSR;
 // se a chamada falhar por algum motivo, cai pro <pre> simples (ver template).
-const { data: highlighted } = await useAsyncData(
+// Sem `await` aqui de propósito: este componente é renderizado
+// condicionalmente dentro de /projetos/[slug].vue, que já tem seu próprio
+// fetch assíncrono — encadear outro `await` no setup criaria um Suspense
+// aninhado, causa comum de mismatch de hidratação (SSR resolve tudo de uma
+// vez, o cliente pode resolver em ordem/timing diferente).
+const { data: highlighted } = useAsyncData(
   () => `playground-source-${props.componentKey}`,
   () => $fetch<{ html: string }>(`/api/playground-source/${props.componentKey}`),
   { watch: [() => props.componentKey] }
