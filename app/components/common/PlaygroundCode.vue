@@ -11,25 +11,17 @@ import { CheckIcon, CopyIcon } from '@lucide/vue';
 
 const props = defineProps<{
   componentKey: string
+  // Destaque de sintaxe (Shiki) já vem pronto do pai (/projetos/[slug].vue),
+  // que faz o fetch dentro do mesmo boundary assíncrono que já tinha — este
+  // componente não busca nada sozinho, pra não criar um <Suspense> aninhado
+  // (causa comum de mismatch de hidratação). Sem highlight, cai pro <pre>
+  // simples (ver template).
+  html: string | null
 }>()
 
 const source = computed(() => PLAYGROUND_SOURCES[props.componentKey])
 const dependencies = computed(() => getPlaygroundDependencies(props.componentKey))
 const hasIcons = computed(() => usesLucideIcons(props.componentKey))
-
-// Destaque de sintaxe (Shiki) roda só no servidor — ver
-// server/utils/playground-highlight.ts. O HTML já vem colorido pelo SSR;
-// se a chamada falhar por algum motivo, cai pro <pre> simples (ver template).
-// Sem `await` aqui de propósito: este componente é renderizado
-// condicionalmente dentro de /projetos/[slug].vue, que já tem seu próprio
-// fetch assíncrono — encadear outro `await` no setup criaria um Suspense
-// aninhado, causa comum de mismatch de hidratação (SSR resolve tudo de uma
-// vez, o cliente pode resolver em ordem/timing diferente).
-const { data: highlighted } = useAsyncData(
-  () => `playground-source-${props.componentKey}`,
-  () => $fetch<{ html: string }>(`/api/playground-source/${props.componentKey}`),
-  { watch: [() => props.componentKey] }
-)
 
 const copied = ref(false)
 
@@ -75,8 +67,8 @@ async function copyCode() {
     </div>
 
     <!-- eslint-disable vue/no-v-html -->
-    <div v-if="highlighted?.html"
-      class="overflow-hidden rounded-lg border text-xs [&_pre]:max-h-120 [&_pre]:overflow-auto [&_pre]:p-4" v-html="highlighted.html" />
+    <div v-if="html"
+      class="overflow-hidden rounded-lg border text-xs [&_pre]:max-h-120 [&_pre]:overflow-auto [&_pre]:p-4" v-html="html" />
     <!-- eslint-enable vue/no-v-html -->
     <pre v-else class="max-h-120 overflow-auto rounded-lg border bg-muted/30 p-4 text-xs"><code>{{ source }}</code></pre>
 

@@ -33,6 +33,15 @@ if (!data.value?.project) {
 
 const project = computed(() => data.value!.project!)
 
+// Busca o HTML colorido (Shiki, ver server/utils/playground-highlight.ts)
+// aqui no topo da página, dentro do mesmo boundary assíncrono que já existe
+// (o await acima) — não dentro de PlaygroundCode.vue, pra não criar um
+// <Suspense> aninhado (causa comum de mismatch de hidratação).
+const { data: playgroundSource } = await useAsyncData(`playground-source-${slug}`, () =>
+  project.value.playgroundComponent
+    ? $fetch<{ html: string }>(`/api/playground-source/${project.value.playgroundComponent}`)
+    : Promise.resolve(null))
+
 const requestUrl = useRequestURL()
 const projectUrl = computed(() => `${requestUrl.origin}/projetos/${project.value.slug}`)
 
@@ -131,6 +140,7 @@ useHead({
         :alt="`${project.title} — imagem ${index + 1}`" class="w-full rounded-sm object-cover">
     </div>
 
-    <PlaygroundCode v-if="project.playgroundComponent" :component-key="project.playgroundComponent" />
+    <PlaygroundCode v-if="project.playgroundComponent" :component-key="project.playgroundComponent"
+      :html="playgroundSource?.html ?? null" />
   </div>
 </template>
