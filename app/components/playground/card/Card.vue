@@ -2,7 +2,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { HeartIcon } from '@lucide/vue'
+import { HeartIcon, Mail } from '@lucide/vue'
 
 const member = {
   name: 'Ana Carolina',
@@ -101,7 +101,8 @@ function toggleLike() {
           <Button
             class="h-12 w-full flex-1 rounded-full px-6 min-[560px]:w-fit min-[560px]:flex-none cursor-pointer border border-transparent transition-colors hover:border-foreground/70"
             variant="default">
-            Contrate agora
+            <Mail />
+            Contato
           </Button>
           <div class="flex items-center gap-1.5">
             <Button size="icon" variant="secondary" :aria-pressed="liked" aria-label="Curtir"
