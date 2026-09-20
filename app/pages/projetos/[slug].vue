@@ -6,6 +6,7 @@ import TechBadge from '@/components/common/TechBadge.vue'
 import { Button } from '@/components/ui/button'
 import { PLAYGROUND_COMPONENTS } from '@/utils/playground-components'
 import { Calendar, ExternalLink, MoveLeft } from '@lucide/vue'
+import type { PlaygroundSourceInfo } from '~~/server/utils/playground-highlight'
 
 const route = useRoute()
 const slug = route.params.slug as string
@@ -33,13 +34,16 @@ if (!data.value?.project) {
 
 const project = computed(() => data.value!.project!)
 
-// Busca o HTML colorido (Shiki, ver server/utils/playground-highlight.ts)
-// aqui no topo da página, dentro do mesmo boundary assíncrono que já existe
-// (o await acima) — não dentro de PlaygroundCode.vue, pra não criar um
-// <Suspense> aninhado (causa comum de mismatch de hidratação).
+// Busca o HTML colorido + dependências (Shiki, ver
+// server/utils/playground-highlight.ts) aqui no topo da página, dentro do
+// mesmo boundary assíncrono que já existe (o await acima) — não dentro de
+// PlaygroundCode.vue, pra não criar um <Suspense> aninhado. Tudo calculado
+// no servidor a partir de uma única leitura e passado pronto via prop: o
+// cliente não recalcula nada sozinho (ver comentário em
+// server/utils/playground-highlight.ts sobre por que isso importa).
 const { data: playgroundSource } = await useAsyncData(`playground-source-${slug}`, () =>
   project.value.playgroundComponent
-    ? $fetch<{ html: string }>(`/api/playground-source/${project.value.playgroundComponent}`)
+    ? $fetch<PlaygroundSourceInfo>(`/api/playground-source/${project.value.playgroundComponent}`)
     : Promise.resolve(null))
 
 const requestUrl = useRequestURL()
@@ -140,7 +144,6 @@ useHead({
         :alt="`${project.title} — imagem ${index + 1}`" class="w-full rounded-sm object-cover">
     </div>
 
-    <PlaygroundCode v-if="project.playgroundComponent" :component-key="project.playgroundComponent"
-      :html="playgroundSource?.html ?? null" />
+    <PlaygroundCode v-if="playgroundSource" :info="playgroundSource" />
   </div>
 </template>
