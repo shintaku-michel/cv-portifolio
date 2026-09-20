@@ -7,7 +7,7 @@ import { HeartIcon } from '@lucide/vue'
 const member = {
   name: 'Ana Souza',
   role: 'Product Designer',
-  image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80',
+  image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=500&q=80',
   bio: 'Focada em transformar problemas complexos em interfaces simples, acessíveis e bonitas de usar.',
   tags: ['UX', 'UI', 'Design System']
 }

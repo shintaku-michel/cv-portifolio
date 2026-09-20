@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Project } from '#shared/types/project'
 import { formatPeriod } from '#shared/utils/format-period'
+import PlaygroundCode from '@/components/common/PlaygroundCode.vue'
 import TechBadge from '@/components/common/TechBadge.vue'
 import { Button } from '@/components/ui/button'
 import { PLAYGROUND_COMPONENTS } from '@/utils/playground-components'
@@ -129,5 +130,7 @@ useHead({
       <img v-for="(image, index) in project.gallery" :key="index" :src="image"
         :alt="`${project.title} — imagem ${index + 1}`" class="w-full rounded-sm object-cover">
     </div>
+
+    <PlaygroundCode v-if="project.playgroundComponent" :component-key="project.playgroundComponent" />
   </div>
 </template>
