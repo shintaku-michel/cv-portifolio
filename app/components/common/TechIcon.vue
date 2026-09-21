@@ -27,7 +27,7 @@ const iconMarkup = computed(() => {
 
 <template>
   <svg
-    v-if="icon" :viewBox="icon.viewBox ?? '0 0 24 24'" class="size-6 shrink-0" :style="{ color: iconColor }"
+    v-if="icon" :viewBox="icon.viewBox ?? '0 0 24 24'" class="size-3.5 shrink-0" :style="{ color: iconColor }"
     aria-hidden="true" v-html="iconMarkup"
   />
 </template>
