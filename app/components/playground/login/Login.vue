@@ -26,7 +26,7 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
         :class="[heroPanel, 'md:left-1/2',
           isRegister ? 'hidden md:flex md:invisible md:translate-x-full md:opacity-0' : 'flex md:flex md:visible md:translate-x-0 md:opacity-100']">
         <h2 class="text-2xl font-semibold">
-          Criar conta
+          Olá! Bem-vindo
         </h2>
 
         <p class="text-sm text-neutral-50/85">
@@ -36,7 +36,7 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
         <button type="button"
           class="cursor-pointer rounded-xl bg-white/10 px-11 py-3 text-base font-semibold backdrop-blur-sm transition-colors duration-300 hover:bg-neutral-50 hover:text-neutral-900 flex items-center gap-2"
           @click="isRegister = true">
-          Criar
+          Criar conta
           <ArrowRight class="size-4" />
         </button>
       </div>
@@ -118,7 +118,7 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
           isRegister ? 'flex md:flex md:visible md:translate-x-0 md:opacity-100' : 'hidden md:flex md:invisible md:-translate-x-full md:opacity-0']"
         @submit.prevent>
         <h1 class="mb-4 text-xl font-semibold text-foreground">
-          Criar uma conta
+          Criar conta
         </h1>
 
         <div class="flex flex-col gap-1.5">
