@@ -98,6 +98,14 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
             class="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
             <TechIcon slug="google-oauth" />
           </button>
+          <button type="button" aria-label="Entrar com Microsoft"
+            class="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
+            <TechIcon slug="microsoft" />
+          </button>
+          <button type="button" aria-label="Entrar com Facebook"
+            class="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
+            <TechIcon slug="facebook" />
+          </button>
         </div>
       </form>
 
