@@ -95,16 +95,16 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
         </div>
         <div class="flex justify-center gap-3">
           <button type="button" aria-label="Entrar com Google"
-            class="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
-            <TechIcon slug="google-oauth" />
+            class="group flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
+            <TechIcon slug="google-oauth" class="opacity-60 transition-opacity group-hover:opacity-100" />
           </button>
           <button type="button" aria-label="Entrar com Microsoft"
-            class="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
-            <TechIcon slug="microsoft" />
+            class="group flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
+            <TechIcon slug="microsoft" class="opacity-60 transition-opacity group-hover:opacity-100" />
           </button>
           <button type="button" aria-label="Entrar com Facebook"
-            class="flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
-            <TechIcon slug="facebook" />
+            class="group flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
+            <TechIcon slug="facebook" class="opacity-60 transition-opacity group-hover:opacity-100" />
           </button>
         </div>
       </form>
