@@ -33,6 +33,7 @@ if (!data.value?.project) {
 }
 
 const project = computed(() => data.value!.project!)
+const backTab = computed(() => project.value.featured ? 'projetos' : 'componentes')
 
 // Busca o HTML colorido + dependências (Shiki, ver
 // server/utils/playground-highlight.ts) aqui no topo da página, dentro do
@@ -82,7 +83,8 @@ useHead({
 
 <template>
   <div class="md:p-6 md:mx-auto md:w-3xl">
-    <NuxtLink to="/projetos" class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
+    <NuxtLink :to="{ path: '/projetos', query: { tab: backTab } }"
+      class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
       <MoveLeft class="h-4 w-4" />
       Projetos e Componentes
     </NuxtLink>

@@ -28,7 +28,8 @@ const { data, pending, error } = await useAsyncData('projetos', () =>
   useGraphQL<{ projects: Project[] }>(QUERY)
 )
 
-const activeTab = ref<'projetos' | 'componentes'>('projetos')
+const route = useRoute()
+const activeTab = ref<'projetos' | 'componentes'>(route.query.tab === 'componentes' ? 'componentes' : 'projetos')
 
 const projetos = computed(() => (data.value?.projects ?? []).filter(project => project.featured))
 const componentes = computed(() => (data.value?.projects ?? []).filter(project => !project.featured))
