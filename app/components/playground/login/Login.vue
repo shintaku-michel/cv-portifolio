@@ -1,18 +1,9 @@
 <script setup lang="ts">
-// Port do card de login/registro com painel deslizante (imagem + texto
-// convidando a trocar de lado, formulário desliza junto) pra Vue, usando
-// shadcn-vue (Input, Label, Button) + Tailwind. Cores via tokens de tema
-// (bg-card, text-foreground etc.) em vez de hex/neutral fixos — os campos
-// usam o estilo padrão do shadcn sem override, adaptando ao tema
-// claro/escuro do site como o resto do app.
-//
-// Sem props (ver app/components/playground/card/Card.vue pro motivo):
-// os campos não enviam nada de verdade, é só a interação/animação.
 import TechIcon from '@/components/common/TechIcon.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { EyeIcon, EyeOffIcon } from '@lucide/vue'
+import { ArrowLeft, ArrowRight, EyeIcon, EyeOffIcon } from '@lucide/vue'
 
 const heroImage = 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=700&q=80'
 
@@ -31,29 +22,35 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
       <div :class="[panel, 'left-1/2 z-20 flex flex-col items-center justify-center gap-4 px-6 text-center text-neutral-50',
         isRegister ? 'invisible translate-x-full opacity-0' : 'visible translate-x-0 opacity-100']">
         <h2 class="text-2xl font-semibold">
-          Hello there
+          Criar conta
         </h2>
-        <p class="text-sm leading-relaxed text-neutral-50/85">
-          Begin your journey with us — crie sua conta em poucos segundos.
+
+        <p class="text-sm text-neutral-50/85">
+          Não adie este momento. Vamos começar juntos a sua jornada.
         </p>
+
         <button type="button"
-          class="cursor-pointer rounded-xl bg-white/10 px-11 py-3 text-base font-semibold backdrop-blur-sm transition-colors duration-300 hover:bg-neutral-50 hover:text-neutral-900"
+          class="cursor-pointer rounded-xl bg-white/10 px-11 py-3 text-base font-semibold backdrop-blur-sm transition-colors duration-300 hover:bg-neutral-50 hover:text-neutral-900 flex items-center gap-2"
           @click="isRegister = true">
-          Sign Up
+          Criar
+          <ArrowRight class="size-4" />
         </button>
       </div>
 
       <div :class="[panel, 'left-0 z-20 flex flex-col items-center justify-center gap-4 px-6 text-center text-neutral-50',
         isRegister ? 'visible translate-x-0 opacity-100' : 'invisible -translate-x-full opacity-0']">
         <h2 class="text-2xl font-semibold">
-          Welcome back
+          Fazer login
         </h2>
-        <p class="text-sm leading-relaxed text-neutral-50/85">
-          Login to review your dashboard and pick up where you left off.
+
+        <p class="text-sm text-neutral-50/85">
+          O sucesso vem do compromisso de melhorar um pouco mais todos os dias.
         </p>
+
         <button type="button"
-          class="cursor-pointer rounded-xl bg-white/10 px-11 py-3 text-base font-semibold backdrop-blur-sm transition-colors duration-300 hover:bg-neutral-50 hover:text-neutral-900"
+          class="cursor-pointer rounded-xl bg-white/10 px-11 py-3 text-base font-semibold backdrop-blur-sm transition-colors duration-300 hover:bg-neutral-50 hover:text-neutral-900 flex items-center gap-2"
           @click="isRegister = false">
+          <ArrowLeft class="size-4" />
           Login
         </button>
       </div>
@@ -66,14 +63,14 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
 
         <div class="flex flex-col gap-1.5">
           <Label for="login-email">E-mail</Label>
-          <Input id="login-email" type="email" placeholder="shin@example.com" />
+          <Input id="login-email" type="email" placeholder="shin@example.com" class="h-10" />
         </div>
 
         <div class="flex flex-col gap-1.5">
           <Label for="login-password">Senha</Label>
           <div class="relative">
             <Input id="login-password" :type="showLoginPassword ? 'text' : 'password'" placeholder="••••••••"
-              class="pr-10" />
+              class="pr-10 h-10" />
             <button type="button"
               class="absolute inset-y-0 right-3 flex cursor-pointer items-center text-muted-foreground hover:text-foreground"
               :aria-label="showLoginPassword ? 'Ocultar senha' : 'Mostrar senha'"
@@ -84,7 +81,7 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
           </div>
         </div>
 
-        <Button type="submit" class="mt-1 w-full rounded-xl cursor-pointer">
+        <Button type="submit" class="mt-1 w-full rounded-xl cursor-pointer h-10">
           Entrar
         </Button>
 
@@ -109,19 +106,19 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
 
         <div class="flex flex-col gap-1.5">
           <Label for="register-name">Nome</Label>
-          <Input id="register-name" type="text" placeholder="Seu nome" />
+          <Input id="register-name" type="text" placeholder="Seu nome" class="h-10" />
         </div>
 
         <div class="flex flex-col gap-1.5">
           <Label for="register-email">E-mail</Label>
-          <Input id="register-email" type="email" placeholder="shin@example.com" />
+          <Input id="register-email" type="email" placeholder="shin@example.com" class="h-10" />
         </div>
 
         <div class="flex flex-col gap-1.5">
           <Label for="register-password">Senha</Label>
           <div class="relative">
             <Input id="register-password" :type="showRegisterPassword ? 'text' : 'password'" placeholder="••••••••"
-              class="pr-10" />
+              class="pr-10 h-10" />
             <button type="button"
               class="absolute inset-y-0 right-3 flex cursor-pointer items-center text-muted-foreground hover:text-foreground"
               :aria-label="showRegisterPassword ? 'Ocultar senha' : 'Mostrar senha'"
@@ -132,7 +129,7 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
           </div>
         </div>
 
-        <Button type="submit" class="mt-1 w-full rounded-xl cursor-pointer">
+        <Button type="submit" class="mt-1 w-full rounded-xl cursor-pointer h-10">
           Cadastrar
         </Button>
       </form>
