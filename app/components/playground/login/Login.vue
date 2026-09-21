@@ -11,16 +11,19 @@ const isRegister = ref(false)
 const showLoginPassword = ref(false)
 const showRegisterPassword = ref(false)
 
-const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-out'
+// Empilhado no mobile (fluxo normal, só o painel ativo renderiza) e o
+// slide lado a lado a partir do md (posicionamento absoluto, w-1/2).
+const heroPanel = 'z-20 flex-col items-center justify-center gap-4 px-6 py-10 text-center text-neutral-50 w-full md:absolute md:inset-y-0 md:w-1/2 md:py-0 md:transition-all md:duration-[650ms] md:ease-in-out'
+const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-full md:absolute md:inset-y-0 md:w-1/2 md:justify-center md:px-10 md:py-0 md:transition-all md:duration-[650ms] md:ease-in-out'
 </script>
 
 <template>
   <div class="flex justify-center">
-    <div class="relative h-130 w-full overflow-hidden rounded-lg bg-card">
+    <div class="relative w-full overflow-hidden rounded-lg bg-card md:h-130">
       <div class="absolute inset-0 z-0 bg-cover bg-center" :style="{ backgroundImage: `url(${heroImage})` }" />
 
-      <div :class="[panel, 'left-1/2 z-20 flex flex-col items-center justify-center gap-4 px-6 text-center text-neutral-50',
-        isRegister ? 'invisible translate-x-full opacity-0' : 'visible translate-x-0 opacity-100']">
+      <div :class="[heroPanel, 'md:left-1/2',
+        isRegister ? 'hidden md:flex md:invisible md:translate-x-full md:opacity-0' : 'flex md:flex md:visible md:translate-x-0 md:opacity-100']">
         <h2 class="text-2xl font-semibold">
           Criar conta
         </h2>
@@ -37,8 +40,8 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
         </button>
       </div>
 
-      <div :class="[panel, 'left-0 z-20 flex flex-col items-center justify-center gap-4 px-6 text-center text-neutral-50',
-        isRegister ? 'visible translate-x-0 opacity-100' : 'invisible -translate-x-full opacity-0']">
+      <div :class="[heroPanel, 'md:left-0',
+        isRegister ? 'flex md:flex md:visible md:translate-x-0 md:opacity-100' : 'hidden md:flex md:invisible md:-translate-x-full md:opacity-0']">
         <h2 class="text-2xl font-semibold">
           Fazer login
         </h2>
@@ -55,8 +58,8 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
         </button>
       </div>
 
-      <form :class="[panel, 'left-0 z-10 flex flex-col justify-center gap-3 bg-card/90 px-10 backdrop-blur-md',
-        isRegister ? 'invisible translate-x-full opacity-0' : 'visible translate-x-0 opacity-100']" @submit.prevent>
+      <form :class="[formPanel, 'md:left-0',
+        isRegister ? 'hidden md:flex md:invisible md:translate-x-full md:opacity-0' : 'flex md:flex md:visible md:translate-x-0 md:opacity-100']" @submit.prevent>
         <h1 class="mb-4 text-xl font-semibold text-foreground">
           Login
         </h1>
@@ -98,8 +101,8 @@ const panel = 'absolute inset-y-0 w-1/2 transition-all duration-[650ms] ease-in-
         </div>
       </form>
 
-      <form :class="[panel, 'left-1/2 z-10 flex flex-col justify-center gap-3 bg-card/90 px-10 backdrop-blur-md',
-        isRegister ? 'visible translate-x-0 opacity-100' : 'invisible -translate-x-full opacity-0']" @submit.prevent>
+      <form :class="[formPanel, 'md:left-1/2',
+        isRegister ? 'flex md:flex md:visible md:translate-x-0 md:opacity-100' : 'hidden md:flex md:invisible md:-translate-x-full md:opacity-0']" @submit.prevent>
         <h1 class="mb-4 text-xl font-semibold text-foreground">
           Criar uma conta
         </h1>
