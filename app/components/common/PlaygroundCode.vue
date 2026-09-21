@@ -29,7 +29,7 @@ async function copyCode() {
     <!-- eslint-enable vue/no-v-html -->
 
     <div class="flex justify-end">
-      <Button variant="outline" size="sm" @click="copyCode">
+      <Button variant="outline" size="sm" @click="copyCode" class="h-10">
         <CheckIcon v-if="copied" class="size-4" />
         <CopyIcon v-else class="size-4" />
         {{ copied ? 'Copiado!' : 'Copiar código' }}
