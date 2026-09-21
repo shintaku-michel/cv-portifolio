@@ -22,8 +22,9 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
     <div class="relative w-full overflow-hidden rounded-lg bg-card md:h-130">
       <div class="absolute inset-0 z-0 bg-cover bg-center" :style="{ backgroundImage: `url(${heroImage})` }" />
 
-      <div :class="[heroPanel, 'md:left-1/2',
-        isRegister ? 'hidden md:flex md:invisible md:translate-x-full md:opacity-0' : 'flex md:flex md:visible md:translate-x-0 md:opacity-100']">
+      <div
+        :class="[heroPanel, 'md:left-1/2',
+          isRegister ? 'hidden md:flex md:invisible md:translate-x-full md:opacity-0' : 'flex md:flex md:visible md:translate-x-0 md:opacity-100']">
         <h2 class="text-2xl font-semibold">
           Criar conta
         </h2>
@@ -40,8 +41,9 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
         </button>
       </div>
 
-      <div :class="[heroPanel, 'md:left-0',
-        isRegister ? 'flex md:flex md:visible md:translate-x-0 md:opacity-100' : 'hidden md:flex md:invisible md:-translate-x-full md:opacity-0']">
+      <div
+        :class="[heroPanel, 'md:left-0',
+          isRegister ? 'flex md:flex md:visible md:translate-x-0 md:opacity-100' : 'hidden md:flex md:invisible md:-translate-x-full md:opacity-0']">
         <h2 class="text-2xl font-semibold">
           Fazer login
         </h2>
@@ -58,8 +60,10 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
         </button>
       </div>
 
-      <form :class="[formPanel, 'md:left-0',
-        isRegister ? 'hidden md:flex md:invisible md:translate-x-full md:opacity-0' : 'flex md:flex md:visible md:translate-x-0 md:opacity-100']" @submit.prevent>
+      <form
+        :class="[formPanel, 'md:left-0',
+          isRegister ? 'hidden md:flex md:invisible md:translate-x-full md:opacity-0' : 'flex md:flex md:visible md:translate-x-0 md:opacity-100']"
+        @submit.prevent>
         <h1 class="mb-4 text-xl font-semibold text-foreground">
           Login
         </h1>
@@ -96,21 +100,23 @@ const formPanel = 'z-10 flex-col gap-3 bg-card/90 px-6 py-8 backdrop-blur-md w-f
         <div class="flex justify-center gap-3">
           <button type="button" aria-label="Entrar com Google"
             class="group flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
-            <TechIcon slug="google-oauth" class="opacity-60 transition-opacity group-hover:opacity-100" />
+            <TechIcon slug="google-oauth" class="opacity-40 transition-opacity group-hover:opacity-100" />
           </button>
           <button type="button" aria-label="Entrar com Microsoft"
             class="group flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
-            <TechIcon slug="microsoft" class="opacity-60 transition-opacity group-hover:opacity-100" />
+            <TechIcon slug="microsoft" class="opacity-40 transition-opacity group-hover:opacity-100" />
           </button>
           <button type="button" aria-label="Entrar com Facebook"
             class="group flex size-10 cursor-pointer items-center justify-center rounded-full border border-border transition-colors hover:bg-muted">
-            <TechIcon slug="facebook" class="opacity-60 transition-opacity group-hover:opacity-100" />
+            <TechIcon slug="facebook" class="opacity-40 transition-opacity group-hover:opacity-100" />
           </button>
         </div>
       </form>
 
-      <form :class="[formPanel, 'md:left-1/2',
-        isRegister ? 'flex md:flex md:visible md:translate-x-0 md:opacity-100' : 'hidden md:flex md:invisible md:-translate-x-full md:opacity-0']" @submit.prevent>
+      <form
+        :class="[formPanel, 'md:left-1/2',
+          isRegister ? 'flex md:flex md:visible md:translate-x-0 md:opacity-100' : 'hidden md:flex md:invisible md:-translate-x-full md:opacity-0']"
+        @submit.prevent>
         <h1 class="mb-4 text-xl font-semibold text-foreground">
           Criar uma conta
         </h1>
