@@ -13,9 +13,9 @@ const member = {
 }
 
 const tagPalette = [
-  'text-purple-400 ring-1 ring-purple-400/20', // roxo
-  'text-pink-400 ring-1 ring-pink-400/20', // lilás
-  'text-yellow-200 ring-1 ring-yellow-400/20' // amarelo
+  'text-pink-400 ring-1 ring-pink-400/20', // roxo
+  'text-blue-400 ring-1 ring-blue-400/20', // lilás
+  'text-orange-400 ring-1 ring-orange-400/20' // amarelo
 ]
 
 const liked = ref(false)
@@ -107,7 +107,7 @@ function toggleLike() {
           <div class="flex items-center gap-1.5">
             <Button size="icon" variant="secondary" :aria-pressed="liked" aria-label="Curtir"
               class="size-12 shrink-0 rounded-full bg-foreground/10 hover:bg-foreground/18 cursor-pointer"
-              :class="liked && 'bg-red-500 text-white hover:bg-red-700'" @click="toggleLike">
+              :class="liked && 'bg-red-900 text-white hover:bg-red-700'" @click="toggleLike">
               <HeartIcon :class="liked && 'fill-current'" />
             </Button>
             <span class="text-sm text-muted-foreground">+{{ likesCount }}</span>
