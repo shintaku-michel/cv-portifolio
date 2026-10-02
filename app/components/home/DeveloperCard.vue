@@ -16,7 +16,7 @@
           <span class="size-3 rounded-full bg-green-500" />
         </div>
         <figcaption class="text-xs text-slate-400">
-          developer.js
+          ~/data/developer.ts
         </figcaption>
       </div>
 
