@@ -27,7 +27,10 @@
         <span class="block pl-6 motion-safe:animate-hero-line-in motion-safe:[animation-delay:1.4s]"><span class="text-purple-400">nickname</span>: <span class="text-green-400">'Shin'</span>,</span>
         <span class="block pl-6 motion-safe:animate-hero-line-in motion-safe:[animation-delay:1.6s]"><span class="text-purple-400">keySkills</span>: <span class="text-orange-400">[</span><span class="text-green-400">'Node.js'</span>, <span class="text-green-400">'Vue'</span>, <span class="text-green-400">'React'</span>, <span class="text-green-400">'TypeScript'</span><span class="text-orange-400">]</span>,</span>
         <span class="block pl-6 motion-safe:animate-hero-line-in motion-safe:[animation-delay:1.8s]"><span class="text-purple-400">focuses</span>: <span class="text-orange-400">[</span><span class="text-green-400">'Full-Stack'</span>, <span class="text-green-400">'UI/UX'</span>, <span class="text-green-400">'IA'</span><span class="text-orange-400">]</span>,</span>
-        <span class="block pl-6 motion-safe:animate-hero-line-in motion-safe:[animation-delay:2s]"><span class="text-purple-400">learning</span>: <span class="text-green-400">'Always'</span></span>
+
+        <span class="block pl-6 motion-safe:animate-hero-line-in motion-safe:[animation-delay:1.8s]"><span class="text-purple-400">hobby</span>: <span class="text-orange-400">[</span><span class="text-green-400">'Music'</span>,<span class="text-green-400">'Rebuilding things'</span><span class="text-orange-400">]</span>,</span>
+
+        <span class="block pl-6 motion-safe:animate-hero-line-in motion-safe:[animation-delay:2s]"><span class="text-purple-400">learning</span>: <span class="text-green-400">'Constantly'</span></span>
         <span class="block"><span class="text-orange-400">}</span>;</span>
       </code>
     </div>
