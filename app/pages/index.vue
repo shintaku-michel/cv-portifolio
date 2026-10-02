@@ -71,14 +71,14 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
             class="flex flex-row gap-18 mt-12 w-full max-w-xl motion-safe:animate-hero-fade-up motion-safe:[animation-delay:1.1s]">
             <div class="flex flex-col gap-2">
               <p
-                class="font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.3rem] lg:text-7xl text-orange-700 dark:text-orange-400/70">
+                class="font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.3rem] lg:text-7xl text-orange-600 dark:text-orange-400/70">
                 <CountUp :to="15" :delay="1100" /> +
               </p>
               <span class="text-sm text-muted-foreground">Years Experience</span>
             </div>
             <div class="flex flex-col gap-2">
               <p
-                class="font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.3rem] lg:text-7xl text-orange-700 dark:text-orange-400/70">
+                class="font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.3rem] lg:text-7xl text-orange-600 dark:text-orange-400/70">
                 <CountUp :to="40" :delay="1100" /> +
               </p>
               <span class="text-sm text-muted-foreground">Projects Delivered</span>
