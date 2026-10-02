@@ -30,7 +30,9 @@ export default defineNuxtConfig({
     families: [
       { name: 'Inter', provider: 'google' },
       { name: 'Caveat', provider: 'google' },
-      { name: 'Bricolage Grotesque', provider: 'google' }
+      // Fonte variável (200–800): sem a faixa, só o peso 400 é baixado e o
+      // `font-extrabold` do nome no Hero vira negrito sintetizado pelo navegador.
+      { name: 'Bricolage Grotesque', provider: 'google', weights: ['200 800'] }
     ]
   },
   css: ['~/assets/css/tailwind.css'],

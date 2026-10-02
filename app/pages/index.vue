@@ -27,7 +27,7 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
             こんにちは世界！私は
           </p>
           <h1
-            class="mt-2 font-display text-4xl lg:text-7xl font-extrabold motion-safe:animate-hero-fade-up motion-safe:[animation-delay:0.4s]">
+            class="mt-2 font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.03em] lg:text-7xl motion-safe:animate-hero-fade-up motion-safe:[animation-delay:0.4s]">
             Michel Shintaku
           </h1>
           <p
