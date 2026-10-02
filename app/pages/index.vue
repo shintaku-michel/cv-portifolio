@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CountUp from '@/components/common/CountUp.vue'
 import TechMarquee from '@/components/common/TechMarquee.vue'
 import DeveloperCard from '@/components/home/DeveloperCard.vue'
 import { Button } from '@/components/ui/button'
@@ -65,6 +66,24 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
 
           <TechMarquee
             class="mt-4 w-full max-w-xl motion-safe:animate-hero-fade-up motion-safe:[animation-delay:1.1s]" />
+
+          <div
+            class="flex flex-row gap-18 mt-12 w-full max-w-xl motion-safe:animate-hero-fade-up motion-safe:[animation-delay:1.1s]">
+            <div class="flex flex-col gap-2">
+              <p
+                class="font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.3rem] lg:text-7xl text-orange-600/60 dark:text-orange-400/40">
+                <CountUp :to="15" :delay="1100" /> +
+              </p>
+              <span class="text-sm text-foreground/40">Years Experience</span>
+            </div>
+            <div class="flex flex-col gap-2">
+              <p
+                class="font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.3rem] lg:text-7xl text-orange-600/60 dark:text-orange-400/40">
+                <CountUp :to="40" :delay="1100" /> +
+              </p>
+              <span class="text-sm text-foreground/40">Projects Delivered</span>
+            </div>
+          </div>
         </div>
 
         <DeveloperCard
