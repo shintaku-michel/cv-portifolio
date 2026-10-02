@@ -10,6 +10,7 @@
     --font-sans: 'Inter', sans-serif;
     --font-heading: var(--font-sans);
     --font-cursive: 'Caveat', cursive;
+    --font-display: 'Bricolage Grotesque', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -45,6 +46,29 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* Animações de entrada do Hero (home). Usadas com `motion-safe:` para
+   respeitar prefers-reduced-motion; o atraso de cada elemento é definido
+   no próprio elemento via `[animation-delay:…]`. */
+@theme {
+    --animate-hero-fade-up: hero-fade-up 0.6s ease-out both;
+    --animate-hero-slide-in: hero-slide-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    --animate-hero-line-in: hero-line-in 0.3s ease-out both;
+    --animate-hero-sway: hero-sway 6s ease-in-out infinite;
+
+    @keyframes hero-fade-up {
+        from { opacity: 0; translate: 0 20px; }
+    }
+    @keyframes hero-slide-in {
+        from { opacity: 0; translate: 50px 0; }
+    }
+    @keyframes hero-line-in {
+        from { opacity: 0; translate: -10px 0; }
+    }
+    @keyframes hero-sway {
+        50% { rotate: 6deg; }
+    }
 }
 
 :root {
@@ -114,6 +138,15 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Fundo quadriculado decorativo do layout público. A cor deriva de
+   --foreground para as linhas aparecerem nos dois temas. */
+@utility bg-grid {
+    --grid-line: color-mix(in oklab, var(--foreground) 3%, transparent);
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
 }
 
 @layer base {

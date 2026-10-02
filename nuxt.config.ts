@@ -22,14 +22,15 @@ export default defineNuxtConfig({
     }
   },
   modules: ['@nuxt/eslint', '@nuxt/fonts'],
-  // Fontes (Inter, Caveat) são referenciadas via `--font-*` em tailwind.css;
+  // Fontes (Inter, Caveat, Bricolage Grotesque) são referenciadas via `--font-*` em tailwind.css;
   // o módulo detecta o uso e as auto-hospeda no domínio do projeto, para que
   // todo visitante receba exatamente o mesmo arquivo, sem depender do Google
   // Fonts estar acessível na rede de quem acessa.
   fonts: {
     families: [
       { name: 'Inter', provider: 'google' },
-      { name: 'Caveat', provider: 'google' }
+      { name: 'Caveat', provider: 'google' },
+      { name: 'Bricolage Grotesque', provider: 'google' }
     ]
   },
   css: ['~/assets/css/tailwind.css'],

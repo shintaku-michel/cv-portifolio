@@ -62,6 +62,9 @@ const activeNavId = computed(() => {
 
 <template>
   <div class="min-h-dvh">
+    <!-- Fundo quadriculado decorativo, fixo atrás de todas as páginas. -->
+    <div class="pointer-events-none fixed inset-0 -z-10 bg-grid bg-size-[40px_40px] lg:bg-size-[80px_80px]" aria-hidden="true" />
+
     <nav
       class="fixed inset-y-0 left-0 z-40 flex w-16 flex-col items-center overflow-y-auto border-r bg-background py-4"
       aria-label="Menu principal"
