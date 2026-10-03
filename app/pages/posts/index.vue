@@ -3,9 +3,8 @@ import type { Post } from '#shared/types/post'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { HeartIcon, MessageCircleIcon, MoveLeft } from '@lucide/vue'
+import PostCard from '@/components/posts/PostCard.vue'
+import { MoveLeft } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -31,20 +30,6 @@ const QUERY = `
 const { data, pending, error } = await useAsyncData('posts', () =>
   useGraphQL<{ posts: Post[] }>(QUERY)
 )
-
-function formatDate(value: string | null) {
-  if (!value) return null
-  return new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
-}
-
-function authorInitials(name: string) {
-  return name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map(part => part[0]!.toUpperCase())
-    .join('')
-}
 </script>
 
 <template>
@@ -68,65 +53,7 @@ function authorInitials(name: string) {
     <EmptyState v-else-if="!data?.posts.length" message="Nenhum post publicado ainda." />
 
     <div v-else class="flex flex-col gap-6 mt-6">
-      <NuxtLink v-for="post in data.posts" :key="post.id" :to="`/posts/${post.slug}`"
-        class="flex flex-col gap-3 rounded-sm border p-5 transition-colors hover:bg-accent sm:flex-row">
-        <img v-if="post.coverImage" :src="post.coverImage" :alt="post.title"
-          class="aspect-video w-full rounded-sm object-cover sm:w-48 sm:shrink-0">
-        <div class="flex flex-col gap-2">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-            <div class="flex items-center gap-2">
-              <Avatar size="md">
-                <AvatarImage v-if="post.author.avatarUrl" :src="post.author.avatarUrl" :alt="post.author.name" />
-                <AvatarFallback>{{ authorInitials(post.author.name) }}</AvatarFallback>
-              </Avatar>
-              <div class="min-w-0">
-                <p class="truncate text-sm font-medium leading-tight">
-                  {{ post.author.name }}
-                </p>
-                <p v-if="post.author.bio" class="truncate text-xs leading-tight text-muted-foreground">
-                  {{ post.author.bio }}
-                </p>
-              </div>
-            </div>
-
-            <div>
-              <p class="text-xs text-muted-foreground">
-                <span v-if="post.publishedAt">{{ formatDate(post.publishedAt) }}</span>
-              </p>
-            </div>
-          </div>
-
-          <h2 class="text-lg font-medium">
-            {{ post.title }}
-          </h2>
-          <p class="text-sm text-muted-foreground whitespace-pre-line">
-            {{ post.excerpt }}
-          </p>
-
-          <div
-            class="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground mt-4 border-t pt-4">
-            <div class="flex flex-wrap items-center gap-2">
-              <Badge v-if="post.category" variant="outline">
-                {{ post.category.name }}
-              </Badge>
-              <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
-                {{ tag.name }}
-              </Badge>
-            </div>
-
-            <span class="flex items-center gap-3">
-              <span class="flex items-center gap-1">
-                <HeartIcon class="size-3.5" />
-                {{ post.likesCount }}
-              </span>
-              <span class="flex items-center gap-1">
-                <MessageCircleIcon class="size-3.5" />
-                {{ post.commentsCount }}
-              </span>
-            </span>
-          </div>
-        </div>
-      </NuxtLink>
+      <PostCard v-for="post in data.posts" :key="post.id" :post="post" />
     </div>
   </div>
 </template>

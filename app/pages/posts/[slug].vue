@@ -117,7 +117,7 @@ function formatDate(value: string | null) {
               <Badge v-if="post.category" variant="outline">
                 {{ post.category.name }}
               </Badge>
-              <Badge v-for="tag in post.tags" :key="tag.id" variant="secondary">
+              <Badge v-for="tag in post.tags" :key="tag.id" variant="outline">
                 {{ tag.name }}
               </Badge>
             </div>
