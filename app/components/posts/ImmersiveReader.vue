@@ -247,14 +247,14 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
 
       <header class="flex items-center gap-4 border-b border-current/10 px-6 py-3">
         <DialogClose as-child>
-          <Button variant="ghost" size="icon" aria-label="Fechar leitor imersivo">
+          <Button variant="ghost" size="icon-lg" aria-label="Fechar leitor imersivo">
             <XIcon class="size-5" />
           </Button>
         </DialogClose>
 
         <span class="flex-1 truncate text-sm font-medium">{{ title }}</span>
 
-        <Button type="button" size="sm" :aria-pressed="isPlaying" @click="togglePlay">
+        <Button type="button" size="lg" :aria-pressed="isPlaying" @click="togglePlay">
           <PauseIcon v-if="isPlaying" class="size-4" />
           <PlayIcon v-else class="size-4" />
           {{ isPlaying ? 'Pausar' : 'Escutar' }}
@@ -262,7 +262,7 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
 
         <Button
           variant="ghost"
-          size="icon"
+          size="icon-lg"
           :aria-expanded="sidebarOpen"
           aria-controls="reader-settings-panel"
           :aria-label="sidebarOpen ? 'Fechar configurações do leitor' : 'Abrir configurações do leitor'"
@@ -313,7 +313,7 @@ function sentenceClass(blockIndex: number, sentenceIndex: number): string {
               <h2 class="font-medium">
                 Configurações
               </h2>
-              <Button variant="ghost" size="icon" aria-label="Fechar configurações do leitor" @click="sidebarOpen = false">
+              <Button variant="ghost" size="icon-lg" aria-label="Fechar configurações do leitor" @click="sidebarOpen = false">
                 <XIcon class="size-4" />
               </Button>
             </div>

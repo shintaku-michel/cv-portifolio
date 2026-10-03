@@ -99,7 +99,7 @@ function toggleReplies(commentId: string) {
     <!-- Admin só responde comentários existentes, não abre comentário novo. -->
     <div v-if="user && user.role !== 'ADMIN'" class="flex shrink-0 flex-col gap-2">
       <Textarea v-model="newCommentContent" rows="3" placeholder="Escreva um comentário…" aria-label="Comentário" />
-      <Button class="self-start" :disabled="submitting || !newCommentContent.trim()" @click="submitComment">
+      <Button size="lg" class="self-start" :disabled="submitting || !newCommentContent.trim()" @click="submitComment">
         {{ submitting ? 'Enviando…' : 'Comentar' }}
       </Button>
       <p v-if="justSubmitted" class="text-sm text-muted-foreground">
@@ -149,10 +149,10 @@ function toggleReplies(commentId: string) {
         <div v-if="replyingToId === comment.id" class="flex flex-col gap-2">
           <Textarea v-model="replyContent" rows="2" placeholder="Escreva uma resposta…" aria-label="Resposta" />
           <div class="flex gap-2">
-            <Button size="sm" :disabled="replySubmitting || !replyContent.trim()" @click="submitReply(comment.id)">
+            <Button size="lg" :disabled="replySubmitting || !replyContent.trim()" @click="submitReply(comment.id)">
               {{ replySubmitting ? 'Enviando…' : 'Responder' }}
             </Button>
-            <Button size="sm" variant="outline" @click="replyingToId = null">
+            <Button size="lg" variant="outline" @click="replyingToId = null">
               Cancelar
             </Button>
           </div>

@@ -41,6 +41,7 @@ async function toggle() {
 
 <template>
   <Button
+    size="lg"
     variant="outline"
     :disabled="pending"
     :aria-pressed="liked"

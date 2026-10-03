@@ -111,12 +111,12 @@ useHead({
       </div>
 
       <div class="flex flex-wrap gap-3">
-        <Button v-if="project.demoUrl" as="a" variant="outline" :href="project.demoUrl" target="_blank"
+        <Button v-if="project.demoUrl" as="a" size="lg" variant="outline" :href="project.demoUrl" target="_blank"
           rel="noopener noreferrer">
           <ExternalLink />
           Acessar aplicação
         </Button>
-        <Button v-if="project.repositoryUrl" as="a" variant="outline" :href="project.repositoryUrl" target="_blank"
+        <Button v-if="project.repositoryUrl" as="a" size="lg" variant="outline" :href="project.repositoryUrl" target="_blank"
           rel="noopener noreferrer">
           <ExternalLink />
           Acessar repositório

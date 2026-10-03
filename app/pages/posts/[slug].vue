@@ -122,7 +122,7 @@ function formatDate(value: string | null) {
               </Badge>
             </div>
 
-            <Button variant="ghost" size="sm" class="hidden gap-2 text-muted-foreground sm:inline-flex"
+            <Button variant="ghost" size="lg" class="hidden gap-2 text-muted-foreground sm:inline-flex"
               @click="readerOpen = true">
               <BookOpenTextIcon class="size-4" />
               Leitor imersivo

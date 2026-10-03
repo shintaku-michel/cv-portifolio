@@ -16,7 +16,7 @@ async function copyLink() {
 </script>
 
 <template>
-  <Button variant="outline" @click="copyLink">
+  <Button size="lg" variant="outline" @click="copyLink">
     <LinkIcon class="size-4" />
     {{ copied ? 'Link copiado!' : 'Copiar link' }}
   </Button>

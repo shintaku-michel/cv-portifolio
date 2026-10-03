@@ -56,7 +56,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/graduacao` }] }
     </div>
 
     <div class="flex items-center flex-wrap gap-3">
-      <Button variant="default" class="px-2.5 py-4.5" @click="certificateOpen = true">
+      <Button size="lg" @click="certificateOpen = true">
         <View />
         Visualizar
       </Button>

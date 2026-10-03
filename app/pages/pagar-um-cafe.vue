@@ -130,7 +130,7 @@ async function onSubmit() {
         {{ errorMessage }}
       </p>
 
-      <Button type="submit" :disabled="!isValid || submitting" class="self-start">
+      <Button type="submit" size="lg" :disabled="!isValid || submitting" class="self-start">
         <Send />
         {{ submitting ? 'Enviando…' : 'Enviar mensagem' }}
       </Button>

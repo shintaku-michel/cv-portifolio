@@ -42,11 +42,11 @@ const certificateOpen = ref(false)
     </div>
 
     <div class="flex flex-wrap gap-3">
-      <Button variant="default" class="px-2.5 py-4.5" @click="certificateOpen = true">
+      <Button size="lg" @click="certificateOpen = true">
         <View />
         Visualizar
       </Button>
-      <Button as-child variant="outline" class="px-2.5 py-4.5">
+      <Button as-child size="lg" variant="outline">
         <a :href="ROCKETSEAT_CERTIFICATE_URL" target="_blank" rel="noopener noreferrer">
           <ExternalLink />
           Certificado online

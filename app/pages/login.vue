@@ -37,17 +37,17 @@ async function onSubmit() {
           <p class="text-sm">
             Autenticado como <strong>{{ user.name }}</strong> ({{ user.role }})
           </p>
-          <Button v-if="user.role === 'ADMIN'" variant="outline" as-child>
+          <Button v-if="user.role === 'ADMIN'" size="lg" variant="outline" as-child>
             <NuxtLink to="/admin/perfil">Editar perfil</NuxtLink>
           </Button>
-          <Button variant="outline" @click="logout">
+          <Button size="lg" variant="outline" @click="logout">
             Sair
           </Button>
         </div>
 
         <div v-else class="flex flex-col gap-6">
           <div class="flex flex-col gap-2">
-            <Button as-child>
+            <Button as-child size="lg">
               <a :href="googleLoginUrl">Entrar com Google</a>
             </Button>
             <p class="text-center text-xs text-muted-foreground">
@@ -73,7 +73,7 @@ async function onSubmit() {
             <p v-if="error" role="alert" class="text-sm text-destructive">
               {{ error }}
             </p>
-            <Button type="submit" variant="outline" :disabled="pending">
+            <Button type="submit" size="lg" variant="outline" :disabled="pending">
               {{ pending ? 'Entrando…' : 'Entrar' }}
             </Button>
           </form>

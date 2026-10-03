@@ -32,11 +32,11 @@ defineEmits<{
       <CardDescription>{{ certificate.description }}</CardDescription>
     </CardContent>
     <CardFooter class="flex flex-wrap gap-2">
-      <Button size="sm" :disabled="!certificate.image" @click="$emit('view', certificate.id)">
+      <Button size="lg" class="cursor-pointer" :disabled="!certificate.image" @click="$emit('view', certificate.id)">
         <View />
         Visualizar
       </Button>
-      <Button v-if="certificate.onlineUrl" as-child size="sm" variant="outline">
+      <Button v-if="certificate.onlineUrl" as-child size="lg" variant="outline">
         <a :href="certificate.onlineUrl" target="_blank" rel="noopener noreferrer">
           <ExternalLink />
           Certificado online
