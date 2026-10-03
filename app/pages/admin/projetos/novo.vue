@@ -44,11 +44,9 @@ async function onSubmit(input: ProjectInput) {
     </p>
     <ProjectForm :technologies="data?.technologies ?? []" :submitting="submitting" @submit="onSubmit">
       <template #actions>
-        <NuxtLink to="/admin/projetos">
-          <Button variant="outline" type="button">
-            <ArrowLeftIcon /> Voltar
-          </Button>
-        </NuxtLink>
+        <Button as-child size="lg" variant="outline">
+          <NuxtLink to="/admin/projetos"><ArrowLeftIcon /> Voltar</NuxtLink>
+        </Button>
       </template>
     </ProjectForm>
   </div>

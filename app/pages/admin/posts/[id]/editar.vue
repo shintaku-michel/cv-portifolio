@@ -82,12 +82,10 @@ async function togglePublish() {
       @submit="onSubmit"
     >
       <template #actions>
-        <NuxtLink to="/admin/posts">
-          <Button variant="outline" type="button">
-            <ArrowLeftIcon /> Voltar
-          </Button>
-        </NuxtLink>
-        <Button variant="outline" type="button" @click="togglePublish">
+        <Button as-child size="lg" variant="outline">
+          <NuxtLink to="/admin/posts"><ArrowLeftIcon /> Voltar</NuxtLink>
+        </Button>
+        <Button size="lg" variant="outline" type="button" @click="togglePublish">
           <component :is="post.status === 'PUBLISHED' ? GlobeXIcon : GlobeIcon" />
           {{ post.status === 'PUBLISHED' ? 'Despublicar' : 'Publicar' }}
         </Button>

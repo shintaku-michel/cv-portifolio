@@ -76,7 +76,7 @@ async function confirmToggleRole() {
             </Badge>
           </div>
           <Button
-            size="sm"
+            size="lg"
             variant="outline"
             :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
             :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
@@ -121,7 +121,7 @@ async function confirmToggleRole() {
             </TableCell>
             <TableCell class="text-right">
               <Button
-                size="sm"
+                size="lg"
                 variant="outline"
                 :disabled="actionPending === u.id || (u.id === currentUser?.id && u.role === 'ADMIN')"
                 :title="u.id === currentUser?.id && u.role === 'ADMIN' ? 'Você não pode remover a própria permissão de administrador' : undefined"
@@ -146,10 +146,10 @@ async function confirmToggleRole() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" :disabled="actionPending === confirmTarget.id" @click="confirmTarget = null">
+          <Button size="lg" variant="outline" :disabled="actionPending === confirmTarget.id" @click="confirmTarget = null">
             Cancelar
           </Button>
-          <Button :disabled="actionPending === confirmTarget.id" @click="confirmToggleRole">
+          <Button size="lg" :disabled="actionPending === confirmTarget.id" @click="confirmToggleRole">
             Confirmar
           </Button>
         </DialogFooter>

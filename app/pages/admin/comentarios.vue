@@ -110,7 +110,7 @@ async function confirmDelete() {
             </div>
             <DropdownMenu :modal="false">
               <DropdownMenuTrigger as-child>
-                <Button size="icon" variant="outline" :disabled="actionPending === comment.id"
+                <Button size="icon-lg" variant="outline" :disabled="actionPending === comment.id"
                   aria-label="Ações do comentário" class="shrink-0">
                   <EllipsisIcon />
                 </Button>
@@ -170,7 +170,7 @@ async function confirmDelete() {
               <ButtonGroup class="justify-end w-full">
                 <DropdownMenu :modal="false">
                   <DropdownMenuTrigger as-child>
-                    <Button size="icon" variant="outline" :disabled="actionPending === comment.id"
+                    <Button size="icon-lg" variant="outline" :disabled="actionPending === comment.id"
                       aria-label="Ações do comentário">
                       <EllipsisIcon />
                     </Button>
@@ -208,10 +208,11 @@ async function confirmDelete() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" :disabled="actionPending === confirmDeleteTarget.id" @click="confirmDeleteTarget = null">
+          <Button size="lg" variant="outline" :disabled="actionPending === confirmDeleteTarget.id" @click="confirmDeleteTarget = null">
             Cancelar
           </Button>
           <Button
+            size="lg"
             variant="destructive"
             class="bg-destructive text-white hover:bg-destructive/90"
             :disabled="actionPending === confirmDeleteTarget.id"

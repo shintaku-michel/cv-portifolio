@@ -40,11 +40,9 @@ async function onSubmit(input: CertificateInput) {
     </p>
     <CertificateForm :submitting="submitting" @submit="onSubmit">
       <template #actions>
-        <NuxtLink to="/admin/certificados">
-          <Button variant="outline" type="button">
-            <ArrowLeftIcon /> Voltar
-          </Button>
-        </NuxtLink>
+        <Button as-child size="lg" variant="outline">
+          <NuxtLink to="/admin/certificados"><ArrowLeftIcon /> Voltar</NuxtLink>
+        </Button>
       </template>
     </CertificateForm>
   </div>

@@ -52,11 +52,9 @@ async function onSubmit(input: PostInput) {
       @submit="onSubmit"
     >
       <template #actions>
-        <NuxtLink to="/admin/posts">
-          <Button variant="outline" type="button">
-            <ArrowLeftIcon /> Voltar
-          </Button>
-        </NuxtLink>
+        <Button as-child size="lg" variant="outline">
+          <NuxtLink to="/admin/posts"><ArrowLeftIcon /> Voltar</NuxtLink>
+        </Button>
       </template>
     </PostForm>
   </div>

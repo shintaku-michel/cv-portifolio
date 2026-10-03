@@ -124,9 +124,9 @@ async function confirmDelete() {
       <h1 class="text-2xl font-semibold">
         Posts
       </h1>
-      <NuxtLink to="/admin/posts/novo">
-        <Button>Novo post</Button>
-      </NuxtLink>
+      <Button as-child size="lg">
+        <NuxtLink to="/admin/posts/novo">Novo post</NuxtLink>
+      </Button>
     </div>
 
     <LoadingState v-if="pending" />
@@ -150,7 +150,7 @@ async function confirmDelete() {
             <div class="flex shrink-0 items-center gap-1">
               <DropdownMenu :modal="false">
                 <DropdownMenuTrigger as-child>
-                  <Button size="icon" variant="outline" :disabled="actionPending === post.id"
+                  <Button size="icon-lg" variant="outline" :disabled="actionPending === post.id"
                     aria-label="Ações do post">
                     <EllipsisIcon />
                   </Button>
@@ -172,7 +172,7 @@ async function confirmDelete() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+              <Button size="icon-lg" variant="outline" draggable="true" :disabled="reordering"
                 aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
                 @dragstart="onDragStart(post, $event)" @dragend="onDragEnd">
                 <GripHorizontalIcon />
@@ -241,7 +241,7 @@ async function confirmDelete() {
               <ButtonGroup class="justify-end w-full">
                 <DropdownMenu :modal="false">
                   <DropdownMenuTrigger as-child>
-                    <Button size="icon" variant="outline" :disabled="actionPending === post.id"
+                    <Button size="icon-lg" variant="outline" :disabled="actionPending === post.id"
                       aria-label="Ações do post">
                       <EllipsisIcon />
                     </Button>
@@ -263,7 +263,7 @@ async function confirmDelete() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button size="icon" variant="outline" draggable="true" :disabled="reordering"
+                <Button size="icon-lg" variant="outline" draggable="true" :disabled="reordering"
                   aria-label="Arrastar para reordenar" class="cursor-grab active:cursor-grabbing"
                   @dragstart="onDragStart(post, $event)" @dragend="onDragEnd">
                   <GripHorizontalIcon />
@@ -284,10 +284,11 @@ async function confirmDelete() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" :disabled="actionPending === confirmDeleteTarget.id" @click="confirmDeleteTarget = null">
+          <Button size="lg" variant="outline" :disabled="actionPending === confirmDeleteTarget.id" @click="confirmDeleteTarget = null">
             Cancelar
           </Button>
           <Button
+            size="lg"
             variant="destructive"
             class="bg-destructive text-white hover:bg-destructive/90"
             :disabled="actionPending === confirmDeleteTarget.id"

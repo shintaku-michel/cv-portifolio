@@ -238,7 +238,7 @@ function onSubmit() {
 
     <div class="flex gap-2">
       <slot name="actions" />
-      <Button type="submit" :disabled="submitting" class="ms-auto">
+      <Button size="lg" type="submit" :disabled="submitting" class="ms-auto">
         <LoaderCircleIcon v-if="submitting" class="animate-spin" />
         <CheckIcon v-else />
         {{ submitting ? 'Salvando…' : 'Salvar' }}

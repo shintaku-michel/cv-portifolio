@@ -87,7 +87,7 @@ async function onSubmit() {
         Perfil atualizado.
       </p>
 
-      <Button type="submit" class="self-start" :disabled="submitting">
+      <Button size="lg" type="submit" class="self-start" :disabled="submitting">
         {{ submitting ? 'Salvando…' : 'Salvar' }}
       </Button>
     </form>

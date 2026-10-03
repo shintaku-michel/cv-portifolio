@@ -47,7 +47,7 @@ async function onLogout() {
         <!-- Mobile: menu sanduíche com a navegação achatada num Sheet. -->
         <Sheet v-model:open="mobileMenuOpen">
           <SheetTrigger as-child class="sm:hidden">
-            <Button size="icon" variant="outline" aria-label="Abrir menu de administração">
+            <Button size="icon-lg" variant="outline" aria-label="Abrir menu de administração">
               <MenuIcon />
             </Button>
           </SheetTrigger>
@@ -108,7 +108,7 @@ async function onLogout() {
 
         <div class="flex items-center gap-3 text-sm text-muted-foreground">
           <span v-if="user" class="hidden sm:inline">{{ user.name }}</span>
-          <Button size="sm" variant="outline" @click="onLogout">
+          <Button size="lg" variant="outline" @click="onLogout">
             Sair
           </Button>
         </div>

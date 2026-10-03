@@ -201,10 +201,10 @@ const toolbarGroups = computed<ToolbarAction[][]>(() => {
       </DialogHeader>
       <Input v-model="linkUrl" type="url" placeholder="https://..." @keydown.enter.prevent="applyLink" />
       <DialogFooter class="gap-2 sm:justify-between">
-        <Button v-if="editor?.isActive('link')" type="button" variant="outline" @click="removeLink">
+        <Button v-if="editor?.isActive('link')" size="lg" type="button" variant="outline" @click="removeLink">
           Remover link
         </Button>
-        <Button type="button" class="ml-auto" @click="applyLink">
+        <Button size="lg" type="button" class="ml-auto" @click="applyLink">
           Aplicar
         </Button>
       </DialogFooter>
