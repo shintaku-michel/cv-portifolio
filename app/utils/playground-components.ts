@@ -4,7 +4,7 @@ import type { Component } from 'vue'
 // nenhuma string vinda do banco chega perto de um import dinâmico. A chave
 // salva no projeto (Project.playgroundComponent) é o nome da pasta; cada
 // pasta segue o mesmo padrão de barrel de `components/ui/*` (ex:
-// `playground/button/index.ts` → `export { default as Button } from './Button.vue'`).
+// `playground/card/index.ts` → `export { default as Card } from './Card.vue'`).
 const modules = import.meta.glob('../components/playground/*/index.ts', { eager: true }) as Record<string, Record<string, unknown>>
 
 function toPascalCase(folderName: string) {
