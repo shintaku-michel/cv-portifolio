@@ -1,4 +1,4 @@
-function toMonthYear(value: string) {
+export function toMonthYear(value: string) {
   const [year, month] = value.split('-')
   return `${month}/${year}`
 }

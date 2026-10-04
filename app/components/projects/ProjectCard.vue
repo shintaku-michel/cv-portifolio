@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import type { Project } from '#shared/types/project';
-import { formatPeriod } from '#shared/utils/format-period';
+import { formatPeriod, toMonthYear } from '#shared/utils/format-period';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 
-defineProps<{
+const props = defineProps<{
   project: Project
 }>()
+
+// Projetos (featured) mostram o período completo; componentes, só o mês de
+// publicação.
+const dateLabel = computed(() => {
+  const { featured, startDate, endDate } = props.project
+  if (!startDate) return null
+  return `Publicado em: ${featured ? formatPeriod(startDate, endDate) : toMonthYear(startDate)}`
+})
 </script>
 
 <template>
@@ -26,17 +34,17 @@ defineProps<{
         </p>
       </CardContent>
 
-      <CardFooter class="justify-between gap-2">
-        <Badge variant="outline"
+      <CardFooter class="gap-2">
+        <span v-if="dateLabel" class="text-xs whitespace-nowrap text-muted-foreground">
+          {{ dateLabel }}
+        </span>
+        <!-- Componentes (featured = false) não mostram status Online/Offline. -->
+        <Badge v-if="project.featured" variant="outline" class="ms-auto"
           :class="project.isOnline
             ? 'border-green-600/40 text-green-700 dark:border-green-400/40 dark:text-green-400'
             : 'border-red-600/40 text-red-700 dark:border-red-400/40 dark:text-red-400'">
           {{ project.isOnline ? 'Online' : 'Offline' }}
         </Badge>
-        <span v-if="formatPeriod(project.startDate, project.endDate)"
-          class="text-xs whitespace-nowrap text-muted-foreground">
-          {{ formatPeriod(project.startDate, project.endDate) }}
-        </span>
       </CardFooter>
     </Card>
   </NuxtLink>
