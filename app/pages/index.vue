@@ -3,9 +3,17 @@ import CountUp from '@/components/common/CountUp.vue'
 import TechMarquee from '@/components/common/TechMarquee.vue'
 import DeveloperCard from '@/components/home/DeveloperCard.vue'
 import { Button } from '@/components/ui/button'
-import { FolderGit2Icon, MailIcon, MicAudioLines } from '@lucide/vue'
+import { getTechIcon } from '@/utils/tech-icons'
+import { FolderGit2Icon, MailIcon } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
+
+// Ícones monocromáticos (currentColor): herdam a cor do texto do botão
+// outline, garantindo o mesmo contraste do rótulo nos temas claro e escuro.
+const socialLinks = [
+  { label: 'GitHub', href: 'https://github.com/shintaku-michel', icon: getTechIcon('github') },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mshintaku', icon: getTechIcon('linkedin') }
+]
 
 useSeoMeta({
   title: 'Início',
@@ -50,17 +58,22 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
                 Conheça meu trabalho
               </NuxtLink>
             </Button>
-            <Button as-child size="lg" variant="outline">
-              <NuxtLink to="/blog">
-                <MicAudioLines />
-                Fake Blog
-              </NuxtLink>
-            </Button>
+
             <Button as-child size="lg" variant="outline">
               <NuxtLink to="/pagar-um-cafe">
                 <MailIcon />
                 Contato
               </NuxtLink>
+            </Button>
+
+            <Button v-for="link in socialLinks" :key="link.href" as-child size="lg" variant="outline">
+              <a :href="link.href" target="_blank" rel="noopener noreferrer"
+                :aria-label="`${link.label} (abre em nova aba)`">
+                <svg v-if="link.icon" :viewBox="link.icon.viewBox ?? '0 0 24 24'" aria-hidden="true">
+                  <path :d="link.icon.path" fill="currentColor" />
+                </svg>
+                {{ link.label }}
+              </a>
             </Button>
           </div>
 
