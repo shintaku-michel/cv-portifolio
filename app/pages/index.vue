@@ -41,7 +41,7 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
         </p>
         <h1
           class="scroll-reveal mt-2 font-display text-4xl leading-[0.95] font-extrabold tracking-[-0.03em] [--reveal-at:0.36] lg:text-6xl">
-          Michel Shintaku
+          Shin Michel
         </h1>
         <p
           class="scroll-reveal mt-2 text-2xl font-cursive [--reveal-at:0.42] sm:text-3xl lg:text-4xl text-blue-600 dark:text-blue-400">
