@@ -53,21 +53,9 @@
    no próprio elemento via `[animation-delay:…]`. */
 @theme {
     --animate-hero-fade-up: hero-fade-up 0.6s ease-out both;
-    --animate-hero-slide-in: hero-slide-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-    --animate-hero-line-in: hero-line-in 0.3s ease-out both;
-    --animate-hero-sway: hero-sway 6s ease-in-out infinite;
 
     @keyframes hero-fade-up {
         from { opacity: 0; translate: 0 20px; }
-    }
-    @keyframes hero-slide-in {
-        from { opacity: 0; translate: 50px 0; }
-    }
-    @keyframes hero-line-in {
-        from { opacity: 0; translate: -10px 0; }
-    }
-    @keyframes hero-sway {
-        50% { rotate: 6deg; }
     }
 }
 
@@ -140,13 +128,22 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* Fundo quadriculado decorativo do layout público. A cor deriva de
-   --foreground para as linhas aparecerem nos dois temas. */
-@utility bg-grid {
-    --grid-line: color-mix(in oklab, var(--foreground) 3%, transparent);
-    background-image:
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+/* Revelação ligada ao scroll do hero da home (ScrollVideoHero.vue publica
+   --hero-progress de 0 a 1). Cada item define em que ponto começa a aparecer
+   com `[--reveal-at:…]`; a curva é um smoothstep, então entra e sai sem
+   arrancos. Ao rolar de volta, o item some pelo mesmo caminho. Fora do hero
+   (sem --hero-progress) o item fica totalmente visível. */
+@utility scroll-reveal {
+    --reveal-t: clamp(0, calc((var(--hero-progress, 1) - var(--reveal-at, 0)) / var(--reveal-span, 0.18)), 1);
+    --reveal: calc(var(--reveal-t) * var(--reveal-t) * (3 - 2 * var(--reveal-t)));
+    opacity: var(--reveal);
+    translate: calc((1 - var(--reveal)) * var(--reveal-x, 0px)) calc((1 - var(--reveal)) * var(--reveal-y, 1.5rem));
+    will-change: opacity, translate;
+
+    @media (prefers-reduced-motion: reduce) {
+        opacity: 1;
+        translate: none;
+    }
 }
 
 @layer base {

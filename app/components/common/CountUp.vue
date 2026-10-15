@@ -2,20 +2,26 @@
 // Conta de 0 até `to` com desaceleração no final. O valor final fica num
 // texto `sr-only` para leitores de tela e buscadores; o número animado é
 // só visual. Com prefers-reduced-motion, mostra o valor final direto.
+// `play` permite adiar o início (ex.: até o número ficar visível no hero).
 const props = withDefaults(defineProps<{
   to: number
   duration?: number
   delay?: number
+  play?: boolean
 }>(), {
   duration: 4000,
-  delay: 0
+  delay: 0,
+  play: true
 })
 
 const current = ref(0)
 let timer: ReturnType<typeof setTimeout> | undefined
 let frame = 0
+let started = false
 
-onMounted(() => {
+function run() {
+  if (started) return
+  started = true
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     current.value = props.to
     return
@@ -31,6 +37,14 @@ onMounted(() => {
     }
     frame = requestAnimationFrame(step)
   }, props.delay)
+}
+
+onMounted(() => {
+  if (props.play) run()
+})
+
+watch(() => props.play, (play) => {
+  if (play) run()
 })
 
 onBeforeUnmount(() => {
