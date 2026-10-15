@@ -11,7 +11,7 @@ const requestUrl = useRequestURL()
 // Ícones monocromáticos (currentColor): herdam a cor do texto do botão
 // outline, garantindo o mesmo contraste do rótulo nos temas claro e escuro.
 const socialLinks = [
-  { label: 'GitHub', href: 'https://github.com/shintaku-michel', icon: getTechIcon('github') },
+  /* { label: 'GitHub', href: 'https://github.com/shintaku-michel', icon: getTechIcon('github') }, */
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mshintaku', icon: getTechIcon('linkedin') }
 ]
 
