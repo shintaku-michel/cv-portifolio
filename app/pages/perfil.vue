@@ -41,7 +41,7 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/perfil` }] })
     </p>
 
     <p>
-      Hoje, sou desenvolvedor Full Stack e tenho mais de 18 anos de experiência no desenvolvimento web. Minha trajetória
+      Hoje, sou desenvolvedor Full-Stack e tenho mais de 18 anos de experiência no desenvolvimento web. Minha trajetória
       na tecnologia começou em 2005 e, desde 2007, trabalho profissionalmente transformando ideias e necessidades em
       soluções digitais.
     </p>
