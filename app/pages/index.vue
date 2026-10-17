@@ -61,13 +61,6 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
             </NuxtLink>
           </Button>
 
-          <Button as-child size="lg" variant="outline">
-            <NuxtLink to="/pagar-um-cafe">
-              <MailIcon />
-              Contato
-            </NuxtLink>
-          </Button>
-
           <Button v-for="link in socialLinks" :key="link.href" as-child size="lg" variant="outline">
             <a :href="link.href" target="_blank" rel="noopener noreferrer"
               :aria-label="`${link.label} (abre em nova aba)`">
@@ -76,6 +69,13 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
               </svg>
               {{ link.label }}
             </a>
+          </Button>
+
+          <Button as-child size="lg" variant="outline">
+            <NuxtLink to="/pagar-um-cafe">
+              <MailIcon />
+              Contato
+            </NuxtLink>
           </Button>
         </div>
 
