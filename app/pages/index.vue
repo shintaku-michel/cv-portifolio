@@ -35,7 +35,7 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
       class="relative flex w-full flex-1 items-center justify-center px-6 py-16 text-center lg:justify-end lg:px-0 lg:py-0 lg:text-start">
       <!-- Desktop: o conteúdo ocupa metade da largura, alinhado à direita e recuado 150px da borda. -->
       <div
-        class="flex w-full min-w-0 max-w-xl flex-col items-center lg:mr-[190.5px] lg:w-2/5 lg:max-w-none lg:items-start lg:px-12 xl:px-20">
+        class="flex w-full min-w-0 max-w-xl flex-col items-center lg:mr-[240.5px] lg:w-2/5 lg:max-w-none lg:items-start lg:px-12 xl:px-20">
         <p class="scroll-reveal text-lg font-light text-foreground/70 [--reveal-at:0.30] sm:text-xl">
           こんにちは世界！私は
         </p>
@@ -49,8 +49,8 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
         </p>
 
         <p class="scroll-reveal mt-4 font-light text-foreground/70 [--reveal-at:0.48]">
-          Desenvolvo produtos digitais que unem tecnologia e estratégia, com foco no usuário,
-          transformando necessidades reais em soluções inovadoras.
+          Desenvolvo produtos digitais que unem tecnologia e estratégia,
+          transformando necessidades em soluções inovadoras.
         </p>
 
         <div class="scroll-reveal mt-6 flex flex-wrap justify-center gap-3 [--reveal-at:0.54] lg:justify-start">
@@ -79,7 +79,7 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
           </Button>
         </div>
 
-        <TechMarquee class="scroll-reveal mt-4 w-full max-w-xl [--reveal-at:0.60]" />
+        <TechMarquee class="scroll-reveal mt-4 w-full max-w-lg [--reveal-at:0.60]" />
 
         <div class="scroll-reveal flex flex-row gap-18 mt-12 w-full max-w-xl [--reveal-at:0.66]">
           <div class="flex flex-col gap-2">
