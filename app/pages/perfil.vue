@@ -47,8 +47,8 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/perfil` }] })
     </p>
 
     <p>
-      Ao longo da minha trajetória, sempre busquei criar experiências que unam tecnologia, usabilidade, acessibilidade e
-      regras de negócio, mantendo o foco no que realmente importa: as pessoas que usam o produto.
+      Ao longo da minha trajetória, aprendi a valorizar a criação de experiências que unam tecnologia, usabilidade,
+      acessibilidade e regras de negócio, mantendo o foco no que realmente importa: as pessoas que usam o produto.
     </p>
   </div>
 </template>
