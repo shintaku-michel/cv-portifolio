@@ -22,10 +22,11 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/experiencia` }]
     </div>
 
     <p>
-      Comecei minha carreira no backend, desenvolvendo APIs e aprendendo sobre padrões de desenvolvimento e arquitetura
-      de software. Entre 2010 e 2011, trabalhar com Java exigia conhecer não apenas a linguagem, mas também um amplo
-      ecossistema de configurações, persistência de dados, gerenciamento de dependências, empacotamento e servidores de
-      aplicação. Nesse período, trabalhei com tecnologias como Java EE, Spring, Hibernate, Maven, Tomcat e JBoss.
+      Comecei minha carreira no backend, desenvolvendo APIs e aprendendo sobre padrões de projeto e arquitetura
+      de software. Entre 2010 e 2011, trabalhar com Java exigia dominar não apenas a linguagem, mas todo um
+      ecossistema de configuração, persistência de dados, gerenciamento de dependências, empacotamento e servidores
+      de aplicação, bem mais complexo do que é hoje. Nesse período, trabalhei com Java EE, Spring, Hibernate,
+      Maven, Tomcat e JBoss.
     </p>
     <p>
       Sabe aquele ditado de que o mundo dá voltas? Pois é, aconteceu comigo. Com o tempo, minha curiosidade me levou ao

@@ -27,7 +27,8 @@ useHead({ link: [{ rel: 'canonical', href: `${requestUrl.origin}/valores` }] })
       também são formas de evoluir.
     </p>
     <p>
-      Prefiro uma comunicação direta e honesta. Problemas devem ser compartilhados e resolvidos o quanto antes, antes
+      Prefiro sempre uma comunicação direta e honesta. Problemas devem ser compartilhados e resolvidos o quanto antes,
+      antes
       que se tornem maiores. Questionar, pedir ajuda, ouvir diferentes perspectivas e compartilhar conhecimento fazem
       parte de um bom trabalho em equipe.
     </p>
