@@ -100,6 +100,7 @@ describe('AuthService (integração)', () => {
 
       expect(user.email).toBe(googleEmail)
       expect(user.role).toBe('USER')
+      expect(user.avatarUrl).toBe('https://example.com/foto.png')
 
       const [row] = await db.select().from(users).where(eq(users.email, googleEmail))
       expect(row!.passwordHash).toBeNull()
@@ -115,6 +116,18 @@ describe('AuthService (integração)', () => {
       })
 
       expect(user.name).toBe('Leitor Google Renomeado')
+      expect(user.avatarUrl).toBe('https://example.com/nova-foto.png')
+
+      // A sessão (base de /api/auth/me e da nav) também traz a foto.
+      const { sessionId } = await AuthService.loginWithGoogle({
+        googleId,
+        email: googleEmail,
+        name: 'Leitor Google Renomeado',
+        avatarUrl: 'https://example.com/nova-foto.png'
+      })
+      const sessionUser = await AuthService.getSessionUser(sessionId)
+      expect(sessionUser?.avatarUrl).toBe('https://example.com/nova-foto.png')
+      expect(sessionUser).not.toHaveProperty('passwordHash')
 
       const all = await db.select().from(users).where(eq(users.email, googleEmail))
       expect(all).toHaveLength(1)

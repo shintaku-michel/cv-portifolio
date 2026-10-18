@@ -11,8 +11,10 @@ export type { SessionUser } from '../../shared/types/auth'
 
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000
 
-function toSessionUser(user: { id: string, name: string, email: string, role: UserRole }): SessionUser {
-  return { id: user.id, name: user.name, email: user.email, role: user.role }
+// Nunca inclui passwordHash/googleId — só o que o cliente pode ver. A foto e
+// a bio entram para a nav (avatar) e o formulário de perfil.
+function toSessionUser(user: { id: string, name: string, email: string, role: UserRole, avatarUrl: string | null, bio: string | null }): SessionUser {
+  return { id: user.id, name: user.name, email: user.email, role: user.role, avatarUrl: user.avatarUrl, bio: user.bio }
 }
 
 export const AuthService = {
