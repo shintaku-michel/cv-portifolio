@@ -32,7 +32,7 @@ const mobileMenuOpen = ref(false)
 
 async function onLogout() {
   await logout()
-  await navigateTo('/login')
+  await navigateTo('/login-admin')
 }
 </script>
 
