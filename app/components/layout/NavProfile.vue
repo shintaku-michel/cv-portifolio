@@ -44,7 +44,10 @@ async function onLogout() {
   <div
     class="mt-4 flex shrink-0 flex-col rounded-lg border border-transparent p-2 transition-colors duration-300 group-hover/nav:border-border group-has-focus-visible/nav:border-border motion-reduce:transition-none"
     :class="{ 'md:border-border': props.pinned }">
-    <Avatar
+    <!-- `key`: o AvatarRoot do reka guarda o status "loaded" da foto e não o
+         limpa quando o AvatarImage sai (logout) — o fallback não voltaria.
+         Trocar de foto (ou para visitante) recria o Avatar do zero. -->
+    <Avatar :key="avatarSrc ?? 'visitor'"
       class="size-13.75 scale-[0.7273] self-center bg-muted transition-[scale] duration-300 ease-out group-hover/nav:scale-100 group-has-focus-visible/nav:scale-100 motion-reduce:transition-none"
       :class="{ 'md:scale-100': props.pinned }">
       <AvatarImage v-if="avatarSrc" :src="avatarSrc" alt="" referrer-policy="no-referrer" />
