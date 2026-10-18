@@ -54,7 +54,7 @@ async function onLogout() {
     </Avatar>
 
     <template v-if="user">
-      <div class="mt-3 min-w-0 text-left">
+      <div class="mt-3 min-w-0 text-center">
         <p class="truncate text-sm font-semibold" :class="props.labelClass">
           {{ user.name }}
         </p>
@@ -63,12 +63,13 @@ async function onLogout() {
         </p>
       </div>
 
-      <button type="button" :disabled="loggingOut"
-        class="mt-2 flex h-10 shrink-0 items-center gap-3 rounded-lg px-2.5 text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
-        @click="onLogout">
-        <LogOutIcon class="size-5 shrink-0" aria-hidden="true" />
-        <span :class="props.labelClass">Sair</span>
-      </button>
+      <!-- Mesmo comportamento do "Entrar": só aparece com a nav aberta. -->
+      <Button variant="ghost" size="sm" :disabled="loggingOut"
+        class="mt-2 h-10 w-45.5 pointer-events-none group-hover/nav:pointer-events-auto group-has-focus-visible/nav:pointer-events-auto"
+        :class="[props.labelClass, { 'md:pointer-events-auto': props.pinned }]" @click="onLogout">
+        <LogOutIcon class="size-4" aria-hidden="true" />
+        Sair
+      </Button>
     </template>
 
     <template v-else>
