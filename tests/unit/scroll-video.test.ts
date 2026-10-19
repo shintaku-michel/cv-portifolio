@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { scrollProgress, snapToFrame } from '../../app/utils/scroll-video'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { fetchBlobWithin, scrollProgress, snapToFrame } from '../../app/utils/scroll-video'
 
 describe('snapToFrame', () => {
   it('aims at the center of the frame that contains the time', () => {
@@ -26,5 +26,47 @@ describe('scrollProgress', () => {
 
   it('guards against a zero scrollable range', () => {
     expect(scrollProgress(-10, 0)).toBe(1)
+  })
+})
+
+describe('fetchBlobWithin', () => {
+  // fetch falso: responde depois de `delayMs`, ou rejeita se o sinal abortar antes.
+  function stubFetch(delayMs: number, status = 200) {
+    vi.stubGlobal('fetch', (_url: string, init: { signal: AbortSignal }) => new Promise((resolve, reject) => {
+      const timer = setTimeout(() => resolve(new Response(new Blob(['video']), { status })), delayMs)
+      init.signal.addEventListener('abort', () => {
+        clearTimeout(timer)
+        reject(init.signal.reason)
+      })
+    }))
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('returns the blob when the download finishes in time', async () => {
+    stubFetch(5)
+    const blob = await fetchBlobWithin('/hero.mp4', 200, new AbortController().signal)
+    expect(await blob.text()).toBe('video')
+  })
+
+  it('gives up with a TimeoutError when the download is too slow', async () => {
+    stubFetch(500)
+    await expect(fetchBlobWithin('/hero.mp4', 20, new AbortController().signal))
+      .rejects.toMatchObject({ name: 'TimeoutError' })
+  })
+
+  it('rejects with an AbortError when the caller aborts (teardown)', async () => {
+    stubFetch(500)
+    const controller = new AbortController()
+    const pending = fetchBlobWithin('/hero.mp4', 1000, controller.signal)
+    controller.abort()
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' })
+  })
+
+  it('rejects on an HTTP error status', async () => {
+    stubFetch(5, 404)
+    await expect(fetchBlobWithin('/hero.mp4', 200, new AbortController().signal)).rejects.toThrow('HTTP 404')
   })
 })

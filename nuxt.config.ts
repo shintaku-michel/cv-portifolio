@@ -45,6 +45,15 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()]
   },
+  routeRules: {
+    // Vídeo e imagens do hero (~12 MB) passam pelo Cloud Run via rewrite do
+    // Firebase Hosting. Sem Cache-Control, o Firebase responde `private` e a
+    // CDN não guarda cópia — todo visitante baixaria do container.
+    // `s-maxage` deixa a CDN guardar; o cache dela é limpo a cada deploy de
+    // hosting (todo push na main), então trocar o vídeo não serve versão velha.
+    // `max-age` curto no navegador pelo mesmo motivo (nomes de arquivo fixos).
+    '/hero/**': { headers: { 'cache-control': 'public, max-age=86400, s-maxage=31536000' } }
+  },
   nitro: {
     // Empacota server/graphql/schema/*.graphql e app/components/playground/**
     // no build de produção (readFileSync/import.meta.glob direto não é

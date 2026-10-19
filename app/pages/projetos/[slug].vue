@@ -3,6 +3,7 @@ import type { Project } from '#shared/types/project'
 import { formatPeriod } from '#shared/utils/format-period'
 import CommentSection from '@/components/comments/CommentSection.vue'
 import LikeButton from '@/components/common/LikeButton.vue'
+import ShareButton from '@/components/common/ShareButton.vue'
 import PlaygroundCode from '@/components/common/PlaygroundCode.vue'
 import TechBadge from '@/components/common/TechBadge.vue'
 import { Button } from '@/components/ui/button'
@@ -131,7 +132,11 @@ useHead({
           </div>
         </div>
 
-        <div v-if="project.playgroundComponent && PLAYGROUND_COMPONENTS[project.playgroundComponent]" class="mb-8">
+        <!-- relative z-10: playgrounds largos (ex: carousel) passam da coluna e
+             precisam ficar por cima do painel lateral, que é sticky e vem
+             depois no HTML. -->
+        <div v-if="project.playgroundComponent && PLAYGROUND_COMPONENTS[project.playgroundComponent]"
+          class="relative z-10 mb-8">
           <component :is="PLAYGROUND_COMPONENTS[project.playgroundComponent]" />
         </div>
 
@@ -158,12 +163,13 @@ useHead({
 
       <aside
         aria-label="Curtidas e comentários do projeto"
-        class="flex flex-col gap-6 rounded-sm border p-6 lg:sticky lg:top-6 lg:h-[calc(100vh-12rem)] lg:self-start">
-        <div class="flex shrink-0 gap-3">
-          <LikeButton :target="{ type: 'PROJECT', id: project.id }" :liked="project.likedByMe" :count="project.likesCount" />
-        </div>
-
-        <CommentSection :target="{ type: 'PROJECT', id: project.id }" class="min-h-0 flex-1" />
+        class="flex flex-col rounded-sm border p-6 lg:sticky lg:top-6 lg:max-h-[calc(100vh-12rem)] lg:self-start">
+        <CommentSection :target="{ type: 'PROJECT', id: project.id }" class="min-h-0 flex-1">
+          <template #actions>
+            <LikeButton :target="{ type: 'PROJECT', id: project.id }" :liked="project.likedByMe" :count="project.likesCount" />
+            <ShareButton :url="projectUrl" />
+          </template>
+        </CommentSection>
       </aside>
     </div>
   </div>

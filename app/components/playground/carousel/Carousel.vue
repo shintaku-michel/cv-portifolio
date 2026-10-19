@@ -326,7 +326,7 @@ function nextItemStyle(order: number) {
 
               <div class="carousel-fade-up [animation-delay:1s]">
                 <Button as-child size="lg" variant="outline">
-                  <NuxtLink to="/">
+                  <NuxtLink to="https://bondry.org/pt-br" target="_blank" rel="noopener noreferrer">
                     <LogIn />
                     Experimentar agora
                   </NuxtLink>

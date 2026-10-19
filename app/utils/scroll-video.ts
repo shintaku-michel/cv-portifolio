@@ -27,6 +27,12 @@ export interface ScrollVideoOptions {
   fallback?: string
   /** blob: baixa o arquivo inteiro antes do scrub (seeks locais, mais fluido). */
   load?: 'blob' | 'stream'
+  /**
+   * Tempo máximo (ms) esperando o download completo no modo blob. Passou
+   * disso (conexão lenta), cai para streaming: o hero anima logo, só um
+   * pouco menos fluido no começo, em vez de ficar parado no pôster.
+   */
+  blobTimeoutMs?: number
   /** Fração do vídeo exibida ao fim do scroll (0–1). Ex.: 0.9 para antes dos últimos 10%. */
   endAt?: number
   /** Constante de tempo da suavização, em ms. Maior = mais lento e macio. */
@@ -45,6 +51,32 @@ export function snapToFrame(time: number, duration: number, fps: number): number
 export function scrollProgress(sectionTop: number, scrollable: number): number {
   const p = -sectionTop / Math.max(1, scrollable)
   return p < 0 ? 0 : p > 1 ? 1 : p
+}
+
+/**
+ * Baixa o arquivo inteiro como Blob, desistindo após `timeoutMs`. Rejeita
+ * com AbortError se `signal` abortar (teardown) e com TimeoutError se o
+ * prazo estourar — o chamador decide o que fazer em cada caso.
+ */
+export async function fetchBlobWithin(url: string, timeoutMs: number, signal: AbortSignal): Promise<Blob> {
+  const controller = new AbortController()
+  const onAbort = () => controller.abort(abortError())
+  if (signal.aborted) throw abortError()
+  signal.addEventListener('abort', onAbort, { once: true })
+  const timer = setTimeout(() => controller.abort(new DOMException('Timeout', 'TimeoutError')), timeoutMs)
+  try {
+    // O sinal cobre também a leitura do corpo (res.blob()), não só a resposta.
+    const res = await fetch(url, { signal: controller.signal })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    return await res.blob()
+  }
+  catch (err) {
+    throw controller.signal.aborted ? controller.signal.reason : err
+  }
+  finally {
+    clearTimeout(timer)
+    signal.removeEventListener('abort', onAbort)
+  }
 }
 
 function abortError() {
@@ -74,7 +106,7 @@ export class ScrollVideoController {
 
   constructor(elements: ScrollVideoElements, options: ScrollVideoOptions) {
     this.el = elements
-    this.opts = { smallMax: 900, fps: 24, load: 'blob', endAt: 1, smoothingMs: 140, ...options }
+    this.opts = { smallMax: 900, fps: 24, load: 'blob', blobTimeoutMs: 4000, endAt: 1, smoothingMs: 140, ...options }
 
     this.motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     this.motionQuery.addEventListener('change', this.onMotionChange)
@@ -122,7 +154,7 @@ export class ScrollVideoController {
   }
 
   private async loadVideo() {
-    const { src, srcSmall, smallMax, load } = this.opts
+    const { src, srcSmall, smallMax, load, blobTimeoutMs } = this.opts
     const url = srcSmall && window.innerWidth <= smallMax ? srcSmall : src
     const v = this.el.video
     const gen = this.generation
@@ -133,16 +165,14 @@ export class ScrollVideoController {
       let finalUrl = url
       if (load === 'blob') {
         try {
-          const res = await fetch(url, { signal })
-          if (!res.ok) throw new Error(`HTTP ${res.status}`)
-          const blob = await res.blob()
+          const blob = await fetchBlobWithin(url, blobTimeoutMs, signal)
           if (stale()) return
           this.objectUrl = URL.createObjectURL(blob)
           finalUrl = this.objectUrl
         }
         catch (err) {
           if ((err as Error).name === 'AbortError') return
-          finalUrl = url // fetch indisponível → streaming normal
+          finalUrl = url // lento demais, fetch indisponível ou erro → streaming normal
         }
       }
       if (stale()) return
