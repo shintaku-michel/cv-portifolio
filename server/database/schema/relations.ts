@@ -28,7 +28,8 @@ export const technologiesRelations = relations(technologies, ({ many }) => ({
 
 export const projectsRelations = relations(projects, ({ many }) => ({
   projectTechnologies: many(projectTechnologies),
-  comments: many(comments)
+  comments: many(comments),
+  likes: many(likes)
 }))
 
 export const projectTechnologiesRelations = relations(projectTechnologies, ({ one }) => ({
@@ -67,5 +68,6 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
 
 export const likesRelations = relations(likes, ({ one }) => ({
   user: one(users, { fields: [likes.userId], references: [users.id] }),
-  post: one(posts, { fields: [likes.postId], references: [posts.id] })
+  post: one(posts, { fields: [likes.postId], references: [posts.id] }),
+  project: one(projects, { fields: [likes.projectId], references: [projects.id] })
 }))

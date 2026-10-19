@@ -1,14 +1,12 @@
 import type { SessionUser } from './auth'
+import type { ContentRef, ContentType } from './content'
 
 export type CommentStatus = 'PENDING' | 'VISIBLE' | 'HIDDEN'
 
-/** Onde o comentário foi feito. Novo alvo = novo valor aqui + coluna no banco. */
-export type CommentTargetType = 'POST' | 'PROJECT'
+/** Onde o comentário foi feito. Novo alvo = novo valor em ContentType + coluna no banco. */
+export type CommentTargetType = ContentType
 
-export interface CommentTargetRef {
-  type: CommentTargetType
-  id: string
-}
+export type CommentTargetRef = ContentRef
 
 export interface CommentTarget extends CommentTargetRef {
   title: string

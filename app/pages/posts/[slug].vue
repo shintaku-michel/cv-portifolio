@@ -2,7 +2,7 @@
 import type { Post } from '#shared/types/post'
 import CommentSection from '@/components/comments/CommentSection.vue'
 import ImmersiveReader from '@/components/posts/ImmersiveReader.vue'
-import LikeButton from '@/components/posts/LikeButton.vue'
+import LikeButton from '@/components/common/LikeButton.vue'
 import ShareButton from '@/components/posts/ShareButton.vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -143,7 +143,7 @@ function formatDate(value: string | null) {
         <div
           class="flex flex-col gap-6 rounded-sm border p-6 lg:sticky lg:top-6 lg:h-[calc(100vh-12rem)] lg:self-start">
           <div class="flex shrink-0 gap-3">
-            <LikeButton :post-id="post.id" :liked="post.likedByMe" :count="post.likesCount" />
+            <LikeButton :target="{ type: 'POST', id: post.id }" :liked="post.likedByMe" :count="post.likesCount" />
             <ShareButton :url="postUrl" />
           </div>
 

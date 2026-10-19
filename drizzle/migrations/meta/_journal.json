@@ -78,6 +78,13 @@
       "when": 1792366614600,
       "tag": "0010_comment_targets",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792376187417,
+      "tag": "0011_like_targets",
+      "breakpoints": true
     }
   ]
 }

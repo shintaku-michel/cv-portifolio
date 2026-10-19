@@ -31,5 +31,5 @@ export const resolvers = {
   },
   Comment: commentResolvers.Comment,
   Post: { ...likeResolvers.Post, ...commentResolvers.Post },
-  Project: commentResolvers.Project
+  Project: { ...likeResolvers.Project, ...commentResolvers.Project }
 }

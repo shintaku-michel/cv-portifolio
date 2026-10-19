@@ -4,9 +4,19 @@ extend type Post {
   likedByMe: Boolean!
 }
 
+extend type Project {
+  likesCount: Int!
+  """false quando não autenticado."""
+  likedByMe: Boolean!
+}
+
 extend type Mutation {
-  """Exige usuário autenticado. Idempotente se já curtido."""
+  """Exige usuário autenticado e post publicado. Idempotente se já curtido."""
   likePost(postId: ID!): Post!
-  """Exige usuário autenticado. Idempotente se não curtido."""
+  """Exige usuário autenticado e post publicado. Idempotente se não curtido."""
   unlikePost(postId: ID!): Post!
+  """Exige usuário autenticado e projeto publicado. Idempotente se já curtido."""
+  likeProject(projectId: ID!): Project!
+  """Exige usuário autenticado e projeto publicado. Idempotente se não curtido."""
+  unlikeProject(projectId: ID!): Project!
 }
