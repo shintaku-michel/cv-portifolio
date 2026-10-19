@@ -3,7 +3,8 @@ import { createError } from 'h3'
 import type { CommentStatus, CommentTarget, CommentTargetRef } from '../../shared/types/comment'
 import { COMMENT_MAX_LENGTH } from '../../shared/utils/comment'
 import { db } from '../database/client'
-import { comments, posts, projects } from '../database/schema'
+import { comments } from '../database/schema'
+import { isPublishedContent, isUuid } from '../utils/content'
 
 export type CreateCommentInput = {
   target: CommentTargetRef
@@ -11,14 +12,12 @@ export type CreateCommentInput = {
   parentId?: string | null
 }
 
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-
 // Só o necessário para montar o CommentTarget — nunca o conteúdo inteiro do alvo.
 const targetColumns = { columns: { id: true, title: true, slug: true } } as const
 const withRelations = { user: true, post: targetColumns, project: targetColumns } as const
 
 // Cada tipo de alvo em um só lugar: coluna em `comments` e URL pública.
-// Novo alvo = nova entrada aqui, em isPublishedTarget e coluna/CHECK no schema.
+// Novo alvo = nova entrada aqui, em isPublishedContent e coluna/CHECK no schema.
 const TARGETS = {
   POST: { key: 'postId', path: '/posts' },
   PROJECT: { key: 'projectId', path: '/projetos' }
@@ -53,16 +52,6 @@ export function toCommentTarget(row: { post?: TargetSummary | null, project?: Ta
   throw new Error('Comentário carregado sem post/projeto')
 }
 
-async function isPublishedTarget(target: CommentTargetRef): Promise<boolean> {
-  if (!UUID_PATTERN.test(target.id)) {
-    return false
-  }
-  const [row] = target.type === 'POST'
-    ? await db.select({ status: posts.status }).from(posts).where(eq(posts.id, target.id)).limit(1)
-    : await db.select({ status: projects.status }).from(projects).where(eq(projects.id, target.id)).limit(1)
-  return row?.status === 'PUBLISHED'
-}
-
 function normalizeContent(content: string): string {
   const trimmed = content.trim()
   if (!trimmed) {
@@ -78,7 +67,7 @@ export const CommentService = {
   // Alvo em DRAFT (ou inexistente) não expõe comentários, mesmo os que
   // ficaram VISIBLE antes de ele ser despublicado.
   async getVisible(target: CommentTargetRef) {
-    if (!await isPublishedTarget(target)) {
+    if (!await isPublishedContent(target)) {
       return []
     }
     return db.query.comments.findMany({
@@ -140,12 +129,12 @@ export const CommentService = {
 
     // Só se comenta em conteúdo publicado (seção 15). Mesma resposta para
     // inexistente e DRAFT — não revela rascunhos.
-    if (!await isPublishedTarget(input.target)) {
+    if (!await isPublishedContent(input.target)) {
       throw createError({ statusCode: 404, message: 'Conteúdo não encontrado' })
     }
 
     if (input.parentId) {
-      const parent = UUID_PATTERN.test(input.parentId)
+      const parent = isUuid(input.parentId)
         ? await db.query.comments.findFirst({ where: (c, { eq }) => eq(c.id, input.parentId!) })
         : undefined
       if (!parent) {
