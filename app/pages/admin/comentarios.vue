@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { Comment, CommentStatus } from '#shared/types/comment'
+import { COMMENT_TARGET_LABELS } from '#shared/utils/comment'
 import EmptyState from '@/components/common/EmptyState.vue'
 import ErrorState from '@/components/common/ErrorState.vue'
 import LoadingState from '@/components/common/LoadingState.vue'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -26,7 +28,7 @@ const QUERY = `
     adminComments(status: $status) {
       id content status createdAt
       user { name email }
-      target { title url }
+      target { type title url }
     }
   }
 `
@@ -102,6 +104,9 @@ async function confirmDelete() {
           <div class="mb-3 flex items-start justify-between gap-2">
             <div class="min-w-0">
               <p class="wrap-break-word">
+                <Badge variant="secondary" class="mr-1.5 align-middle">
+                  {{ COMMENT_TARGET_LABELS[comment.target.type] }}
+                </Badge>
                 {{ comment.target.title }}
               </p>
               <p class="text-sm text-muted-foreground wrap-break-word">
@@ -144,7 +149,7 @@ async function confirmDelete() {
         <TableHeader>
           <TableRow>
             <TableHead class="w-[55%]">
-              Post/Comentário
+              Conteúdo/Comentário
             </TableHead>
             <TableHead class="w-[25%]">
               Autor
@@ -157,7 +162,12 @@ async function confirmDelete() {
         <TableBody>
           <TableRow v-for="comment in data.adminComments" :key="comment.id">
             <TableCell class="whitespace-normal wrap-break-word">
-              <p>{{ comment.target.title }}</p>
+              <p>
+                <Badge variant="secondary" class="mr-1.5 align-middle">
+                  {{ COMMENT_TARGET_LABELS[comment.target.type] }}
+                </Badge>
+                {{ comment.target.title }}
+              </p>
               <p class="text-sm text-muted-foreground">{{ comment.content }}</p>
             </TableCell>
             <TableCell class="whitespace-normal wrap-break-word">

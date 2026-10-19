@@ -3,18 +3,24 @@ import { MessageCircleCheckIcon, MessageCircleIcon, MessagesSquareIcon } from '@
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import ErrorState from '@/components/common/ErrorState.vue'
-import type { Comment } from '#shared/types/comment'
+import type { Comment, CommentTargetRef } from '#shared/types/comment'
+import { COMMENT_MAX_LENGTH } from '#shared/utils/comment'
 
+// Seção de comentários reutilizável: serve para qualquer alvo comentável
+// (post, projeto/componente). As regras — alvo publicado, moderação,
+// tamanho — ficam no servidor (CommentService); aqui é só a interface.
 const props = defineProps<{
-  postId: string
+  target: CommentTargetRef
 }>()
 
 const { user } = useAuth()
 
-const target = computed(() => ({ type: 'POST' as const, id: props.postId }))
+// Volta para a página atual depois do login com Google.
+const route = useRoute()
+const loginUrl = computed(() => `/login?redirect=${encodeURIComponent(route.fullPath)}`)
 
 const QUERY = `
-  query PostComments($target: CommentTargetInput!) {
+  query TargetComments($target: CommentTargetInput!) {
     comments(target: $target) {
       id content createdAt
       user { name }
@@ -26,9 +32,29 @@ const QUERY = `
   }
 `
 
-const { data, error } = await useAsyncData(`comments-${props.postId}`, () =>
-  useGraphQL<{ comments: Comment[] }>(QUERY, { target: target.value })
+const { data, error } = await useAsyncData(`comments-${props.target.type}-${props.target.id}`, () =>
+  useGraphQL<{ comments: Comment[] }>(QUERY, { target: { type: props.target.type, id: props.target.id } })
 )
+
+const CREATE_MUTATION = `mutation ($input: CreateCommentInput!) { createComment(input: $input) { id } }`
+
+// Erro do envio (validação, limite de envios, alvo indisponível) — a
+// mensagem vem do servidor, que é quem valida.
+const submitError = ref<string | null>(null)
+
+async function createComment(content: string, parentId?: string) {
+  submitError.value = null
+  try {
+    await useGraphQL(CREATE_MUTATION, {
+      input: { target: { type: props.target.type, id: props.target.id }, content, parentId }
+    })
+    justSubmitted.value = true
+    return true
+  } catch (err) {
+    submitError.value = err instanceof Error ? err.message : 'Não foi possível enviar o comentário.'
+    return false
+  }
+}
 
 const newCommentContent = ref('')
 const submitting = ref(false)
@@ -38,12 +64,9 @@ async function submitComment() {
   if (!newCommentContent.value.trim()) return
   submitting.value = true
   try {
-    await useGraphQL(
-      `mutation ($input: CreateCommentInput!) { createComment(input: $input) { id } }`,
-      { input: { target: target.value, content: newCommentContent.value } }
-    )
-    newCommentContent.value = ''
-    justSubmitted.value = true
+    if (await createComment(newCommentContent.value)) {
+      newCommentContent.value = ''
+    }
   } finally {
     submitting.value = false
   }
@@ -56,18 +79,16 @@ const replySubmitting = ref(false)
 function startReply(commentId: string) {
   replyingToId.value = commentId
   replyContent.value = ''
+  submitError.value = null
 }
 
 async function submitReply(parentId: string) {
   if (!replyContent.value.trim()) return
   replySubmitting.value = true
   try {
-    await useGraphQL(
-      `mutation ($input: CreateCommentInput!) { createComment(input: $input) { id } }`,
-      { input: { target: target.value, content: replyContent.value, parentId } }
-    )
-    replyingToId.value = null
-    justSubmitted.value = true
+    if (await createComment(replyContent.value, parentId)) {
+      replyingToId.value = null
+    }
   } finally {
     replySubmitting.value = false
   }
@@ -100,7 +121,7 @@ function toggleReplies(commentId: string) {
 
     <!-- Admin só responde comentários existentes, não abre comentário novo. -->
     <div v-if="user && user.role !== 'ADMIN'" class="flex shrink-0 flex-col gap-2">
-      <Textarea v-model="newCommentContent" rows="3" placeholder="Escreva um comentário…" aria-label="Comentário" />
+      <Textarea v-model="newCommentContent" rows="3" :maxlength="COMMENT_MAX_LENGTH" placeholder="Escreva um comentário…" aria-label="Comentário" />
       <Button size="lg" class="self-start" :disabled="submitting || !newCommentContent.trim()" @click="submitComment">
         {{ submitting ? 'Enviando…' : 'Comentar' }}
       </Button>
@@ -109,7 +130,11 @@ function toggleReplies(commentId: string) {
       </p>
     </div>
     <p v-else-if="!user" class="shrink-0 text-sm text-muted-foreground">
-      <NuxtLink to="/login" class="underline">Faça login</NuxtLink> para comentar.
+      <NuxtLink :to="loginUrl" class="underline">Faça login</NuxtLink> para comentar.
+    </p>
+
+    <p v-if="submitError" role="alert" class="shrink-0 text-sm text-destructive">
+      {{ submitError }}
     </p>
 
     <ErrorState v-if="error" message="Não foi possível carregar os comentários." />
@@ -149,7 +174,7 @@ function toggleReplies(commentId: string) {
         </div>
 
         <div v-if="replyingToId === comment.id" class="flex flex-col gap-2">
-          <Textarea v-model="replyContent" rows="2" placeholder="Escreva uma resposta…" aria-label="Resposta" />
+          <Textarea v-model="replyContent" rows="2" :maxlength="COMMENT_MAX_LENGTH" placeholder="Escreva uma resposta…" aria-label="Resposta" />
           <div class="flex gap-2">
             <Button size="lg" :disabled="replySubmitting || !replyContent.trim()" @click="submitReply(comment.id)">
               {{ replySubmitting ? 'Enviando…' : 'Responder' }}
