@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import type { TabsListProps } from 'reka-ui'
-import { TabsList } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { cn } from '~/layouts/lib/utils'
 import type { TabsListVariants } from '.'
+import { reactiveOmit } from '@vueuse/core'
+import { TabsList } from 'reka-ui'
+import { cn } from '@/lib/utils'
 import { tabsListVariants } from '.'
 
 const props = withDefaults(defineProps<TabsListProps & {
@@ -18,8 +18,12 @@ const delegatedProps = reactiveOmit(props, 'class', 'variant')
 </script>
 
 <template>
-  <TabsList data-slot="tabs-list" :data-variant="variant" v-bind="delegatedProps"
-    :class="cn(tabsListVariants({ variant }), props.class)">
+  <TabsList
+    data-slot="tabs-list"
+    :data-variant="variant"
+    v-bind="delegatedProps"
+    :class="cn(tabsListVariants({ variant }), props.class)"
+  >
     <slot />
   </TabsList>
 </template>

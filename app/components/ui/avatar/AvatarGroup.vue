@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue';
-import { cn } from '~/layouts/lib/utils';
+import type { HTMLAttributes } from 'vue'
+import { cn } from '@/lib/utils'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
@@ -8,10 +8,13 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div data-slot="avatar-group" :class="cn(
-    'group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background',
-    props.class,
-  )">
+  <div
+    data-slot="avatar-group"
+    :class="cn(
+      'group/avatar-group flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-background',
+      props.class,
+    )"
+  >
     <slot />
   </div>
 </template>

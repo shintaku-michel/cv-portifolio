@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { reactiveOmit } from '@vueuse/core'
 import type { AccordionRootEmits, AccordionRootProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { reactiveOmit } from '@vueuse/core'
 import {
   AccordionRoot,
   useForwardPropsEmits,
 } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { cn } from '~/layouts/lib/utils'
+import { cn } from '@/lib/utils'
 
 const props = defineProps<AccordionRootProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<AccordionRootEmits>()
@@ -16,8 +16,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
-  <AccordionRoot v-slot="slotProps" data-slot="accordion" v-bind="forwarded"
-    :class="cn('flex w-full flex-col', props.class)">
+  <AccordionRoot
+    v-slot="slotProps"
+    data-slot="accordion"
+    v-bind="forwarded"
+    :class="cn('flex w-full flex-col', props.class)"
+  >
     <slot v-bind="slotProps" />
   </AccordionRoot>
 </template>
