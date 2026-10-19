@@ -30,5 +30,6 @@ export const resolvers = {
     ...certificateResolvers.Mutation
   },
   Comment: commentResolvers.Comment,
-  Post: { ...likeResolvers.Post, ...commentResolvers.Post }
+  Post: { ...likeResolvers.Post, ...commentResolvers.Post },
+  Project: commentResolvers.Project
 }

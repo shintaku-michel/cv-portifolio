@@ -26,7 +26,7 @@ const QUERY = `
     adminComments(status: $status) {
       id content status createdAt
       user { name email }
-      post { title slug }
+      target { title url }
     }
   }
 `
@@ -102,7 +102,7 @@ async function confirmDelete() {
           <div class="mb-3 flex items-start justify-between gap-2">
             <div class="min-w-0">
               <p class="wrap-break-word">
-                {{ comment.post.title }}
+                {{ comment.target.title }}
               </p>
               <p class="text-sm text-muted-foreground wrap-break-word">
                 {{ comment.content }}
@@ -116,7 +116,7 @@ async function confirmDelete() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem @select="navigateTo(`/posts/${comment.post.slug}`)">
+                <DropdownMenuItem @select="navigateTo(comment.target.url)">
                   <EyeIcon /> Visualizar
                 </DropdownMenuItem>
                 <DropdownMenuItem v-if="comment.status !== 'VISIBLE'" @select="approve(comment)">
@@ -157,7 +157,7 @@ async function confirmDelete() {
         <TableBody>
           <TableRow v-for="comment in data.adminComments" :key="comment.id">
             <TableCell class="whitespace-normal wrap-break-word">
-              <p>{{ comment.post.title }}</p>
+              <p>{{ comment.target.title }}</p>
               <p class="text-sm text-muted-foreground">{{ comment.content }}</p>
             </TableCell>
             <TableCell class="whitespace-normal wrap-break-word">
@@ -176,7 +176,7 @@ async function confirmDelete() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem @select="navigateTo(`/posts/${comment.post.slug}`)">
+                    <DropdownMenuItem @select="navigateTo(comment.target.url)">
                       <EyeIcon /> Visualizar
                     </DropdownMenuItem>
                     <DropdownMenuItem v-if="comment.status !== 'VISIBLE'" @select="approve(comment)">

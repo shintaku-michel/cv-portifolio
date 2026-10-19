@@ -4,12 +4,31 @@ enum CommentStatus {
   HIDDEN
 }
 
+"""Onde o comentário pode ser feito. Novo alvo = novo valor aqui."""
+enum CommentTargetType {
+  POST
+  PROJECT
+}
+
+input CommentTargetInput {
+  type: CommentTargetType!
+  id: ID!
+}
+
+type CommentTarget {
+  type: CommentTargetType!
+  id: ID!
+  title: String!
+  slug: String!
+  """Página pública do alvo (ex: /posts/meu-post)."""
+  url: String!
+}
+
 type Comment {
   id: ID!
   content: String!
   user: User!
-  post: Post!
-  postId: ID!
+  target: CommentTarget!
   parentId: ID
   status: CommentStatus!
   """Respostas de 1º nível apenas (seção 16). Só inclui as VISIBLE, salvo para o autor/ADMIN."""
@@ -19,7 +38,8 @@ type Comment {
 }
 
 input CreateCommentInput {
-  postId: ID!
+  target: CommentTargetInput!
+  """Até 2000 caracteres; espaços nas pontas são removidos."""
   content: String!
   parentId: ID
 }
@@ -29,19 +49,24 @@ extend type Post {
   commentsCount: Int!
 }
 
+extend type Project {
+  """Total de comentários VISIBLE (raiz + respostas)."""
+  commentsCount: Int!
+}
+
 extend type Query {
-  """Apenas comentários VISIBLE de 1º nível (com respostas VISIBLE aninhadas)."""
-  comments(postId: ID!): [Comment!]!
+  """Apenas comentários VISIBLE de 1º nível (com respostas VISIBLE aninhadas). Vazio se o alvo não estiver publicado."""
+  comments(target: CommentTargetInput!): [Comment!]!
   """Exige ADMIN."""
   pendingComments: [Comment!]!
   """Retorna null se PENDING/HIDDEN e o chamador não for o autor nem ADMIN."""
   comment(id: ID!): Comment
-  """Todos os comentários com o status informado, de qualquer post. Exige ADMIN."""
+  """Todos os comentários com o status informado, de qualquer alvo. Exige ADMIN."""
   adminComments(status: CommentStatus!): [Comment!]!
 }
 
 extend type Mutation {
-  """Exige usuário autenticado. Sempre cria como PENDING."""
+  """Exige usuário autenticado e alvo publicado. Sempre cria como PENDING."""
   createComment(input: CreateCommentInput!): Comment!
   """Exige ADMIN."""
   approveComment(id: ID!): Comment!
