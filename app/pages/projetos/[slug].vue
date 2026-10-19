@@ -132,7 +132,11 @@ useHead({
           </div>
         </div>
 
-        <div v-if="project.playgroundComponent && PLAYGROUND_COMPONENTS[project.playgroundComponent]" class="mb-8">
+        <!-- relative z-10: playgrounds largos (ex: carousel) passam da coluna e
+             precisam ficar por cima do painel lateral, que é sticky e vem
+             depois no HTML. -->
+        <div v-if="project.playgroundComponent && PLAYGROUND_COMPONENTS[project.playgroundComponent]"
+          class="relative z-10 mb-8">
           <component :is="PLAYGROUND_COMPONENTS[project.playgroundComponent]" />
         </div>
 
