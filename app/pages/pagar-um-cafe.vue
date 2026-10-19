@@ -100,11 +100,13 @@ async function onSubmit() {
       <div class="flex flex-col md:flex-row flex-wrap gap-4">
         <div class="flex flex-col gap-2 flex-1">
           <Label for="name">Nome</Label>
-          <Input id="name" v-model="name" type="text" autocomplete="name" required :disabled="submitting" />
+          <Input id="name" class="h-10" v-model="name" type="text" autocomplete="name" required
+            :disabled="submitting" />
         </div>
         <div class="flex flex-col gap-2 flex-1">
           <Label for="email">Email</Label>
-          <Input id="email" v-model="email" type="email" autocomplete="email" required :disabled="submitting" />
+          <Input id="email" class="h-10" v-model="email" type="email" autocomplete="email" required
+            :disabled="submitting" />
         </div>
       </div>
 
