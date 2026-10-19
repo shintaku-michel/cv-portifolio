@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Project } from '#shared/types/project'
 import { formatPeriod } from '#shared/utils/format-period'
+import CommentSection from '@/components/comments/CommentSection.vue'
 import PlaygroundCode from '@/components/common/PlaygroundCode.vue'
 import TechBadge from '@/components/common/TechBadge.vue'
 import { Button } from '@/components/ui/button'
@@ -82,70 +83,82 @@ useHead({
 </script>
 
 <template>
-  <div class="md:p-6 md:mx-auto md:w-3xl">
+  <div class="md:p-6 md:mx-auto md:w-6xl">
     <NuxtLink :to="{ path: '/projetos', query: { tab: backTab } }"
       class="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:underline">
       <MoveLeft class="h-4 w-4" />
       Projetos e Componentes
     </NuxtLink>
 
-    <div class="mb-2 flex flex-col items-start gap-2">
-      <h1 class="text-2xl font-semibold">
-        {{ project.title }}
-      </h1>
-      <p class="text-md">
-        {{ project.shortDescription }}
-      </p>
-    </div>
+    <!-- Mesmo layout do post: conteúdo + painel lateral de comentários
+         (fixo ao rolar a partir de lg; abaixo do conteúdo em telas menores). -->
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_1fr] lg:gap-12">
+      <div class="min-w-0">
+        <div class="mb-2 flex flex-col items-start gap-2">
+          <h1 class="text-2xl font-semibold">
+            {{ project.title }}
+          </h1>
+          <p class="text-md">
+            {{ project.shortDescription }}
+          </p>
+        </div>
 
-    <img v-if="project.featured && project.coverImage" :src="project.coverImage" :alt="project.title"
-      class="mb-4 aspect-video w-full rounded-sm object-cover">
+        <img v-if="project.featured && project.coverImage" :src="project.coverImage" :alt="project.title"
+          class="mb-4 aspect-video w-full rounded-sm object-cover">
 
-    <div class="flex flex-wrap items-center justify-between gap-4 border border-muted p-4 my-4 rounded-sm">
-      <div>
-        <span v-if="formatPeriod(project.startDate, project.endDate)"
-          class="text-xs text-muted-foreground flex items-center gap-2">
-          <Calendar class="inline h-4 w-4" />
-          Publicado em: {{ formatPeriod(project.startDate, project.endDate) }}
-        </span>
+        <div class="flex flex-wrap items-center justify-between gap-4 border border-muted p-4 my-4 rounded-sm">
+          <div>
+            <span v-if="formatPeriod(project.startDate, project.endDate)"
+              class="text-xs text-muted-foreground flex items-center gap-2">
+              <Calendar class="inline h-4 w-4" />
+              Publicado em: {{ formatPeriod(project.startDate, project.endDate) }}
+            </span>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <Button v-if="project.demoUrl" as="a" size="lg" variant="outline" :href="project.demoUrl" target="_blank"
+              rel="noopener noreferrer">
+              <ExternalLink />
+              Acessar aplicação
+            </Button>
+            <Button v-if="project.repositoryUrl" as="a" size="lg" variant="outline" :href="project.repositoryUrl" target="_blank"
+              rel="noopener noreferrer">
+              <ExternalLink />
+              Acessar repositório
+            </Button>
+          </div>
+        </div>
+
+        <div v-if="project.playgroundComponent && PLAYGROUND_COMPONENTS[project.playgroundComponent]" class="mb-8">
+          <component :is="PLAYGROUND_COMPONENTS[project.playgroundComponent]" />
+        </div>
+
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div class="prose prose-neutral mb-8 max-w-none dark:prose-invert" v-html="project.description" />
+
+        <div class="mb-4">
+          <h2 class="text-md font-semibold mb-4">Stack Tecnológica</h2>
+          <div v-if="project.technologies?.length" class="flex flex-wrap gap-1.5">
+            <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
+          </div>
+          <div v-else>
+            <p class="text-sm text-muted-foreground">Informação confidencial</p>
+          </div>
+        </div>
+
+        <div v-if="project.gallery.length" class="mb-10 grid gap-4 sm:grid-cols-2">
+          <img v-for="(image, index) in project.gallery" :key="index" :src="image"
+            :alt="`${project.title} — imagem ${index + 1}`" class="w-full rounded-sm object-cover">
+        </div>
+
+        <PlaygroundCode v-if="playgroundSource" :info="playgroundSource" />
       </div>
 
-      <div class="flex flex-wrap gap-3">
-        <Button v-if="project.demoUrl" as="a" size="lg" variant="outline" :href="project.demoUrl" target="_blank"
-          rel="noopener noreferrer">
-          <ExternalLink />
-          Acessar aplicação
-        </Button>
-        <Button v-if="project.repositoryUrl" as="a" size="lg" variant="outline" :href="project.repositoryUrl" target="_blank"
-          rel="noopener noreferrer">
-          <ExternalLink />
-          Acessar repositório
-        </Button>
-      </div>
+      <aside
+        aria-label="Comentários do projeto"
+        class="flex flex-col gap-6 rounded-sm border p-6 lg:sticky lg:top-6 lg:h-[calc(100vh-12rem)] lg:self-start">
+        <CommentSection :target="{ type: 'PROJECT', id: project.id }" class="min-h-0 flex-1" />
+      </aside>
     </div>
-
-    <div v-if="project.playgroundComponent && PLAYGROUND_COMPONENTS[project.playgroundComponent]" class="mb-8">
-      <component :is="PLAYGROUND_COMPONENTS[project.playgroundComponent]" />
-    </div>
-
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <div class="prose prose-neutral mb-8 max-w-none dark:prose-invert" v-html="project.description" />
-
-    <div class="mb-4">
-      <h2 class="text-md font-semibold mb-4">Stack Tecnológica</h2>
-      <div v-if="project.technologies?.length" class="flex flex-wrap gap-1.5">
-        <TechBadge v-for="tech in project.technologies" :key="tech.id" :name="tech.name" :slug="tech.slug" />
-      </div>
-      <div v-else>
-        <p class="text-sm text-muted-foreground">Informação confidencial</p>
-      </div>
-    </div>
-
-    <div v-if="project.gallery.length" class="mb-10 grid gap-4 sm:grid-cols-2">
-      <img v-for="(image, index) in project.gallery" :key="index" :src="image"
-        :alt="`${project.title} — imagem ${index + 1}`" class="w-full rounded-sm object-cover">
-    </div>
-
-    <PlaygroundCode v-if="playgroundSource" :info="playgroundSource" />
   </div>
 </template>
