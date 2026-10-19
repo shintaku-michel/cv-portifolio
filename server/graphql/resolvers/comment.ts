@@ -1,12 +1,18 @@
 import { createError } from 'h3'
-import { db } from '../../database/client'
+import type { CommentTargetRef } from '../../../shared/types/comment'
 import type { CreateCommentInput } from '../../services/comment.service'
-import { CommentService } from '../../services/comment.service'
+import { CommentService, toCommentTarget } from '../../services/comment.service'
 import { assertAdmin, assertAuthenticated } from '../../utils/authorize'
+import { checkRateLimit } from '../../utils/rate-limit'
 import type { GraphQLContext } from '../context'
 
-type CommentRow = { id: string, userId: string, status: 'PENDING' | 'VISIBLE' | 'HIDDEN', replies?: unknown }
-type PostRow = { id: string }
+type CommentRow = Parameters<typeof toCommentTarget>[0] & { id: string, replies?: unknown }
+type TargetRow = { id: string }
+
+// Por usuário, não por IP: só autenticados comentam. ADMIN fica de fora
+// porque responde em lote ao moderar.
+const COMMENT_LIMIT = 10
+const COMMENT_WINDOW_MS = 10 * 60 * 1000
 
 function canView(comment: { status: string, userId: string }, context: GraphQLContext): boolean {
   return comment.status === 'VISIBLE' || context.user?.role === 'ADMIN' || context.user?.id === comment.userId
@@ -14,7 +20,7 @@ function canView(comment: { status: string, userId: string }, context: GraphQLCo
 
 export const commentResolvers = {
   Query: {
-    comments: (_parent: unknown, { postId }: { postId: string }) => CommentService.getVisible(postId),
+    comments: (_parent: unknown, { target }: { target: CommentTargetRef }) => CommentService.getVisible(target),
 
     pendingComments: (_parent: unknown, _args: unknown, context: GraphQLContext) => {
       assertAdmin(context.user)
@@ -38,6 +44,9 @@ export const commentResolvers = {
   Mutation: {
     createComment: (_parent: unknown, { input }: { input: CreateCommentInput }, context: GraphQLContext) => {
       assertAuthenticated(context.user)
+      if (context.user.role !== 'ADMIN' && !checkRateLimit(`comment:${context.user.id}`, COMMENT_LIMIT, COMMENT_WINDOW_MS)) {
+        throw createError({ statusCode: 429, message: 'Muitos comentários em pouco tempo. Tente novamente mais tarde.' })
+      }
       return CommentService.create(context.user.id, input)
     },
 
@@ -65,19 +74,21 @@ export const commentResolvers = {
   },
 
   Post: {
-    commentsCount: (parent: PostRow) => CommentService.countVisible(parent.id)
+    commentsCount: (parent: TargetRow) => CommentService.countVisible({ type: 'POST', id: parent.id })
+  },
+
+  Project: {
+    commentsCount: (parent: TargetRow) => CommentService.countVisible({ type: 'PROJECT', id: parent.id })
   },
 
   Comment: {
+    target: (parent: CommentRow) => toCommentTarget(parent),
+
     replies: async (parent: CommentRow, _args: unknown, context: GraphQLContext) => {
       if (parent.replies) {
         return parent.replies
       }
-      const rows = await db.query.comments.findMany({
-        with: { user: true },
-        where: (c, { eq }) => eq(c.parentId, parent.id),
-        orderBy: (c, { asc }) => [asc(c.createdAt)]
-      })
+      const rows = await CommentService.getReplies(parent.id)
       return rows.filter(row => canView(row, context))
     }
   }

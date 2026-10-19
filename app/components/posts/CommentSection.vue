@@ -11,9 +11,11 @@ const props = defineProps<{
 
 const { user } = useAuth()
 
+const target = computed(() => ({ type: 'POST' as const, id: props.postId }))
+
 const QUERY = `
-  query PostComments($postId: ID!) {
-    comments(postId: $postId) {
+  query PostComments($target: CommentTargetInput!) {
+    comments(target: $target) {
       id content createdAt
       user { name }
       replies {
@@ -25,7 +27,7 @@ const QUERY = `
 `
 
 const { data, error } = await useAsyncData(`comments-${props.postId}`, () =>
-  useGraphQL<{ comments: Comment[] }>(QUERY, { postId: props.postId })
+  useGraphQL<{ comments: Comment[] }>(QUERY, { target: target.value })
 )
 
 const newCommentContent = ref('')
@@ -38,7 +40,7 @@ async function submitComment() {
   try {
     await useGraphQL(
       `mutation ($input: CreateCommentInput!) { createComment(input: $input) { id } }`,
-      { input: { postId: props.postId, content: newCommentContent.value } }
+      { input: { target: target.value, content: newCommentContent.value } }
     )
     newCommentContent.value = ''
     justSubmitted.value = true
@@ -62,7 +64,7 @@ async function submitReply(parentId: string) {
   try {
     await useGraphQL(
       `mutation ($input: CreateCommentInput!) { createComment(input: $input) { id } }`,
-      { input: { postId: props.postId, content: replyContent.value, parentId } }
+      { input: { target: target.value, content: replyContent.value, parentId } }
     )
     replyingToId.value = null
     justSubmitted.value = true
