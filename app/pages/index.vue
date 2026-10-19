@@ -4,7 +4,7 @@ import TechMarquee from '@/components/common/TechMarquee.vue'
 import ScrollVideoHero from '@/components/home/ScrollVideoHero.vue'
 import { Button } from '@/components/ui/button'
 import { getTechIcon } from '@/utils/tech-icons'
-import { FolderGit2Icon, MailIcon } from '@lucide/vue'
+import { MailIcon } from '@lucide/vue'
 
 const requestUrl = useRequestURL()
 
@@ -54,13 +54,6 @@ useHead({ link: [{ rel: 'canonical', href: requestUrl.origin }] })
         </p>
 
         <div class="scroll-reveal mt-6 flex flex-wrap justify-center gap-3 [--reveal-at:0.54] lg:justify-start">
-          <Button as-child size="lg">
-            <NuxtLink to="/projetos">
-              <FolderGit2Icon />
-              Conheça meu trabalho
-            </NuxtLink>
-          </Button>
-
           <Button v-for="link in socialLinks" :key="link.href" as-child size="lg" variant="outline">
             <a :href="link.href" target="_blank" rel="noopener noreferrer"
               :aria-label="`${link.label} (abre em nova aba)`">
