@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
 import { reactiveOmit } from '@vueuse/core'
 import type { MenubarRootEmits, MenubarRootProps } from 'reka-ui'
 import {
@@ -7,6 +6,7 @@ import {
   useForwardPropsEmits,
 } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
+import { cn } from '~/layouts/lib/utils'
 
 const props = defineProps<MenubarRootProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<MenubarRootEmits>()

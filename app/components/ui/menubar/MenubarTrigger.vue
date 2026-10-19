@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { MenubarTriggerProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
+import type { MenubarTriggerProps } from 'reka-ui'
 import { MenubarTrigger, useForwardProps } from 'reka-ui'
-import { cn } from '@/lib/utils'
+import type { HTMLAttributes } from 'vue'
+import { cn } from '~/layouts/lib/utils'
 
 const props = defineProps<MenubarTriggerProps & { class?: HTMLAttributes['class'] }>()
 
@@ -13,16 +13,11 @@ const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
-  <MenubarTrigger
-    data-slot="menubar-trigger"
-    v-bind="forwardedProps"
-    :class="
-      cn(
-        'hover:bg-muted aria-expanded:bg-muted rounded-sm px-1.5 py-0.5 text-sm font-medium flex items-center outline-hidden select-none',
-        props.class,
-      )
-    "
-  >
+  <MenubarTrigger data-slot="menubar-trigger" v-bind="forwardedProps" :class="cn(
+    'hover:bg-muted aria-expanded:bg-muted rounded-sm px-1.5 py-0.5 text-sm font-medium flex items-center outline-hidden select-none',
+    props.class,
+  )
+    ">
     <slot />
   </MenubarTrigger>
 </template>
