@@ -1,6 +1,7 @@
 import { and, count, eq } from 'drizzle-orm'
 import { createError } from 'h3'
 import type { CommentStatus, CommentTarget, CommentTargetRef } from '../../shared/types/comment'
+import { COMMENT_MAX_LENGTH } from '../../shared/utils/comment'
 import { db } from '../database/client'
 import { comments, posts, projects } from '../database/schema'
 
@@ -9,8 +10,6 @@ export type CreateCommentInput = {
   content: string
   parentId?: string | null
 }
-
-export const COMMENT_MAX_LENGTH = 2000
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 

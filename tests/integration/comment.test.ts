@@ -4,7 +4,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import type { CommentTargetRef } from '../../shared/types/comment'
 import { db } from '../../server/database/client'
 import { comments, posts, projects, users } from '../../server/database/schema'
-import { COMMENT_MAX_LENGTH, CommentService } from '../../server/services/comment.service'
+import { CommentService } from '../../server/services/comment.service'
+import { COMMENT_MAX_LENGTH } from '../../shared/utils/comment'
 
 const suffix = randomUUID().slice(0, 8)
 const userEmail = `test-comment-user-${suffix}@example.com`

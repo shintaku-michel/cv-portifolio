@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Post } from '#shared/types/post'
-import CommentSection from '@/components/posts/CommentSection.vue'
+import CommentSection from '@/components/comments/CommentSection.vue'
 import ImmersiveReader from '@/components/posts/ImmersiveReader.vue'
 import LikeButton from '@/components/posts/LikeButton.vue'
 import ShareButton from '@/components/posts/ShareButton.vue'
@@ -147,7 +147,7 @@ function formatDate(value: string | null) {
             <ShareButton :url="postUrl" />
           </div>
 
-          <CommentSection :post-id="post.id" class="min-h-0 flex-1" />
+          <CommentSection :target="{ type: 'POST', id: post.id }" class="min-h-0 flex-1" />
         </div>
       </div>
     </article>
