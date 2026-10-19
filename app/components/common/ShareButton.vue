@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { LinkIcon } from '@lucide/vue'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
+import { LinkIcon } from '@lucide/vue';
 
 const props = defineProps<{
   url: string

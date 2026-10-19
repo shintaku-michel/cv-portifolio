@@ -3,7 +3,7 @@ import type { Post } from '#shared/types/post'
 import CommentSection from '@/components/comments/CommentSection.vue'
 import ImmersiveReader from '@/components/posts/ImmersiveReader.vue'
 import LikeButton from '@/components/common/LikeButton.vue'
-import ShareButton from '@/components/posts/ShareButton.vue'
+import ShareButton from '@/components/common/ShareButton.vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -140,14 +140,15 @@ function formatDate(value: string | null) {
           <div class="prose prose-neutral max-w-none dark:prose-invert" v-html="post.content" />
         </div>
 
+        <!-- max-h (não h): fechado, o painel fica só com botões e título. -->
         <div
-          class="flex flex-col gap-6 rounded-sm border p-6 lg:sticky lg:top-6 lg:h-[calc(100vh-12rem)] lg:self-start">
-          <div class="flex shrink-0 gap-3">
-            <LikeButton :target="{ type: 'POST', id: post.id }" :liked="post.likedByMe" :count="post.likesCount" />
-            <ShareButton :url="postUrl" />
-          </div>
-
-          <CommentSection :target="{ type: 'POST', id: post.id }" class="min-h-0 flex-1" />
+          class="flex flex-col rounded-sm border p-6 lg:sticky lg:top-6 lg:max-h-[calc(100vh-12rem)] lg:self-start">
+          <CommentSection :target="{ type: 'POST', id: post.id }" class="min-h-0 flex-1">
+            <template #actions>
+              <LikeButton :target="{ type: 'POST', id: post.id }" :liked="post.likedByMe" :count="post.likesCount" />
+              <ShareButton :url="postUrl" />
+            </template>
+          </CommentSection>
         </div>
       </div>
     </article>
